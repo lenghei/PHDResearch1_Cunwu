@@ -2,17 +2,17 @@ import os
 import cv2
 import matplotlib.pyplot as plt
 
-# ===================== 路径设置 =====================
+# ===================== Path Setting =====================
 BASE_PATH = "./datasets/VisDrone2019"
-SPLIT = "train"  # 或者 val
+SPLIT = "train"  # or "val"
 
 IMAGE_DIR = os.path.join(BASE_PATH, SPLIT, "images")
 ANNOT_DIR = os.path.join(BASE_PATH, SPLIT, "annotations")
 
-# 获取图片列表
+# Get image list
 img_files = sorted([f for f in os.listdir(IMAGE_DIR) if f.endswith(('.jpg', '.png'))])
 
-# ===================== 解析标注 =====================
+# ===================== Parse Annotations =====================
 def parse_annot(anno_path):
     boxes = []
     with open(anno_path, 'r') as f:
@@ -27,30 +27,30 @@ def parse_annot(anno_path):
             boxes.append([x1, y1, x2, y2])
     return boxes
 
-# ===================== 绘制框 =====================
+# ===================== Draw Bounding Boxes =====================
 def draw_boxes(img, boxes):
     for (x1, y1, x2, y2) in boxes:
         cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
     return img
 
-# ===================== 显示 5 张图 =====================
+# ===================== Display 5 Images =====================
 plt.figure(figsize=(20, 12))
 
 for i in range(5):
-    # 读取图片
+    # Read image
     img_path = os.path.join(IMAGE_DIR, img_files[i])
     img = cv2.imread(img_path)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    # 读取标注
+    # Read annotations
     name = os.path.splitext(img_files[i])[0]
     anno_path = os.path.join(ANNOT_DIR, name + ".txt")
     boxes = parse_annot(anno_path)
 
-    # 画图
+    # Draw boxes
     img = draw_boxes(img, boxes)
 
-    # 显示
+    # Display image
     plt.subplot(1, 5, i+1)
     plt.imshow(img)
     plt.axis('off')
