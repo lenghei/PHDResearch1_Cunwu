@@ -2,7 +2,7 @@ import os
 import cv2
 import matplotlib.pyplot as plt
 
-# ===================== 路径设置（你不用改，直接运行）=====================
+# ===================== 路径设置 =====================
 BASE_PATH = "./datasets/VisDrone2019"
 SPLIT = "train"  # 或者 val
 
