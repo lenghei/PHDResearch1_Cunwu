@@ -54,7 +54,7 @@ https://github.com/VisDrone/VisDrone-Dataset
 2. Set the Python interpreter to Python 3.12
 3. Install all dependencies listed above
 4. Confirm the dataset path is correctly organized
-5. Run `evaluate.py` directly
+5. Run `evaluate_m1w4.py` directly
 6. Wait for inference and evaluation to finish
 
 ## 6. Expected Outputs
