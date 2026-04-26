@@ -1,7 +1,7 @@
 # Month 2
 ## **Week 5: Data Augmentation Pipeline**
 - **Runtime**: About 15 minutes
-- **Code**: Data augmentation script
+- **Code**: week5.py
 - **Task**: Generate 9 augmented datasets with spatial (brightness/contrast) and temporal (blur/noise) changes
 - **Output**: 9 augmented dataset folders (S1T1–S3T3)
 - **Purpose**: Prepare degraded image data for model robustness test
