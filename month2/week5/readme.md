@@ -1,5 +1,5 @@
 # Week 5 Code Explanation
-**Code Runtime**: Approximately 0.2 hours
+**Code Runtime**: Approximately 0.3 hours
 
 **Personal Statement**: This script was successfully debugged and revised **6 times** before full execution. The output results file was generated correctly. However, I have one limitation: the parameters for the 9 experimental conditions were determined based on visual image effects, since no official fixed standards were provided. I cannot fully confirm whether these parameter settings are fully optimal or reasonable.
 
