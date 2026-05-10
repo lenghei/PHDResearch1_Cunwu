@@ -1,5 +1,5 @@
 # Week 8 Analysis Report
-**Code Run Time**: 10 mins
+**Code Run Time**: 10 minutes
 
 ## Personal View & Analysis
 Based on the experimental results, some interference conditions lead to **performance improvement** instead of performance degradation. When images become brighter or darker, redundant details and background noise are greatly reduced, making objects more prominent and easier to detect. As a result, mAP values under these conditions are higher than the baseline S1T1, showing negative degradation values. This indicates that simplified images can improve detection stability and model robustness.
