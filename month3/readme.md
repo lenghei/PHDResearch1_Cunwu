@@ -1,0 +1,1 @@
+When images become much brighter or darker, redundant background details like leaves or messy ground textures are blacked out or blurred away. With less visual 'noise' and a cleaner background, it actually becomes easier for the detector to lock onto the main objects, leading to a higher mAP.
