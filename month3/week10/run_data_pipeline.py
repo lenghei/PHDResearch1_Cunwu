@@ -13,9 +13,19 @@ SRC_LABEL_DIR = r"./data/VisDrone2019-DET-val/annotations"
 # Destination directory for the generated 3x3 compound stress dataset
 SAVE_ROOT = r"./visdrone_val_aug_9conditions"
 
-# VisDrone class mapping to standard YOLO categories (0-9)
+# CRITICAL FIX: Map VisDrone 1-10 categories to standard YOLO 0-9 indices.
+# This prevents class misalignment which caused the mAP to drop to ~0.02.
 CLASS_MAP = {
-    0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9
+    1: 0,  # pedestrian -> 0
+    2: 1,  # person -> 1
+    3: 2,  # car -> 2
+    4: 3,  # van -> 3
+    5: 4,  # bus -> 4
+    6: 5,  # truck -> 5
+    7: 6,  # motor -> 6
+    8: 7,  # bicycle -> 7
+    9: 8,  # awning-tricycle -> 8
+    10: 9  # tricycle -> 9
 }
 
 # ==============================================================================
@@ -35,7 +45,7 @@ def get_pipeline(S, T):
     """
     transforms = []
 
-    # 3.1 Spatial Variability (Illumination modifications)
+    # 2.1 Spatial Variability (Illumination modifications)
     if S == 2:
         # S2: Overexposure -> Brightness +80 (~0.31), Contrast +0.3
         transforms.append(A.RandomBrightnessContrast(brightness_limit=(0.31, 0.31), contrast_limit=(0.3, 0.3), p=1.0))
@@ -44,7 +54,7 @@ def get_pipeline(S, T):
         transforms.append(
             A.RandomBrightnessContrast(brightness_limit=(-0.20, -0.20), contrast_limit=(-0.2, -0.2), p=1.0))
 
-    # 3.2 Temporal Variability (Motion blur & noise degradation)
+    # 2.2 Temporal Variability (Motion blur & noise degradation)
     if T == 2:
         # T2: Moderate motion blur -> kernel size = 7
         transforms.append(A.MotionBlur(blur_limit=(7, 7), p=1.0))
@@ -59,7 +69,7 @@ def get_pipeline(S, T):
 
 
 # ==============================================================================
-# 3. VISDRONE LABEL PARSER
+# 3. VISDRONE LABEL PARSER (WITH DEGRADED DATA FILTERING)
 # ==============================================================================
 def read_visdrone_annotations(label_path):
     bboxes = []
@@ -81,13 +91,15 @@ def read_visdrone_annotations(label_path):
                 y1 = float(parts[1])
                 w = float(parts[2])
                 h = float(parts[3])
-                category = int(parts[5])  # VisDrone category is at index 5
+                # Index 4 is score (usually 1 in val set), Index 5 is the category id (1 to 11)
+                category = int(parts[5])
 
-                # Filter out invalid shapes or unwanted categories
+                # Filter out invalid shapes and ignore classes like 0 (ignored regions) or 11 (others)
                 if w <= 0 or h <= 0 or category not in CLASS_MAP:
                     continue
+
                 bboxes.append([x1, y1, w, h])
-                category_ids.append(CLASS_MAP[category])
+                category_ids.append(CLASS_MAP[category])  # Map 1-10 to 0-9
             except ValueError:
                 continue
     return bboxes, category_ids
@@ -102,7 +114,7 @@ def run_pipeline():
 
     image_list = sorted([f for f in os.listdir(SRC_IMG_DIR) if f.endswith((".jpg", ".png"))])
     print(f"Loaded baseline validation set: {len(image_list)} images found.")
-    print("Starting data perturbation matrix generation...")
+    print("Starting data perturbation matrix generation with class alignment...")
 
     for cond_name, S, T in CONDITIONS:
         print(f"Processing condition split: {cond_name} (S{S}, T{T})")
@@ -125,7 +137,6 @@ def run_pipeline():
             if img is None:
                 continue
 
-            # Dynamic image dimensions retrieval to eliminate previous hardcoded 1920x1080 bug
             h_img, w_img = img.shape[:2]
             img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
@@ -157,7 +168,7 @@ def run_pipeline():
                 aug_bboxes = transformed["bboxes"]
                 aug_cats = transformed["category_ids"]
 
-                # Write back perturbed image to desk
+                # Write back perturbed image to disk
                 aug_img_bgr = cv2.cvtColor(aug_img, cv2.COLOR_RGB2BGR)
                 cv2.imwrite(os.path.join(img_out_dir, img_name), aug_img_bgr)
 
@@ -183,7 +194,6 @@ def run_pipeline():
                 processed_count += 1
 
             except Exception as e:
-                # Catch random coordinate errors so a single bad frame won't break the whole matrix loop
                 print(f"Skipping problematic sample {img_name}: {str(e)}")
                 continue
 
@@ -192,4 +202,4 @@ def run_pipeline():
 
 if __name__ == "__main__":
     run_pipeline()
-    print("\nData pipeline done. All 9 stress levels generated with precise label mapping.")
+    print("\nData pipeline done. All 9 stress levels generated with accurate standard YOLO index mappings.")
