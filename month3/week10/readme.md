@@ -47,8 +47,8 @@ This engine automates the cross-testing loop across 4 distinct detection models 
 
 * **Heterogeneous Model Benchmarking:**
 The evaluation queue represents diverse architectural capacities and inductive biases. It pairs the standard lightweight anchors **YOLOv8n** (~3.2M params) and **YOLOv8s** (~11.2M params) with **LEAF-YOLO-N** (~1.2M params)—a custom 2025 state-of-the-art detector optimized for VisDrone—and **RT-DETR-R18** (~20M params), introducing a Transformer-based global attention mechanism for comparison.
-* **Hardware-Constrained Inference Pipeline (`batch=4`):**
-To accurately align our benchmarks with the real physical constraints of deploying models on embedded UAV edge hardware (such as the NVIDIA Jetson platform), the evaluation engine forces a serial inference scheme with `batch=4`, rather than utilizing standard large-batch acceleration configurations.
+* **Hardware-Constrained Inference Pipeline (`batch=1`):**
+To accurately align our benchmarks with the real physical constraints of deploying models on embedded UAV edge hardware (such as the NVIDIA Jetson platform), the evaluation engine forces a serial inference scheme with `batch=1`, rather than utilizing standard large-batch acceleration configurations.
 * **Environment Isolation and Cache Flushing:**
 During sequential model evaluations, the underlying validation framework automatically generates an `images.cache` binary metadata file within the image directories. If a subsequent model architecture reads a legacy cache left by a previous run, the validation process misaligns, often driving $mAP$ scores down to zero. My implementation completely mitigates this issue through two mechanisms:
 1. It programmatically writes a unique, isolated `temp_config_*.yaml` configuration file for each split, deleting it immediately after the session terminates to prevent directory pollution.
