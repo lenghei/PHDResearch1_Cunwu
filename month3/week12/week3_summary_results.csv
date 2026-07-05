@@ -1,0 +1,2 @@
+Model,Dataset,mAP50(all),mAP50-95(all),Total_Images,Inference_Device,Total_Time_Sec,Avg_CPU(%),Avg_GPU(%),Max_VRAM(MB)
+yolov8n,VisDrone2019-DET-val(S1T1)-Aggregated,0.0733,0.0455,548,NVIDIA GeForce RTX 4060 Laptop GPU,20.5,5.59,0.0,0.0
