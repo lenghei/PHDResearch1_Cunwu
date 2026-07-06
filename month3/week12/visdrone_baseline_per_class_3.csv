@@ -1,0 +1,7 @@
+Class_ID,Class_Name,mAP50,mAP50-95,Execution_Device,Total_Time_Sec,Max_VRAM_MB
+0,person,0.1068,0.0662,NVIDIA GeForce RTX 4060 Laptop GPU,19.84,0.0
+1,car,0.2981,0.1848,NVIDIA GeForce RTX 4060 Laptop GPU,19.84,0.0
+2,bus,0.0017,0.001,NVIDIA GeForce RTX 4060 Laptop GPU,19.84,0.0
+3,truck,0.0327,0.0203,NVIDIA GeForce RTX 4060 Laptop GPU,19.84,0.0
+4,motorcycle,0.0006,0.0004,NVIDIA GeForce RTX 4060 Laptop GPU,19.84,0.0
+5,bicycle,0.0002,0.0001,NVIDIA GeForce RTX 4060 Laptop GPU,19.84,0.0
