@@ -1,7 +1,5 @@
 ### SOTA Comparative Analysis Report: VisDrone Dataset Performance
 
-**Student:** Cunwu
-
 **Dataset:** VisDrone-DET 2019
 
 **Focus:** Zero-Shot Baseline ($S_1T_1$) vs. 9 Degradation Conditions across YOLOv8 Variants
