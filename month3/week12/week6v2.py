@@ -16,7 +16,8 @@ except ImportError:
     GPUtil = None
 
 
-def enforce_reproducibility(seed=42):
+# Set random seeds for reproducible evaluation
+def set_seed(seed=42):
     random.seed(seed)
     np.random.seed(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)
@@ -28,9 +29,9 @@ def enforce_reproducibility(seed=42):
         torch.backends.cudnn.benchmark = False
 
 
-enforce_reproducibility(seed=42)
+set_seed(42)
 
-# Dataset Structure Configurations
+# Path and grid settings
 DATASET_ROOT = "./visdrone_val_aug_9conditions"
 MATRIX_LAYOUT = [
     ["S1T1", "S1T2", "S1T3"],
@@ -39,37 +40,40 @@ MATRIX_LAYOUT = [
 ]
 ALL_CONDITIONS = [cond for row in MATRIX_LAYOUT for cond in row]
 
-# Centralized Evaluation Metrics Output Paths
-WEEK6_DETAILED_CSV = "week6_per_class_conditions_results.csv"
-WEEK6_SUMMARY_CSV = "week6_models_summary.csv"
-OUTPUT_VIS_DIR = "./week6_comprehensive_visuals"
+# Save paths
+DETAILED_CSV_PATH = "week6_per_class_conditions_results.csv"
+SUMMARY_CSV_PATH = "week6_models_summary.csv"
+VIS_OUTPUT_DIR = "./week6_comprehensive_visuals"
 
-# Academic Category Aggregation Map
+# Target classes for evaluation
 EVAL_CLASS_NAMES = ["person", "car", "bus", "truck", "motorcycle", "bicycle"]
 NUM_CLASSES = len(EVAL_CLASS_NAMES)
 
+# Map VisDrone 10 classes to 6 evaluation classes
 VIS_TO_EVAL = {
-    0: 0, 1: 0,  # pedestrian, person -> person (Eval 0)
-    2: 1, 3: 1,  # car, van -> car (Eval 1)
-    4: 2,  # bus -> bus (Eval 2)
-    5: 3,  # truck -> truck (Eval 3)
-    6: 4, 8: 4,  # motor, awning-tricycle -> motorcycle (Eval 4)
-    7: 5, 9: 5  # bicycle, tricycle -> bicycle (Eval 5)
+    0: 0, 1: 0,  # pedestrian, person -> person
+    2: 1, 3: 1,  # car, van -> car
+    4: 2,        # bus -> bus
+    5: 3,        # truck -> truck
+    6: 4, 8: 4,  # motor, awning-tricycle -> motorcycle
+    7: 5, 9: 5   # bicycle, tricycle -> bicycle
 }
 
+# Map COCO 80 classes to 6 evaluation classes
 COCO_TO_EVAL = {
-    0: 0,  # person -> person (Eval 0)
-    2: 1,  # car -> car (Eval 1)
-    5: 2,  # bus -> bus (Eval 2)
-    7: 3,  # truck -> truck (Eval 3)
-    3: 4,  # motorcycle -> motorcycle (Eval 4)
-    1: 5  # bicycle -> bicycle (Eval 5)
+    0: 0,  # person
+    2: 1,  # car
+    5: 2,  # bus
+    7: 3,  # truck
+    3: 4,  # motorcycle
+    1: 5   # bicycle
 }
 
 DEVICE = 0 if torch.cuda.is_available() else "cpu"
-GPU_NAME = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU Backend"
+GPU_NAME = torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU"
 
 
+# Thread to record CPU, GPU and VRAM usage during testing
 class HardwareMonitor(threading.Thread):
     def __init__(self, interval=0.02):
         super().__init__()
@@ -102,6 +106,7 @@ class HardwareMonitor(threading.Thread):
         return round(avg_cpu, 2), round(avg_gpu, 2), round(max_mem, 1)
 
 
+# Calculate IoU for normalized boxes [x_center, y_center, width, height]
 def calculate_iou_xywhn(box1, box2):
     b1_x1, b1_y1 = box1[0] - box1[2] / 2.0, box1[1] - box1[3] / 2.0
     b1_x2, b1_y2 = box1[0] + box1[2] / 2.0, box1[1] + box1[3] / 2.0
@@ -120,6 +125,7 @@ def calculate_iou_xywhn(box1, box2):
     return inter_area / union_area if union_area > 0 else 0.0
 
 
+# Calculate VOC-style Average Precision (AP50)
 def calculate_voc_ap(eval_records, total_gts):
     if total_gts == 0 or not eval_records:
         return 0.0
@@ -142,46 +148,44 @@ def calculate_voc_ap(eval_records, total_gts):
     return float(np.sum((mrec[idx + 1] - mrec[idx]) * mpre[idx + 1]))
 
 
+# Main benchmark script
 def run_week6_robustness_benchmark(models_list=None, conf_threshold=0.10):
     if models_list is None:
         models_list = ["yolov8n.pt", "yolov8s.pt", "yolov8m.pt", "yolov8l.pt"]
 
-    print(f"[*] Initializing Week 6 High-Throughput Matrix Evaluation Pipeline...")
-    os.makedirs(OUTPUT_VIS_DIR, exist_ok=True)
+    print("Starting Week 6 robustness matrix benchmark...")
+    os.makedirs(VIS_OUTPUT_DIR, exist_ok=True)
 
-    # Reference clean image lists from S1T1
+    # Use S1T1 images as reference image list
     ref_img_dir = os.path.join(DATASET_ROOT, "S1T1", "images")
     if not os.path.exists(ref_img_dir):
-        print(f"[!] Critical Error: Reference directory not found: {ref_img_dir}")
+        print(f"Error: Reference directory not found: {ref_img_dir}")
         return
 
     images = [f for f in os.listdir(ref_img_dir) if f.endswith(('.jpg', '.jpeg', '.png'))]
     num_images = len(images)
-    print(f"[+] Quantified validation corpus size: {num_images} base image tracks.")
+    print(f"Found {num_images} images for evaluation.")
 
     detailed_rows = []
     summary_rows = []
 
-    # Execute batch grid evaluation for each model
     for model_file in models_list:
         model_name = os.path.splitext(model_file)[0]
-        print("\n" + "=" * 70)
-        print(f"[MODEL CORE] Processing architecture model variants: {model_file}")
-        print("=" * 70)
+        print("\n" + "=" * 60)
+        print(f"Evaluating model: {model_file}")
+        print("=" * 60)
 
         try:
             model = YOLO(model_file)
         except Exception as e:
-            print(f"[!] Skipping {model_file}. Architecture load failed: {e}")
+            print(f"Failed to load {model_file}: {e}")
             continue
 
-        # Dictionary to track the best visualization frame name for each category under this model
-        # Format: { class_id: { "img_name": str, "max_count": int } }
+        # Track the best image with most detections per class for plotting
         model_star_tracks = {i: {"img_name": None, "max_count": -1} for i in range(NUM_CLASSES)}
 
-        # Evaluate across all 9 spatial-temporal degradation conditions
         for cond in ALL_CONDITIONS:
-            print(f"  [*] Benchmarking Environmental Condition Matrix Node: [{cond}]")
+            print(f" -> Condition: [{cond}]")
 
             img_dir = os.path.join(DATASET_ROOT, cond, "images")
             lbl_dir = os.path.join(DATASET_ROOT, cond, "labels")
@@ -200,6 +204,7 @@ def run_week6_robustness_benchmark(models_list=None, conf_threshold=0.10):
                 if not os.path.exists(img_path):
                     continue
 
+                # Read ground truth boxes
                 gt_by_class = {i: [] for i in range(NUM_CLASSES)}
                 if os.path.exists(lbl_path):
                     with open(lbl_path, "r") as f:
@@ -213,7 +218,15 @@ def run_week6_robustness_benchmark(models_list=None, conf_threshold=0.10):
                                         [float(parts[1]), float(parts[2]), float(parts[3]), float(parts[4])])
                                     class_gt_counts[eval_cls] += 1
 
-                results = model.predict(source=img_path, conf=conf_threshold, device=DEVICE, verbose=False)[0]
+                # Run inference with 1280px resolution and FP16 half precision
+                results = model.predict(
+                    source=img_path,
+                    imgsz=1280,
+                    half=True,
+                    conf=conf_threshold,
+                    device=DEVICE,
+                    verbose=False
+                )[0]
 
                 pred_by_class = {i: [] for i in range(NUM_CLASSES)}
                 for box in results.boxes:
@@ -226,12 +239,12 @@ def run_week6_robustness_benchmark(models_list=None, conf_threshold=0.10):
                             "conf": float(box.conf[0].item())
                         })
 
-                # Matching predictions and recording target densities for validation frames
+                # Match predictions with ground truths
                 for c in range(NUM_CLASSES):
                     c_gts = gt_by_class[c]
                     c_preds = sorted(pred_by_class[c], key=lambda x: x["conf"], reverse=True)
 
-                    # Track best frame for isolated visual profiling (based on baseline clean density)
+                    # Select representative frame under clean S1T1 condition
                     if cond == "S1T1":
                         current_det_count = len(c_preds)
                         if current_det_count > model_star_tracks[c]["max_count"] and current_det_count > 0:
@@ -288,11 +301,11 @@ def run_week6_robustness_benchmark(models_list=None, conf_threshold=0.10):
                 "Max_VRAM_MB": max_gpu_mem
             })
 
-            print(f"    -> [Node Completed] mAP50: {mean_map50:.4f} | Inference Runtime: {total_time_sec:.2f}s")
+            print(f"    Done -> mAP50: {mean_map50:.4f} | Time: {total_time_sec:.2f}s")
 
-        # Part 2: Generating Isolated 3x3 Matrices per Class for this specific Model Architecture
-        print(f"\n  [*] Generating Visual Matrix Subplots for Model Variant: {model_name}...")
-        model_vis_dir = os.path.join(OUTPUT_VIS_DIR, model_name)
+        # Generate 3x3 visualization grid per class
+        print(f"Generating 3x3 visualization plots for {model_name}...")
+        model_vis_dir = os.path.join(VIS_OUTPUT_DIR, model_name)
         os.makedirs(model_vis_dir, exist_ok=True)
 
         for c in range(NUM_CLASSES):
@@ -304,8 +317,8 @@ def run_week6_robustness_benchmark(models_list=None, conf_threshold=0.10):
 
             fig, axes = plt.subplots(3, 3, figsize=(15, 11))
             fig.suptitle(
-                f"9-Condition Robustness Matrix Breakdown | Model: [{model_name.upper()}] | Class: [{cls_name.upper()}]\n"
-                f"Evaluation Target Target Frame: {star_img} | Platform Architecture: {GPU_NAME}",
+                f"9-Condition Robustness Grid | Model: {model_name.upper()} | Class: {cls_name.upper()}\n"
+                f"Sample Image: {star_img} | GPU: {GPU_NAME}",
                 fontsize=12, fontweight='bold', y=0.97
             )
 
@@ -316,7 +329,15 @@ def run_week6_robustness_benchmark(models_list=None, conf_threshold=0.10):
                     ax = axes[row_idx, col_idx]
 
                     if os.path.exists(img_path):
-                        results = model.predict(source=img_path, conf=conf_threshold, device=DEVICE, verbose=False)[0]
+                        # Run inference for visualization at 1280px with FP16
+                        results = model.predict(
+                            source=img_path,
+                            imgsz=1280,
+                            half=True,
+                            conf=conf_threshold,
+                            device=DEVICE,
+                            verbose=False
+                        )[0]
                         plot_img_bgr = cv2.imread(img_path)
 
                         specific_det_count = 0
@@ -344,20 +365,19 @@ def run_week6_robustness_benchmark(models_list=None, conf_threshold=0.10):
             plt.savefig(chart_save_path, dpi=300, bbox_inches='tight')
             plt.close()
 
-    # Save comprehensive evaluation results to CSV files
-    pd.DataFrame(detailed_rows).to_csv(WEEK6_DETAILED_CSV, index=False)
-    pd.DataFrame(summary_rows).to_csv(WEEK6_SUMMARY_CSV, index=False)
+    # Save results to CSV files
+    pd.DataFrame(detailed_rows).to_csv(DETAILED_CSV_PATH, index=False)
+    pd.DataFrame(summary_rows).to_csv(SUMMARY_CSV_PATH, index=False)
 
-    print("\n" + "=" * 80)
-    print(f"[🎉 Week 6 Benchmark Complete Successfully]")
-    print(f"   ├─ Detailed Class-Condition Table: {WEEK6_DETAILED_CSV}")
-    print(f"   ├─ Model Performance Summary Report: {WEEK6_SUMMARY_CSV}")
-    print(f"   └─ Visual Profiling Matrix Collections saved in: {OUTPUT_VIS_DIR}/")
-    print("=" * 80)
+    print("\n" + "=" * 60)
+    print("Benchmark completed successfully.")
+    print(f" -> Detailed results: {DETAILED_CSV_PATH}")
+    print(f" -> Summary report: {SUMMARY_CSV_PATH}")
+    print(f" -> Visual grids: {VIS_OUTPUT_DIR}/")
+    print("=" * 60)
 
 
 if __name__ == "__main__":
-    # Runs full scale benchmark across 4 variants over 9 distinct spatial-temporal domains
     run_week6_robustness_benchmark(
         models_list=["yolov8n.pt", "yolov8s.pt", "yolov8m.pt", "yolov8l.pt"],
         conf_threshold=0.10
