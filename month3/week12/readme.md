@@ -1,4 +1,4 @@
-# Week 12 Analysis Report: UAV Aerial Robustness & Cross-Domain Evaluation 
+# Week 12 Analysis Report: UAV Aerial Robustness & Cross-Domain Evaluation   
 
 ## 📌 Project Overview
 This repository contains the Week 8 benchmarking pipeline and robustness analysis for lightweight object detection architectures (YOLOv8n, YOLOv8s, YOLOv8m, YOLOv8l) evaluated on the **VisDrone dataset**. The core focus is evaluating model stability under compound environmental degradations across **9 distinct conditions** (Spatial-Temporal Matrix S1-S3, T1-T3).
