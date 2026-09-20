@@ -161,6 +161,7 @@ The planned work for September is:
 
 The main goal is to keep the study focused and reproducible while strengthening the paper through **small-object analysis, resolution effects, domain adaptation, and evaluation of the latest detector generation**.
 
+
 ---
 
 
