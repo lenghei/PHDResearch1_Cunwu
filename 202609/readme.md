@@ -20,7 +20,7 @@ Currently, I am completing the updated experimental code, including unified trai
 
 ## 1. Research Objective
 
-The current research focuses on the robustness of lightweight object detectors for **small-object detection in UAV aerial imagery**.
+The current research focuses on the robustness of lightweight object detectors for **small object detection in UAV aerial imagery**.
 
 Based on practical UAV inspection scenarios, the main challenges considered in this study are:
 
