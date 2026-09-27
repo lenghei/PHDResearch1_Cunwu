@@ -60,7 +60,7 @@ The main comparison will therefore include:
 - YOLO26s Pretrained
 - YOLO26s Fine-Tuned
 
-This experiment will show not only how much fine-tuning improves detection accuracy, but also whether domain adaptation improves robustness under difficult UAV conditions.
+This experiment'll show not only how much fine-tuning improves detection accuracy, but also whether domain adaptation improves robustness under difficult UAV conditions.
 
 The analysis will distinguish between:
 
