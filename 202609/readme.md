@@ -5,7 +5,7 @@ I recently refined the research plan with more focus on the **research contribut
 1. **3×3 Compound Degradation Evaluation**  
    Continue using the current 3×3 compound degradation experiment to simulate common UAV inspection conditions, including illumination changes, motion blur, and image noise.
 
-2. **640 vs. 1280 Resolution Comparison**  
+2. **640 vs. 1280 Resolution Comparison **  
    Add a comparison between 640 and 1280 input resolutions, with particular attention to small-object detection. Since tiny and small objects are common in UAV aerial inspection, the experiment will investigate whether the performance improvement at higher resolution is mainly concentrated on tiny/small objects rather than only improving overall mAP.
 
 3. **Zero-Shot vs. VisDrone Fine-Tuned Comparison**  
