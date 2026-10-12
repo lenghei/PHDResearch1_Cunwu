@@ -46,7 +46,7 @@ YOLO26 also introduces improvements related to small-object learning. Therefore,
 
 ---
 
-### 2.2 Pretrained vs. VisDrone Fine-Tuned Models
+### 2.2  Pretrained  vs. VisDrone Fine-Tuned Models
 
 Each detector will be evaluated in two forms:
 
