@@ -1,4 +1,4 @@
-# Work  report
+# Work report
 
 I recently refined the research plan with more focus on the **research contribution and novelty**. The paper will now concentrate on four main aspects.
 
