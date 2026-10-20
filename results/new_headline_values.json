@@ -1,0 +1,23 @@
+{
+  "v8.clean": "34.80",
+  "v8.corrupt": "17.36",
+  "v8.tiny": "15.01",
+  "v8.zs.clean": "20.28",
+  "v8.zs.corrupt": "9.83",
+  "v8.ft.clean": "40.07",
+  "v8.ft.corrupt": "20.57",
+  "v26.clean": "35.24",
+  "v26.corrupt": "17.49",
+  "v26.tiny": "16.37",
+  "v26.zs.clean": "23.49",
+  "v26.zs.corrupt": "12.27",
+  "v26.ft.clean": "40.76",
+  "v26.ft.corrupt": "20.71",
+  "generation.clean.delta": "0.44",
+  "generation.tiny.delta": "1.36",
+  "objects.below32": "68.47",
+  "v8.best": "34.86",
+  "v8.worst": "3.48",
+  "v26.best": "35.31",
+  "v26.worst": "3.64"
+}
