@@ -1,0 +1,57 @@
+[
+  {
+    "image_id": 1,
+    "ZIP_member": "VisDrone2019-DET-val/images/0000001_02999_d_0000005.jpg",
+    "image_SHA256": "fc80a9305b38af026091cbe0a1d4cfe059964852253b93f01fee17b7443e5514",
+    "annotation_SHA256": "cd5967d1704f90113abbe38fdd8255f5c27f0cff10210bb9fad6ee74a9818a54",
+    "shape": [
+      1080,
+      1920,
+      3
+    ]
+  },
+  {
+    "image_id": 2,
+    "ZIP_member": "VisDrone2019-DET-val/images/0000001_03499_d_0000006.jpg",
+    "image_SHA256": "e8585cff10c927e5d08c23d46c50c798889d6f8979aa71a56a5b9bb4af628672",
+    "annotation_SHA256": "819cdd16aa5a8a0536eb6f08f6e9c2911acb3d0f847d3f90a6d9179725c5fb97",
+    "shape": [
+      1080,
+      1920,
+      3
+    ]
+  },
+  {
+    "image_id": 3,
+    "ZIP_member": "VisDrone2019-DET-val/images/0000001_03999_d_0000007.jpg",
+    "image_SHA256": "d308e68fe81e3f88502ac8d71b8297a8c80ca1d0d744d6cac25727fd567d2b3f",
+    "annotation_SHA256": "91d0eb358b9bbf52428c185cdd6b834b91fee6fc82985e42ab8f0f296e3cd099",
+    "shape": [
+      1080,
+      1920,
+      3
+    ]
+  },
+  {
+    "image_id": 4,
+    "ZIP_member": "VisDrone2019-DET-val/images/0000001_04527_d_0000008.jpg",
+    "image_SHA256": "74673492dafdaa226a76a63240b127c8c04ede388d250f51f51c9eed1bf01907",
+    "annotation_SHA256": "7de372f6b5ff2b49d46437b3cc499cb8c2a072f63aa7d8730af89e3f5d3d7995",
+    "shape": [
+      1080,
+      1920,
+      3
+    ]
+  },
+  {
+    "image_id": 5,
+    "ZIP_member": "VisDrone2019-DET-val/images/0000001_05249_d_0000009.jpg",
+    "image_SHA256": "928dbbfea2fed8a461d5b81059da509169861e52bed4fb71876ed772848b0004",
+    "annotation_SHA256": "12eef27143cd89bc7d43acadf85df2e3779e9f1cebc6a1fd7858d271ccce80a9",
+    "shape": [
+      1080,
+      1920,
+      3
+    ]
+  }
+]

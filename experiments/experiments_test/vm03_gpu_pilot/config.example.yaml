@@ -1,0 +1,10 @@
+dataset_zip: ${UAVGAP_VISDRONE_VAL_ZIP}
+checkpoint: ${UAVGAP_YOLOV8S_FT}
+checkpoint_sha256: 96c84ece325eccf07edefd231f088f758ba5fa6a75a4b577e8db32a94bfeeb8b
+output_root: ${UAVGAP_OUTPUT_ROOT}
+expected_images: 548
+smoke_images: 5
+imgsz: 1280
+batch: 2
+device: '0'
+allow_cpu_fallback: true

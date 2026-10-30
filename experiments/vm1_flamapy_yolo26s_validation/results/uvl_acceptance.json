@@ -1,0 +1,83 @@
+{
+  "dataset": {
+    "valid_count": 27,
+    "constraint_count": 0,
+    "seed": 20261027,
+    "selected_indices": [
+      4,
+      1,
+      25
+    ],
+    "features": [
+      [
+        "BlurSevere",
+        "DatasetVariability",
+        "GaussianNoise",
+        "Illumination",
+        "MotionBlur",
+        "NoiseModerate",
+        "Underexposed"
+      ],
+      [
+        "BlurModerate",
+        "DatasetVariability",
+        "GaussianNoise",
+        "Illumination",
+        "MotionBlur",
+        "NoiseNone",
+        "Normal"
+      ],
+      [
+        "BlurSevere",
+        "DatasetVariability",
+        "GaussianNoise",
+        "Illumination",
+        "MotionBlur",
+        "NoiseSevere",
+        "Overexposed"
+      ]
+    ]
+  },
+  "yolo": {
+    "valid_count": 9,
+    "constraint_count": 0,
+    "seed": 20261027,
+    "selected_indices": [
+      2,
+      0,
+      6
+    ],
+    "features": [
+      [
+        "DenseClassAwareNMS",
+        "Detector",
+        "FP32",
+        "Native10",
+        "R1280",
+        "Resolution",
+        "YOLO26sFT1280",
+        "YOLOVariability"
+      ],
+      [
+        "DenseClassAwareNMS",
+        "Detector",
+        "FP32",
+        "Native10",
+        "R640",
+        "Resolution",
+        "YOLO26sFT1280",
+        "YOLOVariability"
+      ],
+      [
+        "DenseClassAwareNMS",
+        "Detector",
+        "FP32",
+        "Native10",
+        "R1280",
+        "Resolution",
+        "YOLOVariability",
+        "YOLOv8sFT1280"
+      ]
+    ]
+  }
+}

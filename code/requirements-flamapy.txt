@@ -1,0 +1,5 @@
+# Optional FlamaPy environment.
+flamapy-fw==2.6.0
+flamapy-fm==2.6.0
+flamapy-sat==2.6.0
+uvlparser==2.5.0

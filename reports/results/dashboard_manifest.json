@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "scope": "Verified summary snapshots; local complete evidence is not published",
+  "runs": [
+    {
+      "RunID": "vm1_flamapy_yolo26s_validation_check_20261030T145014_efa79d3d",
+      "ExperimentID": "vm1_flamapy_yolo26s_validation",
+      "mode": "check",
+      "status": "PASS",
+      "started_at": "2026-10-30T14:50:14Z",
+      "bundle": "vm1_summary.json",
+      "SHA256": "af66d875b368f81a0a3b3f3a2e22ed8ddd3fcb07acd4592ac21a7daca3d44759"
+    },
+    {
+      "RunID": "vm2_degradation_gap_analysis_replay_20261030T153702_2a5648d1",
+      "ExperimentID": "vm2_degradation_gap_analysis",
+      "status": "PASS",
+      "mode": "replay",
+      "started_at": "2026-10-30T15:37:02Z",
+      "bundle": "vm2_summary.json",
+      "SHA256": "36441c81b66a8a05a20699fcd54aa9196f4d3a252fd69d8014cff1d98d6a076e"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "old_run_id": "vm09_r001",
+    "component": "grid",
+    "relative_source": "experiments/vm09_research_synthesis/runs/vm09_r001/results/full_configuration_metrics.csv",
+    "SHA256": "ee1ebb11f0ae067819551f1d569615b98cd06d4367da641ebc34a89401318a97",
+    "rows": 243
+  },
+  {
+    "old_run_id": "vm13_r001",
+    "component": "uvl_scalability",
+    "relative_source": "experiments/vm13_uvl_scalability/runs/vm13_r001/results/uvl_timing.csv",
+    "SHA256": "19f4317301e48260f2946a445b8908909e37d219db3157248c414a70b46e303c",
+    "rows": 5
+  },
+  {
+    "old_run_id": "vm16_r001",
+    "component": "object_scale",
+    "relative_source": "experiments/vm16_effective_object_scale/runs/vm16_r001/results/three_way_interactions.csv",
+    "SHA256": "773800da4a6f555594c9674f98c8c0b9a628bd41200b03cbecceb9df64141e0b",
+    "rows": 648
+  },
+  {
+    "old_run_id": "vm26_r001",
+    "component": "jpeg",
+    "relative_source": "experiments/vm26_jpeg_ablation/runs/vm26_r001/results/configuration_metrics.csv",
+    "SHA256": "ffbff5d3476d69531b7479636bb3f09001e3e93f9f9f6758af81b7a4711b6650",
+    "rows": 54
+  },
+  {
+    "old_run_id": "vm27_r001",
+    "component": "jpeg_method_comparison",
+    "relative_source": "experiments/vm27_relation_validation/runs/vm27_r001/results/standard_factorial_comparison.csv",
+    "SHA256": "55175404dbae369bfa46cded5fda0dd33753e6dbed4f38671f705ca7a4dc8680",
+    "rows": 9
+  },
+  {
+    "old_run_id": "vm29_r001",
+    "component": "sampling_discovery",
+    "relative_source": "experiments/vm29_auto_discovery/runs/vm29_r001/results/baseline_comparison.csv",
+    "SHA256": "a70b7f1dd0914df3d1f71ad5a53372dcda64299946538d6d46996c9f725746ef",
+    "rows": 84
+  },
+  {
+    "old_run_id": "vm30_r001",
+    "component": "relation_search",
+    "relative_source": "experiments/vm30_relation_search/runs/vm30_r001/results/baseline_comparison.csv",
+    "SHA256": "4b84194a9becfcb2c0fece54a348d121b969378ffa55f11d66b147c5cb47330f",
+    "rows": 1296
+  },
+  {
+    "old_run_id": "vm31_r001",
+    "component": "higher_order_diagnostic",
+    "relative_source": "experiments/vm31_higher_order_diagnostic/runs/vm31_r001/results/headline_summary.csv",
+    "SHA256": "9a2f112f2f3a45a0dfb132c69ef515211bd2439d2fbc60ce8cbfa972c7a5db03",
+    "rows": 9
+  },
+  {
+    "old_run_id": "vm32_r001",
+    "component": "sparse_model_comparison",
+    "relative_source": "experiments/vm32_method_preparation/runs/vm32_r001/results/model_comparison.csv",
+    "SHA256": "fee2b88a73015eebfc49c69968d3f5e05f9a13f51327c106d46feaa83389a025",
+    "rows": 180
+  }
+]

@@ -1,0 +1,63 @@
+history_root: ${UAVGAP_HISTORY_ROOT}
+output_root: ${UAVGAP_LOCAL_RUNS}/vm2_degradation_gap_analysis
+thresholds:
+  min_AP50_95: null
+  max_gpu_event_seconds_per_image: null
+training_coverage_rules: []
+sources:
+- run_id: vm09_r001
+  kind: grid
+  path: experiments/vm09_research_synthesis/runs/vm09_r001/results/full_configuration_metrics.csv
+  SHA256: ee1ebb11f0ae067819551f1d569615b98cd06d4367da641ebc34a89401318a97
+  scope: ds04/dv02/pr01/native10/300-images
+  cohort: ds04/dv02/pr01/native10/300-images
+- run_id: vm13_r001
+  kind: uvl_scalability
+  path: experiments/vm13_uvl_scalability/runs/vm13_r001/results/uvl_timing.csv
+  SHA256: 19f4317301e48260f2946a445b8908909e37d219db3157248c414a70b46e303c
+  scope: UVL_V2_CPU_ONLY
+  cohort: UVL_V2_CPU_ONLY
+- run_id: vm16_r001
+  kind: object_scale
+  path: experiments/vm16_effective_object_scale/runs/vm16_r001/results/three_way_interactions.csv
+  SHA256: 773800da4a6f555594c9674f98c8c0b9a628bd41200b03cbecceb9df64141e0b
+  scope: FIXED_ORIGINAL_AREA; input-shortside results not pooled
+  cohort: FIXED_ORIGINAL_AREA; input-shortside results not pooled
+- run_id: vm26_r001
+  kind: jpeg
+  path: experiments/vm26_jpeg_ablation/runs/vm26_r001/results/configuration_metrics.csv
+  SHA256: ffbff5d3476d69531b7479636bb3f09001e3e93f9f9f6758af81b7a4711b6650
+  scope: ds04/dv03/pr01/native10/300-images
+  cohort: ds04/dv03/pr01/native10/300-images
+- run_id: vm27_r001
+  kind: jpeg_method_comparison
+  path: experiments/vm27_relation_validation/runs/vm27_r001/results/standard_factorial_comparison.csv
+  SHA256: 55175404dbae369bfa46cded5fda0dd33753e6dbed4f38671f705ca7a4dc8680
+  scope: RETROSPECTIVE_JPEG_SUBGRID
+  cohort: RETROSPECTIVE_JPEG_SUBGRID
+- run_id: vm29_r001
+  kind: sampling_discovery
+  path: experiments/vm29_auto_discovery/runs/vm29_r001/results/baseline_comparison.csv
+  SHA256: a70b7f1dd0914df3d1f71ad5a53372dcda64299946538d6d46996c9f725746ef
+  scope: RETROSPECTIVE_ORACLE_REPLAY
+  cohort: RETROSPECTIVE_ORACLE_REPLAY
+- run_id: vm30_r001
+  kind: relation_search
+  path: experiments/vm30_relation_search/runs/vm30_r001/results/baseline_comparison.csv
+  SHA256: 4b84194a9becfcb2c0fece54a348d121b969378ffa55f11d66b147c5cb47330f
+  scope: RETROSPECTIVE_TRANSFER_REPLAY
+  cohort: RETROSPECTIVE_TRANSFER_REPLAY
+- run_id: vm31_r001
+  kind: higher_order_diagnostic
+  path: experiments/vm31_higher_order_diagnostic/runs/vm31_r001/results/headline_summary.csv
+  SHA256: 9a2f112f2f3a45a0dfb132c69ef515211bd2439d2fbc60ce8cbfa972c7a5db03
+  scope: POST_HOC_DIAGNOSTIC
+  cohort: POST_HOC_DIAGNOSTIC
+- run_id: vm32_r001
+  kind: sparse_model_comparison
+  path: experiments/vm32_method_preparation/runs/vm32_r001/results/model_comparison.csv
+  SHA256: fee2b88a73015eebfc49c69968d3f5e05f9a13f51327c106d46feaa83389a025
+  scope: RETROSPECTIVE_DIAGNOSTIC
+  cohort: RETROSPECTIVE_DIAGNOSTIC
+source_index: ${UAVGAP_HISTORY_ROOT}/source_index.json
+source_index_SHA256: 2545b186c4febea1543e33e91f47bf1fb3de0bd09ba79d85cc47bcc5738ce18c

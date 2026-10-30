@@ -1,0 +1,54 @@
+{
+  "RunID": "vm2_degradation_gap_analysis_replay_20261030T145024_24a6b5e2",
+  "status": "PASS",
+  "admission": "PARTIAL",
+  "scope": "HISTORICAL_DEVELOPMENT_REPLAY",
+  "VM1_new_measurements": "NOT_INCLUDED",
+  "sources": 9,
+  "measurement_rows": 297,
+  "separate_summaries": [
+    {
+      "component": "uvl_scalability",
+      "rows": 5,
+      "scope": "UVL_V2_CPU_ONLY"
+    },
+    {
+      "component": "object_scale",
+      "rows": 648,
+      "scope": "FIXED_ORIGINAL_AREA; input-shortside results not pooled"
+    },
+    {
+      "component": "jpeg_method_comparison",
+      "rows": 9,
+      "scope": "RETROSPECTIVE_JPEG_SUBGRID"
+    },
+    {
+      "component": "sampling_discovery",
+      "rows": 84,
+      "scope": "RETROSPECTIVE_ORACLE_REPLAY"
+    },
+    {
+      "component": "relation_search",
+      "rows": 1296,
+      "scope": "RETROSPECTIVE_TRANSFER_REPLAY"
+    },
+    {
+      "component": "higher_order_diagnostic",
+      "rows": 9,
+      "scope": "POST_HOC_DIAGNOSTIC"
+    },
+    {
+      "component": "sparse_model_comparison",
+      "rows": 180,
+      "scope": "RETROSPECTIVE_DIAGNOSTIC"
+    }
+  ],
+  "static_gap": "NOT_READY: no verified exhaustive coverage rules",
+  "empirical_gap": "NOT_EVALUATED: task thresholds unset",
+  "rule_learning": "FROZEN_HISTORICAL_SUMMARIES_ONLY; no new model fitted",
+  "cross_cohort_pooling": false,
+  "GPU_inference": "NOT_RUN",
+  "runtime_inputs": "LOCAL_ARCHIVE_ONLY",
+  "historical_metrics": "297 rows and all contrasts EXACT_MATCH",
+  "preview": "Experiment index.html plus per-Run plots; latest.json retains successful modes"
+}

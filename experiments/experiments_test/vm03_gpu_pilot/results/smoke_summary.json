@@ -1,0 +1,41 @@
+{
+  "RunID": "git03_vm03_20261029T222647_4bef5034",
+  "ExperimentID": "vm03_gpu_pilot",
+  "Status": "PASS",
+  "scope": "SMOKE_ENGINEERING_ONLY",
+  "dataset": "VisDrone2019-DET-val",
+  "images": 5,
+  "checkpoint_id": "ck05",
+  "checkpoint_SHA256": "96c84ece325eccf07edefd231f088f758ba5fa6a75a4b577e8db32a94bfeeb8b",
+  "protocol": "pr01_native10_one2many_FP32_ignore_union_0.5_cap3000",
+  "device": "0",
+  "network_seconds": 0.751477400015574,
+  "evaluation_seconds": 1.7777995999786071,
+  "total_seconds": 15.520151400007308,
+  "raw_predictions": 12115,
+  "predictions_SHA256": "5472779176ad529857b7c0b41f95d99821203a53f8b9c98c4284e9ff7bc8e6be",
+  "GT_SHA256": "ea79e18bb21679465444895dbd5f4c4d90acf12f5f79fcd394e81e651db2776c",
+  "metrics_SHA256": "30d384ab6aa034e3bd82eb30b04a4ca8dbc30e4baf1eed2e6f9253341711b83a",
+  "dataset_ZIP_SHA256": "abeea063037e5d20398837deb11084e652402a34ddf4f207bdf541a6f2a35ef9",
+  "versions": {
+    "torch": "2.6.0+cu124",
+    "ultralytics": "8.4.61",
+    "numpy": "2.4.6"
+  },
+  "aggregate": {
+    "size": "all",
+    "map50": 0.5293824782308985,
+    "map50_95": 0.3520524462689367,
+    "ar50": 0.9172236145920356,
+    "ar50_95": 0.6101768309663047,
+    "gt_count": 480,
+    "evaluated_categories": 9,
+    "image_count": 5,
+    "max_det": 3000,
+    "area_reference": "original_image_pixels"
+  },
+  "full_validation_status": "FULL_VALIDATION_NOT_RUN",
+  "command": "python -B experiments/vm03_gpu_pilot/run.py --config config.local.yaml",
+  "artifact_reference": "${UAVGAP_OUTPUT_ROOT}/git03_vm03_20261029T222647_4bef5034",
+  "metric_regeneration": "PASS_EXACT_MATCH"
+}

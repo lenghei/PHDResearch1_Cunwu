@@ -1,0 +1,16 @@
+features
+    YOLOVariability
+        mandatory
+            Detector
+                alternative
+                    YOLO26sFT1280
+                    YOLOv8sFT1280
+                    YOLO11sFT1280
+            Resolution
+                alternative
+                    R640
+                    R960
+                    R1280
+            FP32
+            Native10
+            DenseClassAwareNMS

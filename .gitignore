@@ -1,0 +1,59 @@
+# Published root directories
+/*
+!/code/
+!/experiments/
+!/reports/
+!/.gitignore
+!/README.md
+
+# Local configuration and environments
+config.local.yaml
+*.local.yaml
+.env
+.env.*
+.venv*/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+# Models, archives and caches
+*.pt
+*.pth
+*.onnx
+*.engine
+*.zip
+*.7z
+*.npy
+*.npz
+*.cache
+# Source media and large execution artifacts
+*.jpg
+*.jpeg
+*.bmp
+*.tif
+*.tiff
+*.png
+*.mp4
+*.avi
+*.mov
+*.log
+predictions*.json
+predictions*.jsonl
+local_runs/
+runtime/
+# Only explicitly reviewed result figures may be added
+!reports/results/*.png
+!experiments/*/results/*.png
+# Credentials and private certificates
+*.pem
+*.key
+*.pfx
+*.p12
+credentials*.json
+secrets*.json
+/datasets/
+/.idea/
+/AGENTS.md
+# Local engineering records
+/reports/publish_audit.json
+/reports/source_reuse.json

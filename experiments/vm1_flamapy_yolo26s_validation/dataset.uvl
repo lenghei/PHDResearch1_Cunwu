@@ -1,0 +1,18 @@
+features
+    DatasetVariability
+        mandatory
+            Illumination
+                alternative
+                    Normal
+                    Overexposed
+                    Underexposed
+            MotionBlur
+                alternative
+                    BlurNone
+                    BlurModerate
+                    BlurSevere
+            GaussianNoise
+                alternative
+                    NoiseNone
+                    NoiseModerate
+                    NoiseSevere

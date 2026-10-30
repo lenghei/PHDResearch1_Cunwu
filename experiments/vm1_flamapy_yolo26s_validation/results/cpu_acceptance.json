@@ -1,0 +1,36 @@
+{
+  "ExperimentID": "vm1_flamapy_yolo26s_validation",
+  "RunID": "vm1_flamapy_yolo26s_validation_check_20261030T145014_efa79d3d",
+  "status": "PASS",
+  "admission": "READY_FOR_MANUAL_RUN",
+  "CPU_tests": {
+    "passed": 13,
+    "failed": 0
+  },
+  "images_verified": 548,
+  "checkpoint_id": "ck01",
+  "checkpoint_SHA256": "1b3861902e01416f199f2242cb43618f7680848cabf5f5df9546f2b404f0c488",
+  "FlamaPy_counts": [
+    27,
+    9
+  ],
+  "GPU_inference": "NOT_RUN",
+  "demo": "PREPARED",
+  "full_clean": "PREPARED",
+  "regeneration": "EXACT_MATCH_ON_HISTORICAL_CK05",
+  "regeneration_RunID": "vm1_flamapy_yolo26s_validation_regenerate_20261030T141744_f6087444",
+  "legacy_baseline_RunID": "git03_vm03_20261030T011335_c3b57c59",
+  "legacy_baseline_SHA256": {
+    "predictions_raw.json": "0b2ac6db2e498ec656bed87bf4ce6376af8be7fd4b0df2ad5f7051da018d2022",
+    "ground_truth.json": "5565c64733b39682f050569bdcba25929db050dec3cfd3df34fdebc2764963d3",
+    "metrics.json": "9bf9f7438d93145e63abcce51f47c73ea2acdb2bc1da5072218e73af447a2a1a"
+  },
+  "source_evidence_SHA256": {
+    "result.json": "142417002ab168860a57cc5b9939a65699225c5c0fdedece277a781a52b52d78",
+    "checkpoint_gate.json": "b3e943e2e8363bc1c44b1190f746c5512c3cfc1825d92f5f6576703ba310f8fd",
+    "regression/check.json": "8f315c077bc267b7cf35691a5e3b29b48edc2a2691d8c7391fb8fe24a2490e12"
+  },
+  "runtime_inputs": "LOCAL_WORKSPACE_ONLY",
+  "preview": "index.html in the private Run directory",
+  "FlamaPy_environment": ".venv_flamapy; Python API PASS; optional distribution CLI missing flamapy.commands"
+}
