@@ -1,0 +1,15 @@
+{
+  "schema": 2,
+  "RunID": "vm1_flamapy_yolo26s_validation_full-paired_20261030T194618_3f0454d3",
+  "ExperimentID": "vm1_flamapy_yolo26s_validation",
+  "mode": "full-paired",
+  "status": "PASS",
+  "started_at": "2026-10-30T19:46:18Z",
+  "scope": "FULL_DEVELOPMENT_VALIDATION",
+  "bundle": "snapshot.json",
+  "SHA256": "9f0fea659560051319e34feb96c05a1c38b66b177506920e621ac93b836987b7",
+  "files": {
+    "snapshot.json": "9f0fea659560051319e34feb96c05a1c38b66b177506920e621ac93b836987b7",
+    "metrics.csv": "f854eb8a287f37d95e23313c2acbdd43829bac19c6156831d35cc556d8470235"
+  }
+}

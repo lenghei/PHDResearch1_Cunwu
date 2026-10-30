@@ -1,0 +1,14 @@
+{
+  "schema": 2,
+  "RunID": "vm1_flamapy_yolo26s_validation_check_20261030T145014_efa79d3d",
+  "ExperimentID": "vm1_flamapy_yolo26s_validation",
+  "mode": "check",
+  "status": "PASS",
+  "started_at": "2026-10-30T14:50:14Z",
+  "bundle": "snapshot.json",
+  "SHA256": "af66d875b368f81a0a3b3f3a2e22ed8ddd3fcb07acd4592ac21a7daca3d44759",
+  "scope": null,
+  "files": {
+    "snapshot.json": "af66d875b368f81a0a3b3f3a2e22ed8ddd3fcb07acd4592ac21a7daca3d44759"
+  }
+}

@@ -1,0 +1,363 @@
+{
+  "RunID": "vm1_flamapy_yolo26s_validation_full-paired_20261030T194618_3f0454d3",
+  "ExperimentID": "vm1_flamapy_yolo26s_validation",
+  "mode": "full-paired",
+  "status": "PASS",
+  "started_at": "2026-10-30T19:46:18Z",
+  "files": {
+    "run.json": {
+      "RunID": "vm1_flamapy_yolo26s_validation_full-paired_20261030T194618_3f0454d3",
+      "ExperimentID": "vm1_flamapy_yolo26s_validation",
+      "mode": "full-paired",
+      "status": "PASS",
+      "started_at": "2026-10-30T19:46:18Z"
+    },
+    "result.json": {
+      "status": "PASS",
+      "scope": "FULL_DEVELOPMENT_VALIDATION",
+      "images_per_condition": 548,
+      "conditions": 2,
+      "checkpoint_id": "ck01",
+      "total_seconds": 287.4467739000029,
+      "GPU_inference": "COMPLETED"
+    },
+    "summary.json": {
+      "schema_version": 1,
+      "RunID": "vm1_flamapy_yolo26s_validation_full-paired_20261030T194618_3f0454d3",
+      "ExperimentID": "vm1_flamapy_yolo26s_validation",
+      "mode": "full-paired",
+      "status": "PASS",
+      "scope": "FULL_DEVELOPMENT_VALIDATION",
+      "dataset": {
+        "name": "VisDrone2019-DET-val",
+        "images_available": 548,
+        "images_per_condition": 548,
+        "image_evaluations": 1096,
+        "original_annotation_objects": 38759,
+        "GT_after_protocol": 38593,
+        "GT_by_size": {
+          "all": 38593,
+          "tiny": 11842,
+          "small": 14582,
+          "medium": 11101,
+          "large": 1068,
+          "coco_small": 26437
+        },
+        "GT_by_class": {
+          "pedestrian": 8801,
+          "people": 5113,
+          "bicycle": 1278,
+          "car": 13980,
+          "van": 1973,
+          "truck": 748,
+          "tricycle": 1044,
+          "awning-tricycle": 528,
+          "bus": 247,
+          "motor": 4881
+        },
+        "classes": 10,
+        "ZIP_SHA256": "abeea063037e5d20398837deb11084e652402a34ddf4f207bdf541a6f2a35ef9"
+      },
+      "model": {
+        "checkpoint_id": "ck01",
+        "architecture": "yolo26s.yaml",
+        "parameter_count": 9955604,
+        "SHA256": "1b3861902e01416f199f2242cb43618f7680848cabf5f5df9546f2b404f0c488",
+        "class_order": [
+          "pedestrian",
+          "people",
+          "bicycle",
+          "car",
+          "van",
+          "truck",
+          "tricycle",
+          "awning-tricycle",
+          "bus",
+          "motor"
+        ],
+        "training_configured": {
+          "model": "yolo26s.pt",
+          "epochs": 100,
+          "imgsz": 1280,
+          "batch": 2,
+          "optimizer": "AdamW",
+          "seed": 42,
+          "amp": true,
+          "cos_lr": true,
+          "warmup_epochs": 3.0
+        },
+        "training_args_SHA256": "e4ab3777368e63cc8a856871d0138cb297cb8287a6cef94362325ec9f4b7f26e",
+        "selected_best_epoch": "NOT_VERIFIED"
+      },
+      "inference": {
+        "imgsz": 1280,
+        "batch": 2,
+        "device": "0",
+        "precision": "FP32",
+        "metric_protocol": "pr01_native10_one2many_FP32_ignore_union_0.5_cap3000",
+        "predict_settings": {
+          "conf": 0.001,
+          "iou": 0.7,
+          "max_det": 3000,
+          "max_nms": 30000,
+          "end2end": false,
+          "half": false,
+          "rect": false,
+          "class_aware": true,
+          "multi_label": true,
+          "augment": false
+        },
+        "seed": 42,
+        "sampling_seed": 20261027,
+        "degradation_seed": 20261028
+      },
+      "flamapy": {
+        "dataset_valid_configs": 27,
+        "detector_valid_configs": 9,
+        "versions": {
+          "flamapy-fw": "2.6.0",
+          "flamapy-fm": "2.6.0",
+          "flamapy-sat": "2.6.0",
+          "uvlparser": "2.5.0"
+        }
+      },
+      "conditions": [
+        {
+          "name": "CLEAN",
+          "configuration_id": "ck01_I0B0N0_R1280",
+          "features": [
+            "BlurNone",
+            "DatasetVariability",
+            "GaussianNoise",
+            "Illumination",
+            "MotionBlur",
+            "NoiseNone",
+            "Normal"
+          ],
+          "degradation_parameters": {
+            "alpha": 1.0,
+            "beta": 0.0,
+            "kernel": 1,
+            "noise_variance": 0.0
+          },
+          "images": 548,
+          "GT_evaluated": 38593,
+          "AP50": 0.573022251886141,
+          "AP50_95": 0.353455583724673,
+          "AR50": 0.9060011246608493,
+          "AR50_95": 0.5707099205573241,
+          "predictions_at_conf_0001": 729320,
+          "inference_call_seconds": 15.993290300008084,
+          "mean_predict_call_ms_per_image": 29.184836313883366,
+          "CUDA_event_seconds": 15.949279411315922,
+          "COCO_evaluation_seconds": 105.98591969999688,
+          "condition_wall_seconds": null,
+          "peak_GPU_allocated_bytes": 427763712,
+          "peak_GPU_reserved_bytes": 603979776,
+          "condition_summary": "CLEAN/summary.json"
+        },
+        {
+          "name": "DEGRADED",
+          "configuration_id": "ck01_I0B1N2_R1280",
+          "features": [
+            "BlurModerate",
+            "DatasetVariability",
+            "GaussianNoise",
+            "Illumination",
+            "MotionBlur",
+            "NoiseSevere",
+            "Normal"
+          ],
+          "degradation_parameters": {
+            "alpha": 1.0,
+            "beta": 0.0,
+            "kernel": 7,
+            "noise_variance": 30.0
+          },
+          "images": 548,
+          "GT_evaluated": 38593,
+          "AP50": 0.3539151739152702,
+          "AP50_95": 0.20729035461491044,
+          "AR50": 0.7041021239648211,
+          "AR50_95": 0.4011512255288626,
+          "predictions_at_conf_0001": 478483,
+          "inference_call_seconds": 21.106230800054618,
+          "mean_predict_call_ms_per_image": 38.51501970812887,
+          "CUDA_event_seconds": 21.06721947097779,
+          "COCO_evaluation_seconds": 84.89447510000173,
+          "condition_wall_seconds": null,
+          "peak_GPU_allocated_bytes": 427757568,
+          "peak_GPU_reserved_bytes": 603979776,
+          "condition_summary": "DEGRADED/summary.json"
+        }
+      ],
+      "paired_comparison": {
+        "file": "paired_comparison.json",
+        "rows": [
+          {
+            "size": "all",
+            "metric": "map50",
+            "clean": 0.573022251886141,
+            "degraded": 0.3539151739152702,
+            "delta_degraded_minus_clean": -0.21910707797087076
+          },
+          {
+            "size": "all",
+            "metric": "map50_95",
+            "clean": 0.353455583724673,
+            "degraded": 0.20729035461491044,
+            "delta_degraded_minus_clean": -0.14616522910976257
+          },
+          {
+            "size": "all",
+            "metric": "ar50_95",
+            "clean": 0.5707099205573241,
+            "degraded": 0.4011512255288626,
+            "delta_degraded_minus_clean": -0.16955869502846144
+          },
+          {
+            "size": "tiny",
+            "metric": "map50",
+            "clean": 0.3785118658714989,
+            "degraded": 0.12939173062592682,
+            "delta_degraded_minus_clean": -0.24912013524557206
+          },
+          {
+            "size": "tiny",
+            "metric": "map50_95",
+            "clean": 0.16511636897391,
+            "degraded": 0.043062142916296335,
+            "delta_degraded_minus_clean": -0.12205422605761365
+          },
+          {
+            "size": "tiny",
+            "metric": "ar50_95",
+            "clean": 0.38914337628103046,
+            "degraded": 0.14544935114883428,
+            "delta_degraded_minus_clean": -0.24369402513219618
+          },
+          {
+            "size": "small",
+            "metric": "map50",
+            "clean": 0.5742866285457109,
+            "degraded": 0.32530857507741884,
+            "delta_degraded_minus_clean": -0.24897805346829205
+          },
+          {
+            "size": "small",
+            "metric": "map50_95",
+            "clean": 0.3336420223494699,
+            "degraded": 0.1571942293342618,
+            "delta_degraded_minus_clean": -0.17644779301520808
+          },
+          {
+            "size": "small",
+            "metric": "ar50_95",
+            "clean": 0.5617316604941708,
+            "degraded": 0.3771709885059349,
+            "delta_degraded_minus_clean": -0.1845606719882359
+          },
+          {
+            "size": "medium",
+            "metric": "map50",
+            "clean": 0.6873134897087168,
+            "degraded": 0.5225361802343333,
+            "delta_degraded_minus_clean": -0.1647773094743834
+          },
+          {
+            "size": "medium",
+            "metric": "map50_95",
+            "clean": 0.46867441084784395,
+            "degraded": 0.32574057606923396,
+            "delta_degraded_minus_clean": -0.14293383477861
+          },
+          {
+            "size": "medium",
+            "metric": "ar50_95",
+            "clean": 0.6886484487357234,
+            "degraded": 0.5721940500130973,
+            "delta_degraded_minus_clean": -0.11645439872262608
+          },
+          {
+            "size": "large",
+            "metric": "map50",
+            "clean": 0.6576221952876257,
+            "degraded": 0.6365098207886543,
+            "delta_degraded_minus_clean": -0.02111237449897141
+          },
+          {
+            "size": "large",
+            "metric": "map50_95",
+            "clean": 0.5275330388101598,
+            "degraded": 0.5006149891077359,
+            "delta_degraded_minus_clean": -0.02691804970242384
+          },
+          {
+            "size": "large",
+            "metric": "ar50_95",
+            "clean": 0.7124011864929904,
+            "degraded": 0.7174522317341695,
+            "delta_degraded_minus_clean": 0.005051045241179053
+          },
+          {
+            "size": "coco_small",
+            "metric": "map50",
+            "clean": 0.49774785518125064,
+            "degraded": 0.24524192046604024,
+            "delta_degraded_minus_clean": -0.25250593471521043
+          },
+          {
+            "size": "coco_small",
+            "metric": "map50_95",
+            "clean": 0.2690607565851533,
+            "degraded": 0.11203070972054935,
+            "delta_degraded_minus_clean": -0.15703004686460398
+          },
+          {
+            "size": "coco_small",
+            "metric": "ar50_95",
+            "clean": 0.4956223903236351,
+            "degraded": 0.288714624047824,
+            "delta_degraded_minus_clean": -0.2069077662758111
+          }
+        ]
+      },
+      "timing": {
+        "whole_run_wall_seconds": null,
+        "pipeline_seconds": 287.4467739000029,
+        "start_utc": null,
+        "end_utc": null,
+        "clock_note": "whole_run_wall_seconds includes admission and reporting; pipeline_seconds excludes setup"
+      },
+      "environment": {
+        "torch": "2.6.0+cu124",
+        "ultralytics": "8.4.61",
+        "numpy": "2.4.6",
+        "opencv-python": "4.11.0.86",
+        "pycocotools": "2.0.11"
+      },
+      "data_note": "Development validation. Original objects include ignored/filtered items."
+    },
+    "provenance.json": {
+      "source_RunID": "vm1_flamapy_yolo26s_validation_full-paired_20261030T194618_3f0454d3",
+      "source_summary_SHA256": "fcef5c11c8576dfe70f0a908ff0320be4d9ebde2d21e86cc394330739f8bd91e",
+      "source_result_SHA256": "bebb0725e80d86e7639cf0bcb6a46a2a9b8b7715048a68e273ad7fe674dff40c",
+      "checkpoint_SHA256": "1b3861902e01416f199f2242cb43618f7680848cabf5f5df9546f2b404f0c488",
+      "dataset_ZIP_SHA256": "abeea063037e5d20398837deb11084e652402a34ddf4f207bdf541a6f2a35ef9",
+      "source_conditions": {
+        "CLEAN": {
+          "GT_SHA256": "5565c64733b39682f050569bdcba25929db050dec3cfd3df34fdebc2764963d3",
+          "predictions_SHA256": "e41835eb5b4a100b2c2ac90c18294b316314f6c92a3931515f9838a7a9b0268f",
+          "predictions_coco_SHA256": "4eec0c19282395b4839f6af68981538ca82879c0987e0d55fd0fde8f1cc0c2fe",
+          "metrics_SHA256": "c10312a64f180d3f9d91cb3f5d0450d0147e50057c8438af2e63c8a8b8e3759b"
+        },
+        "DEGRADED": {
+          "GT_SHA256": "5565c64733b39682f050569bdcba25929db050dec3cfd3df34fdebc2764963d3",
+          "predictions_SHA256": "878837f9db609c9dcb1b2814db0829d0a41dcdb8461dff786eb0c29ae2d60720",
+          "predictions_coco_SHA256": "33445d6c090fef90c4d123da32b6980968b16933f21e2a4ba2049f15ad2c1629",
+          "metrics_SHA256": "5e8005f53dc4cf4e3dc5244d42dbb9860ca06233e6f9ae9fe93c1f5e55dcff3c"
+        }
+      }
+    }
+  }
+}

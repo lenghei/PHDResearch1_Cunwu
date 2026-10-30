@@ -1,0 +1,14 @@
+{
+  "schema": 2,
+  "RunID": "vm2_degradation_gap_analysis_replay_20261030T153702_2a5648d1",
+  "ExperimentID": "vm2_degradation_gap_analysis",
+  "mode": "replay",
+  "status": "PASS",
+  "started_at": "2026-10-30T15:37:02Z",
+  "bundle": "snapshot.json",
+  "SHA256": "36441c81b66a8a05a20699fcd54aa9196f4d3a252fd69d8014cff1d98d6a076e",
+  "scope": "HISTORICAL_DEVELOPMENT_REPLAY",
+  "files": {
+    "snapshot.json": "36441c81b66a8a05a20699fcd54aa9196f4d3a252fd69d8014cff1d98d6a076e"
+  }
+}
