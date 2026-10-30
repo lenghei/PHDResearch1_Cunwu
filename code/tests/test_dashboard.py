@@ -50,23 +50,24 @@ class DashboardTests(unittest.TestCase):
                 with patch.dict(os.environ, {'UAVGAP_DASHBOARD_MODE': 'cloud', 'UAVGAP_RUNS_ROOT': str(clone / 'absent')}):
                     app = self.render(clone / 'code/tools/dashboard.py')
                     self.assertFalse(app.exception)
-                    self.assertGreaterEqual(len(app.get('plotly_chart')), 4)
+                    self.assertGreaterEqual(len(app.get('plotly_chart')), 1)
                     app.sidebar.selectbox[0].select('VM1 · FlamaPy–YOLO26s validation').run()
                     self.assertFalse(app.exception)
                     app.sidebar.selectbox[0].select('VM2 · Degradation interactions').run()
-                    bundle = clone / 'reports/results/vm2_summary.json'
-                    payload = bundle.read_bytes()
-                    bundle.unlink()
+                    run_id = 'vm2_degradation_gap_analysis_replay_20261030T153702_2a5648d1'
+                    folder = clone / 'reports/results/vm2_degradation_gap_analysis' / run_id
+                    snapshot = folder / 'snapshot.json'
+                    payload = snapshot.read_bytes()
+                    snapshot.unlink()
                     app.run()
                     self.assertFalse(app.exception)
                     self.assertTrue(any('missing' in e.value for e in app.error))
-                    bundle.write_bytes(payload + b' ')
+                    snapshot.write_bytes(payload + b' ')
                     app.run()
                     self.assertFalse(app.exception)
                     self.assertTrue(any('checksum' in e.value for e in app.error))
-                    bundle.write_bytes(payload)
-                    manifest = clone / 'reports/results/dashboard_manifest.json'
-                    manifest.unlink()
+                    snapshot.write_bytes(payload)
+                    shutil.rmtree(folder)
                     app.run()
                     self.assertFalse(app.exception)
                     self.assertTrue(app.info)

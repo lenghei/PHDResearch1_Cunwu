@@ -124,12 +124,33 @@ class V2Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Tiny_AP'):
             verify_measurement(row, measured)
 
+    def test_vm1_full_paired_summary_from_saved_metrics(self):
+        from main.config import save
+        from main.pipeline import save_paired_comparison
+        with tempfile.TemporaryDirectory() as folder:
+            run = Path(folder)
+            for name, value in [('CLEAN', .5), ('DEGRADED', .3)]:
+                condition = run / name
+                condition.mkdir()
+                save(condition / 'metrics.json', {'per_area': [
+                    {'size': 'all', 'map50': value, 'map50_95': value / 2,
+                     'ar50_95': value / 3}]})
+                save(condition / 'summary.json', {'checkpoint_id': 'ck01'})
+            sources = [{'configuration': {'name': name, 'configuration_id': name.lower()}}
+                       for name in ['CLEAN', 'DEGRADED']]
+            save_paired_comparison(run, sources, 548)
+            data = json.loads((run / 'paired_comparison.json').read_text(encoding='utf-8'))
+            self.assertEqual(data['images_per_condition'], 548)
+            self.assertEqual(data['checkpoint_id'], 'ck01')
+            self.assertAlmostEqual(data['rows'][0]['delta_degraded_minus_clean'], -.2)
+            self.assertTrue((run / 'paired_comparison.csv').is_file())
+
     def test_entry_routing_without_forward(self):
         path = Path(__file__).resolve().parents[2] / 'experiments/vm1_flamapy_yolo26s_validation/run.py'
         spec = importlib.util.spec_from_file_location('v2_entry_test', path)
         entry = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(entry)
-        for argv, mode in [([], 'check'), (['--check'], 'check'), (['--demo'], 'demo'), (['--full-clean'], 'full-clean'), (['--regenerate', 'saved-run'], 'regenerate')]:
+        for argv, mode in [([], 'full-paired'), (['--full-paired'], 'full-paired'), (['--check'], 'check'), (['--demo'], 'demo'), (['--full-clean'], 'full-clean'), (['--regenerate', 'saved-run'], 'regenerate')]:
             with patch.dict(os.environ), patch('main.pipeline.execute', side_effect=RuntimeError('ROUTE_ONLY')) as call:
                 with self.assertRaisesRegex(RuntimeError, 'ROUTE_ONLY'):
                     entry.main(argv)

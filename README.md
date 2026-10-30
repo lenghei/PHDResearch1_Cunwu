@@ -6,7 +6,7 @@ The project uses UVL feature models and FlamaPy to manage valid configurations, 
 
 Current experiments use YOLO and VisDrone, with support for extending the evaluation to other detectors and datasets.
 
-**Online dashboard:** [ https://uavgap.streamlit.app](https://uavgap.streamlit.app/)
+**Online dashboard:** [https://uavgap.streamlit.app](https://uavgap.streamlit.app/)
 
 ## Project Structure
 
@@ -34,12 +34,12 @@ Datasets, model weights and full experiment outputs are not included in this rep
 
 From the repository root:
 
-**VM1 — Evaluation**
+**VM1 — Full validation**
 
 ```bash
-python -B experiments/vm1_flamapy_yolo26s_validation/run.py --check
-python -B experiments/vm1_flamapy_yolo26s_validation/run.py --demo
+python -B experiments/vm1_flamapy_yolo26s_validation/run.py --full-paired
 python -B experiments/vm1_flamapy_yolo26s_validation/run.py --full-clean
+python -B experiments/vm1_flamapy_yolo26s_validation/run.py --check
 ```
 
 **VM2 — Analysis**

@@ -1,14 +1,21 @@
-"""Export explicitly selected, accepted runs for the read-only cloud viewer."""
+"""Publish one verified experiment run as an independent cloud snapshot.
+
+Usage (from Git root):
+  python -B code/tools/export_dashboard.py --run <local RunID directory>
+  python -B code/tools/export_dashboard.py --run <VM2 replay directory> --archive <historical archive root>
+"""
 import argparse
+import csv
 import hashlib
+import io
 import json
 import re
 import sys
 from pathlib import Path
 
 PUBLIC = Path(__file__).resolve().parents[2]
+RUNS_ROOT = PUBLIC / 'reports' / 'results'
 sys.path.insert(0, str(PUBLIC / 'code'))
-from main.gap_analysis import verify_measurement
 
 
 def read(path):
@@ -16,100 +23,156 @@ def read(path):
 
 
 def sha(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    h = hashlib.sha256()
+    with path.open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+            h.update(chunk)
+    return h.hexdigest()
 
 
-def accepted(run, experiment):
+def accepted(run):
     record = read(run / 'run.json')
-    if record['status'] != 'PASS' or record['ExperimentID'] != experiment or record['RunID'] != run.name:
-        raise ValueError('Select a completed, identity-matched run: ' + run.name)
-    if read(run / 'result.json')['status'] != 'PASS':
-        raise ValueError('Run result is not PASS.')
-    date = re.search(r'(\d{8})T(\d{2})(\d{2})(\d{2})_', run.name)
-    if date is None:
-        raise ValueError('Missing recorded Run UTC timestamp.')
-    day = date[1]
-    record['started_at'] = f'{day[:4]}-{day[4:6]}-{day[6:]}T{date[2]}:{date[3]}:{date[4]}Z'
-    return record
+    result = read(run / 'result.json')
+    if (record.get('status') != 'PASS' or result.get('status') != 'PASS' or
+            record.get('RunID') != run.name or
+            record.get('ExperimentID') not in
+            ('vm1_flamapy_yolo26s_validation', 'vm2_degradation_gap_analysis')):
+        raise ValueError('Run is not a matching, completed VM1/VM2 execution.')
+    date = re.search(r'(\d{8})T(\d{2})(\d{2})(\d{2})(?:_|$)', run.name)
+    if not date:
+        raise ValueError('RunID lacks UTC timestamp.')
+    d = date.group(1)
+    record['started_at'] = f'{d[:4]}-{d[4:6]}-{d[6:]}T{date[2]}:{date[3]}:{date[4]}Z'
+    return record, result
 
 
-def bundle(run, experiment):
-    record = accepted(run, experiment)
-    return {**record, 'files': {'run.json': record}}, record
+def vm1_bundle(run, record, result):
+    report_file = run / 'summary.json'
+    if not report_file.is_file():
+        raise ValueError('VM1 run needs root summary.json (create it using vm1_report.py first).')
+    report = read(report_file)
+    if (report.get('RunID') != run.name or report.get('status') != 'PASS' or
+            report.get('model', {}).get('checkpoint_id') != 'ck01'):
+        raise ValueError('VM1 report identity/checkpoint mismatch.')
+    summaries = result.get('summaries', [])
+    if len(summaries) != 2 or {s['configuration']['name'] for s in summaries} != {'CLEAN', 'DEGRADED'}:
+        raise ValueError('Only completed full CLEAN/DEGRADED paired runs may be published as VM1 results.')
+    if result.get('images_per_condition') != 548 or result.get('conditions') != 2:
+        raise ValueError('VM1 public results must reflect full 548-image paired evaluation.')
+    by_name = {c['name']: c for c in report.get('conditions', [])}
+    if set(by_name) != {'CLEAN', 'DEGRADED'}:
+        raise ValueError('VM1 summary must report both conditions.')
+    if report.get('dataset', {}).get('images_per_condition') != 548:
+        raise ValueError('VM1 report image count mismatch.')
+    actual_sha = report.get('model', {}).get('SHA256')
+    for item in summaries:
+        name = item['configuration']['name']
+        for file, key in [('ground_truth.json', 'GT_SHA256'),
+                          ('predictions_raw.jsonl', 'predictions_SHA256'),
+                          ('predictions_coco.json', 'predictions_coco_SHA256'),
+                          ('metrics.json', 'metrics_SHA256')]:
+            path = run / name / file
+            if sha(path) != item[key]:
+                raise ValueError('VM1 evidence mismatch: ' + str(path))
+        values = item['aggregate']
+        observed = by_name[name]
+        for key, ref in [('AP50', 'map50'), ('AP50_95', 'map50_95'), ('AR50_95', 'ar50_95')]:
+            if abs(observed[key] - values[ref]) > 1e-12:
+                raise ValueError('VM1 metrics mismatch for ' + name)
+        if item['checkpoint_SHA256'] != actual_sha:
+            raise ValueError('VM1 checkpoint SHA mismatch.')
+    # Public metadata is a strict whitelist. No local paths or raw predictions.
+    fields = ('schema_version', 'RunID', 'ExperimentID', 'mode', 'status', 'scope',
+              'dataset', 'model', 'inference', 'flamapy', 'conditions',
+              'paired_comparison', 'timing', 'environment', 'data_note')
+    report = {key: report[key] for key in fields if key in report}
+    report['model'] = dict(report['model'])
+    training = dict(report['model'].get('training_configured') or {})
+    training.pop('data', None)  # May contain private Windows dataset paths.
+    report['model']['training_configured'] = training
+    result_public = {'status': 'PASS', 'scope': result.get('scope'),
+                     'images_per_condition': result['images_per_condition'],
+                     'conditions': 2, 'checkpoint_id': 'ck01',
+                     'total_seconds': result.get('total_seconds'),
+                     'GPU_inference': 'COMPLETED'}
+    bundle = {**record, 'files': {'run.json': record, 'result.json': result_public,
+                                  'summary.json': report,
+                                  'provenance.json': {'source_RunID': run.name,
+                                                      'source_summary_SHA256': sha(report_file),
+                                                      'source_result_SHA256': sha(run / 'result.json'),
+                                                      'checkpoint_SHA256': actual_sha,
+                                                      'dataset_ZIP_SHA256': report['dataset']['ZIP_SHA256']}}}
+    buf = io.StringIO()
+    writer = csv.DictWriter(buf, fieldnames=['condition', 'images', 'AP50', 'AP50_95', 'AR50_95', 'inference_call_seconds'])
+    writer.writeheader()
+    for c in report['conditions']:
+        writer.writerow({k: c.get(v) for k, v in [('condition', 'name'), ('images', 'images'),
+                                                  ('AP50', 'AP50'), ('AP50_95', 'AP50_95'),
+                                                  ('AR50_95', 'AR50_95'),
+                                                  ('inference_call_seconds', 'inference_call_seconds')]})
+    return bundle, {'metrics.csv': buf.getvalue().encode('utf-8')}
 
 
-def export(vm1, vm2, archive, output):
-    first, first_record = bundle(vm1, 'vm1_flamapy_yolo26s_validation')
-    gate = read(vm1 / 'checkpoint_gate.json')
-    data = read(vm1 / 'dataset_gate.json')
-    bridge = read(vm1 / 'bridge.json')
-    if any(v['status'] != 'PASS' for v in [gate, data, bridge]):
-        raise ValueError('VM1 gate is not PASS.')
-    summary = read(vm1 / 'result.json')
-    first['files']['result.json'] = summary
-    first['files']['provenance.json'] = {
-        'source_RunID': vm1.name, 'artifact_SHA256': {n: sha(vm1 / n) for n in
-            ['run.json', 'result.json', 'checkpoint_gate.json', 'dataset_gate.json', 'bridge.json', 'source_SHA256.json']},
-        'source_code_SHA256': read(vm1 / 'source_SHA256.json'),
-        'dataset': {'name': 'VisDrone2019-DET-val', 'images': data['images'], 'ZIP_SHA256': data['ZIP_SHA256'],
-                    'scope': data['scope']},
-        'model': {k: gate[k] for k in ['checkpoint_id', 'SHA256', 'architecture', 'class_order']},
-        'UVL_SHA256': bridge['UVL_SHA256'], 'protocol': 'native10; configured pr01; CPU checks only',
-        'detector_metrics': 'NOT_EVALUATED; no YOLO26s AP exported from CPU acceptance'}
-    second, second_record = bundle(vm2, 'vm2_degradation_gap_analysis')
-    rows = read(vm2 / 'measured_grids.json')
-    if len(rows) != 297 or len({(r['cohort'], r['checkpoint'], r['configuration_id']) for r in rows}) != 297:
-        raise ValueError('Expected separate 243-point grid and 54-point JPEG cohorts.')
-    if any(r['images'] != 300 for r in rows):
-        raise ValueError('Image-count mismatch.')
-    models = {}
+def vm2_bundle(run, record, result, archive):
+    if archive is None:
+        raise ValueError('VM2 requires --archive to verify historical metric sources.')
+    from main.gap_analysis import verify_measurement
+    rows = read(run / 'measured_grids.json')
+    if not rows or len({(r['cohort'], r['checkpoint'], r['configuration_id']) for r in rows}) != len(rows):
+        raise ValueError('Missing or duplicated VM2 measurement rows.')
+    archive = archive.resolve()
     for row in rows:
         metric = (archive / row['metric_source']).resolve()
-        if not metric.is_relative_to(archive.resolve()) or sha(metric) != row['metric_source_SHA256']:
-            raise ValueError('Underlying metric SHA mismatch.')
-        measured = read(metric)
-        verify_measurement(row, measured)
-        if row['measurement_kind'] == 'grid':
-            model_sha = measured['checkpoint_SHA256']
-            if row['checkpoint'] in models and models[row['checkpoint']]['SHA256'] != model_sha:
-                raise ValueError('Mixed checkpoints within a model ID.')
-            models[row['checkpoint']] = {'SHA256': model_sha, 'task': 'native10', 'protocol': 'pr01'}
-    for name in ['result.json', 'measured_grids.json', 'interaction_replay.json']:
-        second['files'][name] = read(vm2 / name)
-    second['files']['provenance.json'] = {
-        'source_RunID': vm2.name,
-        'artifact_SHA256': {n: sha(vm2 / n) for n in ['run.json', 'result.json', 'measured_grids.json',
-                                                   'interaction_replay.json', 'provenance.json', 'source_SHA256.json']},
-        'source_code_SHA256': read(vm2 / 'source_SHA256.json'),
-        'sources': read(vm2 / 'provenance.json'), 'models': models,
-        'protocol': 'pr01; native10; FP32; one-to-many; ignore-union; COCO AP; maxDet=3000',
-        'scope': 'DEVELOPMENT_VALIDATION; fixed 300-image ds04; dv02 grid and dv03 JPEG separate',
-        'independence': 'VisDrone val used for historical checkpoint selection; not independent test data',
-        'counts': {'grid': 243, 'jpeg_subgrid': 54, 'new_GPU_experiments': 0}}
-    manifest = {'schema': 1, 'scope': 'Verified summary snapshots; local complete evidence is not published', 'runs': []}
-    output.mkdir(parents=True, exist_ok=True)
-    payloads = {}
-    for name, value, record in [('vm1_summary.json', first, first_record), ('vm2_summary.json', second, second_record)]:
-        raw = json.dumps(value, indent=2, allow_nan=False).encode('utf-8') + b'\n'
-        if len(raw) >= 1_000_000 or re.search(rb'\b[A-Za-z]:[\\/]', raw):
-            raise ValueError('Export contains private paths or exceeds size limit.')
-        payloads[name] = raw
-        manifest['runs'].append({**record, 'bundle': name, 'SHA256': hashlib.sha256(raw).hexdigest()})
-    payloads['dashboard_manifest.json'] = json.dumps(manifest, indent=2).encode('utf-8') + b'\n'
-    for name, raw in payloads.items():
-        path = output / name
-        if path.exists() and path.read_bytes() != raw:
-            raise FileExistsError('Existing snapshot differs; review before replacing: ' + name)
-    for name, raw in payloads.items():
-        if not (output / name).exists():
-            (output / name).write_bytes(raw)
-        print(name, len(raw), hashlib.sha256(raw).hexdigest())
+        if not metric.is_relative_to(archive) or sha(metric) != row['metric_source_SHA256']:
+            raise ValueError('VM2 underlying metric source SHA mismatch.')
+        verify_measurement(row, read(metric))
+    public_result = dict(result)
+    bundle = {**record, 'files': {
+        'run.json': record,
+        'result.json': public_result,
+        'measured_grids.json': rows,
+        'interaction_replay.json': read(run / 'interaction_replay.json'),
+        'provenance.json': {'source_RunID': run.name,
+                            'source_result_SHA256': sha(run / 'result.json'),
+                            'source_grid_SHA256': sha(run / 'measured_grids.json'),
+                            'protocol': 'historical development replay; cohorts remain separate'}}}
+    return bundle, {}
+
+
+def publish(run, archive=None, output=RUNS_ROOT):
+    run = Path(run).resolve()
+    record, result = accepted(run)
+    experiment = record['ExperimentID']
+    if experiment == 'vm1_flamapy_yolo26s_validation':
+        bundle, attachments = vm1_bundle(run, record, result)
+    else:
+        bundle, attachments = vm2_bundle(run, record, result, archive)
+    raw = (json.dumps(bundle, indent=2, allow_nan=False, ensure_ascii=False) + '\n').encode('utf-8')
+    if len(raw) > 2_000_000 or re.search(rb'[A-Za-z]:[\\/]', raw):
+        raise ValueError('Public snapshot too large or contains a Windows absolute path.')
+    run_folder = Path(output) / experiment / run.name
+    payloads = {'snapshot.json': raw, **attachments}
+    manifest = {'schema': 2, 'RunID': run.name, 'ExperimentID': experiment,
+                'mode': record['mode'], 'status': 'PASS', 'started_at': record['started_at'],
+                'scope': result.get('scope'), 'bundle': 'snapshot.json',
+                'SHA256': hashlib.sha256(raw).hexdigest(),
+                'files': {key: hashlib.sha256(value).hexdigest() for key, value in payloads.items()}}
+    payloads['manifest.json'] = (json.dumps(manifest, indent=2, allow_nan=False) + '\n').encode('utf-8')
+    if run_folder.exists():
+        if any(not (run_folder / name).is_file() or (run_folder / name).read_bytes() != value
+               for name, value in payloads.items()):
+            raise FileExistsError('Published RunID already exists with different content: ' + str(run_folder))
+    else:
+        run_folder.mkdir(parents=True)
+        for name, value in payloads.items():
+            (run_folder / name).write_bytes(value)
+    print('Published:', run_folder)
+    return run_folder
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--vm1-run', type=Path, required=True)
-    parser.add_argument('--vm2-run', type=Path, required=True)
-    parser.add_argument('--archive', type=Path, required=True)
-    args = parser.parse_args()
-    export(args.vm1_run.resolve(), args.vm2_run.resolve(), args.archive.resolve(), PUBLIC / 'reports/results')
+    p = argparse.ArgumentParser(description='Publish a single verified VM1/VM2 run.')
+    p.add_argument('--run', required=True, type=Path, help='Exact local RunID directory')
+    p.add_argument('--archive', type=Path, help='Required for historical VM2 source verification')
+    args = p.parse_args()
+    publish(args.run, args.archive)

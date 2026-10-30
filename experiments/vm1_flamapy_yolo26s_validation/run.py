@@ -13,6 +13,7 @@ def main(argv=None):
     modes.add_argument('--check', action='store_true')
     modes.add_argument('--demo', action='store_true')
     modes.add_argument('--full-clean', action='store_true')
+    modes.add_argument('--full-paired', action='store_true', help='548-image CLEAN plus DEGRADED evaluation')
     modes.add_argument('--regenerate', type=Path)
     modes.add_argument('--refresh-index', action='store_true')
     modes.add_argument('--uvl-only', action='store_true', help=argparse.SUPPRESS)
@@ -34,7 +35,8 @@ def main(argv=None):
         value = build_bridge(Path(__file__).resolve().parent, args.output, **request)
         print(json.dumps(value))
         return
-    mode = 'demo' if args.demo else 'full-clean' if args.full_clean else 'regenerate' if args.regenerate else 'check'
+    mode = ('check' if args.check else 'demo' if args.demo else 'full-clean' if args.full_clean
+            else 'regenerate' if args.regenerate else 'full-paired')
     if mode in ['check', 'regenerate']:
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
     from main.pipeline import execute
@@ -42,7 +44,7 @@ def main(argv=None):
     if mode in ['check', 'regenerate']:
         from main.visualization import create_status_preview
         print('Preview: ' + str(create_status_preview(out)), flush=True)
-    if mode in ['demo', 'full-clean']:
+    if mode in ['demo', 'full-clean', 'full-paired']:
         from main.visualization import create_preview
         import webbrowser
         conditions = json.loads((out / 'conditions.json').read_text())
@@ -51,7 +53,11 @@ def main(argv=None):
             page = create_preview(out / item['directory'], open_browser=False)
             links.append(f'<p><a href="{page.relative_to(out).as_posix()}">{item["name"]}</a></p>')
         page = out / 'index.html'
-        page.write_text('<!doctype html><meta charset="utf-8"><h1>YOLO26s validation</h1>' + ''.join(links), encoding='utf-8')
+        extras = ('<p><a href="paired_comparison.csv">Full paired comparison CSV</a> · '
+                  '<a href="paired_comparison.json">JSON and source hashes</a></p>'
+                  if mode == 'full-paired' else '')
+        page.write_text('<!doctype html><meta charset="utf-8"><h1>YOLO26s validation</h1>' + ''.join(links) + extras,
+                        encoding='utf-8')
         print('Preview: ' + str(page), flush=True)
         if not args.no_open:
             webbrowser.open(page.as_uri())

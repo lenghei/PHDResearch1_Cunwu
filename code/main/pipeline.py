@@ -112,6 +112,37 @@ def check(cfg, out, logger):
             'regeneration': 'PASS_ON_HISTORICAL_CK05; CK01_OUTPUT_NOT_YET_AVAILABLE'}
 
 
+def save_paired_comparison(out, aggregate, count):
+    if len(aggregate) != 2 or [x['configuration']['name'] for x in aggregate] != ['CLEAN', 'DEGRADED']:
+        raise ValueError('Full paired validation requires exactly CLEAN and DEGRADED.')
+    import csv
+    clean_path, degraded_path = out / 'CLEAN', out / 'DEGRADED'
+    clean_metrics = json.loads((clean_path / 'metrics.json').read_text(encoding='utf-8'))
+    degraded_metrics = json.loads((degraded_path / 'metrics.json').read_text(encoding='utf-8'))
+    clean_by_area = {x['size']: x for x in clean_metrics['per_area']}
+    degraded_by_area = {x['size']: x for x in degraded_metrics['per_area']}
+    if clean_by_area.keys() != degraded_by_area.keys():
+        raise ValueError('Paired metric size bins differ.')
+    rows = []
+    for size in clean_by_area:
+        for key in ('map50', 'map50_95', 'ar50_95'):
+            a, b = clean_by_area[size][key], degraded_by_area[size][key]
+            rows.append({'size': size, 'metric': key, 'clean': a, 'degraded': b,
+                         'delta_degraded_minus_clean': b - a if a is not None and b is not None else None})
+    save(out / 'paired_comparison.json', {
+        'scope': 'FULL_DEVELOPMENT_VALIDATION; descriptive paired comparison; no confidence interval',
+        'images_per_condition': count, 'checkpoint_id': 'ck01',
+        'configuration_id': aggregate[1]['configuration']['configuration_id'],
+        'clean_summary_SHA256': sha256(clean_path / 'summary.json'),
+        'degraded_summary_SHA256': sha256(degraded_path / 'summary.json'),
+        'rows': rows})
+    with (out / 'paired_comparison.csv').open('x', encoding='utf-8', newline='') as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+
 def predict(cfg, out, logger, mode):
     import cv2
     import numpy as np
@@ -135,9 +166,9 @@ def predict(cfg, out, logger, mode):
                                        'device': cfg['device'],
                                        'name': torch.cuda.get_device_name(int(cfg['device'])),
                                        'FP32': True})
-    conditions = selection['conditions'] if mode == 'demo' else selection['conditions'][:1]
-    count = 5 if mode == 'demo' else 548
-    archive = VisDroneZIP(cfg['dataset_zip'], 548)
+    conditions = selection['conditions'] if mode in ('demo', 'full-paired') else selection['conditions'][:1]
+    count = 5 if mode == 'demo' else cfg['expected_images']
+    archive = VisDroneZIP(cfg['dataset_zip'], cfg['expected_images'])
     aggregate = []
     started = time.perf_counter()
 
@@ -149,9 +180,13 @@ def predict(cfg, out, logger, mode):
 
     try:
         for condition in conditions:
+            condition_started = time.perf_counter()
+            logger.info('Condition %s | configuration=%s | parameters=%s',
+                        condition['name'], condition['configuration_id'],
+                        json.dumps(condition['parameters'], sort_keys=True))
             folder = out / condition['name']
             folder.mkdir()
-            if mode == 'demo':
+            if mode in ('demo', 'full-paired') and condition['indices'] != [0, 0, 0]:
                 (folder / 'images').mkdir()
             records, raw, trace = [], [], []
             raw_file = folder / 'predictions_raw.jsonl'
@@ -175,7 +210,8 @@ def predict(cfg, out, logger, mode):
                         raise ValueError('Degradation changed image geometry or dtype.')
                     proof = {**proof, 'configuration_id': condition['configuration_id'], 'recipe': recipe,
                              'output_pixel_SHA256': __import__('hashlib').sha256(transformed.tobytes()).hexdigest()}
-                    if mode == 'demo':
+                    # Preview files are only a five-image sample; AP is computed on all 548.
+                    if condition['indices'] != [0, 0, 0] and (mode == 'demo' or first + len(pixels) < 5):
                         name = f"images/{record['stem']}.png"
                         ok, encoded = cv2.imencode('.png', transformed)
                         if not ok:
@@ -242,6 +278,7 @@ def predict(cfg, out, logger, mode):
                        'protocol': 'pr01_native10_one2many_FP32_ignore_union_0.5_cap3000',
                        'configuration': condition, 'dataset_ZIP_SHA256': cfg['dataset_zip_sha256'],
                        'network_seconds': model_seconds, 'evaluation_seconds': evaluation_seconds,
+                       'condition_wall_seconds': time.perf_counter() - condition_started,
                        'CUDA_event_seconds': cuda_seconds,
                        'GPU_peak_allocated_bytes': torch.cuda.max_memory_allocated(),
                        'GPU_peak_reserved_bytes': torch.cuda.max_memory_reserved(),
@@ -251,10 +288,16 @@ def predict(cfg, out, logger, mode):
                        'predictions_coco_SHA256': sha256(folder/'predictions_coco.json'),
                        'metrics_SHA256': sha256(folder/'metrics.json')}
             save(folder / 'summary.json', summary)
+            logger.info('%s completed | %s images | GT %s | AP50 %.2f%% | AP50:95 %.2f%% | AR50:95 %.2f%% | condition wall %.2fs',
+                        condition['name'], count, summary['aggregate']['gt_count'],
+                        100 * summary['aggregate']['map50'], 100 * summary['aggregate']['map50_95'],
+                        100 * summary['aggregate']['ar50_95'], summary['condition_wall_seconds'])
             aggregate.append(summary)
     finally:
         archive.close()
     save(out / 'conditions.json', [{'name': item['configuration']['name'], 'directory': item['configuration']['name']} for item in aggregate])
+    if mode == 'full-paired':
+        save_paired_comparison(out, aggregate, count)
     return {'status': 'PASS', 'scope': aggregate[0]['scope'], 'images_per_condition': count,
             'conditions': len(aggregate), 'checkpoint_id': 'ck01', 'summaries': aggregate,
             'total_seconds': time.perf_counter() - started}
@@ -289,6 +332,8 @@ def regenerate_run(source, out):
 
 
 def execute(config_file, mode, source=None):
+    run_started_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    started = time.perf_counter()
     cfg = settings(config_file)
     cfg['_config_file'] = str(Path(config_file).resolve())
     out, logger = new_run(cfg, EXPERIMENT, mode)
@@ -306,12 +351,36 @@ def execute(config_file, mode, source=None):
         else:
             result = predict(cfg, out, logger, mode)
         save(out / 'result.json', result)
-        save(out / 'run.json', {'RunID': out.name, 'ExperimentID': EXPERIMENT, 'mode': mode, 'status': 'PASS'})
+        run_ended_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        wall_seconds = time.perf_counter() - started
+        save(out / 'run.json', {'RunID': out.name, 'ExperimentID': EXPERIMENT,
+                                'mode': mode, 'status': 'PASS',
+                                'started_at': run_started_at, 'ended_at': run_ended_at,
+                                'wall_seconds': wall_seconds})
+        try:
+            from .run_report import generate_run_report, format_terminal
+            report = generate_run_report(out, started_at=run_started_at,
+                                         ended_at=run_ended_at, wall_seconds=wall_seconds)
+            logger.info('\n%s', format_terminal(report))
+        except Exception:
+            logger.exception('Report generation failed; measured results remain PASS.')
         logger.info('PASS: %s', out)
         return out
     except Exception as exc:
+        run_ended_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        wall_seconds = time.perf_counter() - started
         save(out / 'failure.json', {'status': 'FAILED', 'error': repr(exc), 'traceback': traceback.format_exc()})
-        save(out / 'run.json', {'RunID': out.name, 'ExperimentID': EXPERIMENT, 'mode': mode, 'status': 'FAILED'})
+        save(out / 'run.json', {'RunID': out.name, 'ExperimentID': EXPERIMENT,
+                                'mode': mode, 'status': 'FAILED',
+                                'started_at': run_started_at, 'ended_at': run_ended_at,
+                                'wall_seconds': wall_seconds})
+        logger.error('FAILED | Run wall time: %.2fs | %s', wall_seconds, out)
+        try:
+            from .run_report import generate_run_report
+            generate_run_report(out, started_at=run_started_at,
+                                ended_at=run_ended_at, wall_seconds=wall_seconds)
+        except Exception:
+            logger.exception('Failure summary could not be generated.')
         logger.exception('Failed; partial artifacts retained: %s', out)
         try:
             from .visualization import build_run_index

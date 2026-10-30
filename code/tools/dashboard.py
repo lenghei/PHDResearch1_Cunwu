@@ -12,8 +12,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from dashboard_data import DashboardStore, DataError
 
 store = DashboardStore()
-STUDIES = {'VM2 · Degradation interactions': 'vm2_degradation_gap_analysis',
-           'VM1 · FlamaPy–YOLO26s validation': 'vm1_flamapy_yolo26s_validation',
+STUDIES = {'VM1 · FlamaPy–YOLO26s validation': 'vm1_flamapy_yolo26s_validation',
+           'VM2 · Degradation interactions': 'vm2_degradation_gap_analysis',
            'VM03 · Historical YOLOv8s baseline': 'vm03_gpu_pilot'}
 MODELS = {'ck01': 'YOLO26s', 'ck05': 'YOLOv8s', 'ck06': 'YOLO11s'}
 COLORS = ['#087f8c', '#4463c7', '#a25caf']
@@ -37,13 +37,13 @@ st.markdown('''<style>
 
 with st.sidebar:
     st.markdown('## UAV-GAP')
-    st.caption('EXPERIMENT STUDIO')
+    st.caption('RESEARCH RESULTS')
     options = list(STUDIES) if store.mode == 'local' else list(STUDIES)[:2]
-    label = st.selectbox('Study', options)
+    label = st.selectbox('Experiment', options)
     st.caption(store.mode.title() + ' · Read only · Saved evidence')
     if store.mode == 'cloud':
-        st.caption('Published accepted snapshots only. Complete history and private evidence remain local.')
-    if st.button('Refresh saved results', width='stretch'):
+        st.caption('Published verified summaries. Full predictions and datasets remain local.')
+    if st.button('Refresh', width='stretch'):
         st.rerun()
     st.divider()
     st.caption('Saved summaries only. No inference, training or AP recalculation.' if store.mode == 'cloud' else 'Complete local evidence. No inference, training or AP recalculation.')
@@ -53,37 +53,82 @@ try:
 except (DataError, OSError) as exc:
     st.error(str(exc))
     st.stop()
-st.markdown('<div class="hero"><div class="eyebrow" style="color:#8ce1d4">UAV AERIAL DETECTION</div>'
-            '<h1>Experiment Studio</h1><p>Explore runs, compare configurations, trace the evidence.</p></div>', unsafe_allow_html=True)
+st.markdown('<div class="hero"><div class="eyebrow" style="color:#8ce1d4">UAV OBJECT DETECTION</div>'
+            '<h1>UAV-GAP Experiments</h1><p>Saved measurements, configurations and reproducibility records.</p></div>', unsafe_allow_html=True)
 if not records:
     st.info('No saved runs for this study yet.')
     st.stop()
 
 run_ids = [r['RunID'] for r in records]
 lookup = {r['RunID']: r for r in records}
-selection = st.selectbox('Saved run · newest first', run_ids,
+selection = st.selectbox('Run · newest first', run_ids,
                          format_func=lambda key: f"{lookup[key]['started_at'][:19].replace('T', ' ')} UTC · {lookup[key]['mode']} · {lookup[key]['status']}")
 try:
     run = store.view(STUDIES[label], selection)
     result = run.read('result.json') or run.read('summary.json', {})
+    detailed_summary = run.read('summary.json', {})
 except (DataError, OSError) as exc:
     st.error(str(exc))
     st.stop()
 record = lookup[selection]
-timing = result.get('timing', {})
-elapsed = timing.get('wall_seconds', result.get('total_seconds'))
+timing = detailed_summary.get('timing', {}) or result.get('timing', {})
+elapsed = timing.get('whole_run_wall_seconds') or timing.get('pipeline_seconds') or timing.get('wall_seconds') or result.get('total_seconds')
 columns = st.columns(4)
-for col, name, value in zip(columns, ['Saved status', 'Mode', 'Recorded runs', 'Wall time'],
+for col, name, value in zip(columns, ['Status', 'Mode', 'Runs', 'Recorded time'],
                            [record['status'], record['mode'], str(len(records)), f'{elapsed:.2f} s' if elapsed is not None else 'Not recorded']):
     col.metric(name, value)
 st.caption(f"Recorded start: {record['started_at'][:19].replace('T', ' ')} UTC · Dataset boundaries remain separate.")
 
-overview, runs_tab, configurations, interactions, evidence = st.tabs(['Overview', 'Run history', 'Configuration explorer', 'Interaction analysis', 'Evidence & previews'])
+overview, runs_tab, configurations, interactions, evidence = st.tabs(['Overview', 'Run history', 'Configurations', 'Interactions', 'Evidence'])
 data = pd.DataFrame(run.read('measured_grids.json', []))
 
 with overview:
     st.subheader(label.split(' · ', 1)[1])
-    if not data.empty:
+    if detailed_summary.get('conditions') and detailed_summary.get('paired_comparison'):
+        details = detailed_summary
+        observed = details['conditions']
+        by_name = {c['name']: c for c in observed}
+        clean, degraded = by_name.get('CLEAN'), by_name.get('DEGRADED')
+        if clean and degraded:
+            st.caption('VisDrone2019-DET-val · 548 original images per condition · development validation, not independent test-dev')
+            a, b, c, d = st.columns(4)
+            a.metric('CLEAN AP50:95', f"{100 * clean['AP50_95']:.2f}%")
+            b.metric('DEGRADED AP50:95', f"{100 * degraded['AP50_95']:.2f}%", delta=f"{100 * (degraded['AP50_95'] - clean['AP50_95']):+.2f} pp")
+            c.metric('DEGRADED AP50', f"{100 * degraded['AP50']:.2f}%")
+            d.metric('DEGRADED AR50:95', f"{100 * degraded['AR50_95']:.2f}%")
+            compare = pd.DataFrame([{'Condition': row['name'],
+                                     'AP50 (%)': 100 * row['AP50'],
+                                     'AP50:95 (%)': 100 * row['AP50_95'],
+                                     'AR50:95 (%)': 100 * row['AR50_95'],
+                                     'Inference calls (s)': row.get('inference_call_seconds')}
+                                    for row in observed])
+            st.dataframe(compare, hide_index=True, width='stretch')
+            tidy = compare.melt(id_vars='Condition', value_vars=['AP50 (%)', 'AP50:95 (%)', 'AR50:95 (%)'],
+                                var_name='Metric', value_name='Value (%)')
+            chart(px.bar(tidy, x='Metric', y='Value (%)', color='Condition', barmode='group',
+                         color_discrete_sequence=COLORS, title='CLEAN vs DEGRADED · full validation'))
+            pair = details.get('paired_comparison', {}).get('rows', [])
+            tiny = next((v for v in pair if v.get('size') == 'tiny' and v.get('metric') == 'map50_95'), None)
+            if tiny:
+                st.caption(f"Tiny AP50:95: {100 * tiny['clean']:.2f}% → {100 * tiny['degraded']:.2f}% "
+                           f"({100 * tiny['delta_degraded_minus_clean']:+.2f} percentage points).")
+            ds = details.get('dataset', {})
+            model = details.get('model', {})
+            run_timing = details.get('timing', {})
+            m1, m2, m3, m4 = st.columns(4)
+            m1.metric('Images / condition', ds.get('images_per_condition', '—'))
+            m2.metric('Evaluated GT objects', ds.get('GT_after_protocol', '—'))
+            m3.metric('Model parameters', f"{model['parameter_count'] / 1e6:.2f} M" if model.get('parameter_count') else '—')
+            seconds = run_timing.get('whole_run_wall_seconds') or run_timing.get('pipeline_seconds')
+            m4.metric('Pipeline time', f'{seconds:.1f} s' if seconds is not None else 'Not recorded')
+            st.caption('Degradation: ' + ', '.join(f'{key}={value}' for key, value in degraded.get('degradation_parameters', {}).items()))
+            with st.expander('Model, dataset and protocol'):
+                st.json({'dataset': ds, 'model': model, 'inference': details.get('inference'),
+                         'FlamaPy': details.get('flamapy'), 'timing': run_timing}, expanded=False)
+            st.info('This paired result covers one sampled compound degradation. It does not establish the static or empirical gap across all valid configurations.')
+        else:
+            st.warning('Paired report is missing one of the conditions.')
+    elif not data.empty:
         c1, c2, c3 = st.columns(3)
         c1.metric('Configuration records', len(data))
         c2.metric('Saved checkpoints', data['checkpoint'].nunique())
