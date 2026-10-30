@@ -6,6 +6,8 @@ The project uses UVL feature models and FlamaPy to manage valid configurations, 
 
 Current experiments use YOLO and VisDrone, with support for extending the evaluation to other detectors and datasets.
 
+**Live dashboard:** [UAV-GAP Experiment Studio](https://uavgap.streamlit.app/)
+
 ## Project Structure
 
 - `code/` — Shared implementations, tools and tests.
