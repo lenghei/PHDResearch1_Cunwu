@@ -10,11 +10,12 @@ import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from dashboard_data import DashboardStore, DataError
+from dashboard_autodiscovery import (
+    discover_studies, render_discovered_study, LEGACY_STUDIES,
+)
 
 store = DashboardStore()
-STUDIES = {'VM1 · FlamaPy–YOLO26s validation': 'vm1_flamapy_yolo26s_validation',
-           'VM2 · Degradation interactions': 'vm2_degradation_gap_analysis',
-           'VM03 · Historical YOLOv8s baseline': 'vm03_gpu_pilot'}
+STUDIES = discover_studies(store)
 MODELS = {'ck01': 'YOLO26s', 'ck05': 'YOLOv8s', 'ck06': 'YOLO11s'}
 COLORS = ['#087f8c', '#4463c7', '#a25caf']
 
@@ -38,7 +39,10 @@ st.markdown('''<style>
 with st.sidebar:
     st.markdown('## UAV-GAP')
     st.caption('RESEARCH RESULTS')
-    options = list(STUDIES) if store.mode == 'local' else list(STUDIES)[:2]
+    options = list(STUDIES)
+    if not options:
+        st.info('No published experiments found.')
+        st.stop()
     label = st.selectbox('Experiment', options)
     st.caption(store.mode.title() + ' · Read only · Saved evidence')
     if store.mode == 'cloud':
@@ -47,6 +51,10 @@ with st.sidebar:
         st.rerun()
     st.divider()
     st.caption('Saved summaries only. No inference, training or AP recalculation.' if store.mode == 'cloud' else 'Complete local evidence. No inference, training or AP recalculation.')
+
+if STUDIES[label] not in LEGACY_STUDIES:
+    render_discovered_study(store, STUDIES[label])
+    st.stop()
 
 try:
     records = store.history(STUDIES[label])
