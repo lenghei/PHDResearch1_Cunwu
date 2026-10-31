@@ -1,0 +1,7 @@
+{
+  "best_checkpoint_SHA256": "e564c819603bf36ac6d93e3acb0359e7d5a75503ce78458209e9a28113280667",
+  "actual_epochs": 100,
+  "training_wall_seconds": 26979.132338299998,
+  "ultralytics_results_SHA256": "c3b0b416d4a058629d629a37ab97ca967c595eaff569843cec53309741dd9544",
+  "ultralytics_args_SHA256": "ac13c5ddadc507b1e47a7a17ce1e2e42c1d291874d3ced848fe934b7c9a1900c"
+}

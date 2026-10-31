@@ -79,7 +79,7 @@ for col, name, value in zip(columns, ['Status', 'Mode', 'Runs', 'Recorded time']
     col.metric(name, value)
 st.caption(f"Recorded start: {record['started_at'][:19].replace('T', ' ')} UTC · Dataset boundaries remain separate.")
 
-overview, runs_tab, configurations, interactions, evidence = st.tabs(['Overview', 'Run history', 'Configurations', 'Interactions', 'Evidence'])
+overview, comparisons_tab, runs_tab, configurations, interactions, evidence = st.tabs(['Overview', 'Image comparisons', 'Run history', 'Configurations', 'Interactions', 'Evidence'])
 data = pd.DataFrame(run.read('measured_grids.json', []))
 
 with overview:
@@ -157,6 +157,35 @@ with overview:
             a.metric('Dataset configurations', result['UVL_counts'][0])
             b.metric('Detector configurations', result['UVL_counts'][1])
         st.json(result, expanded=False)
+
+with comparisons_tab:
+    st.subheader('CLEAN vs DEGRADED · matched images')
+    st.caption('Original inputs appear without boxes. Prediction panels show the same image ID with a display-only confidence threshold; AP uses all saved detections.')
+    try:
+        samples = run.comparison_sets()
+    except (DataError, OSError) as exc:
+        st.error('Saved comparison evidence failed validation: ' + str(exc))
+        samples = []
+    if not samples:
+        st.info('No four-panel previews have been published for this run. Generate them locally from saved predictions; no new inference is required.')
+    else:
+        options = {f"{x['image_id']:04d} · {Path(x['source_file'] or '').name}": x for x in samples}
+        selected_image = st.selectbox('Image ID', list(options))
+        sample = options[selected_image]
+        st.caption(f"Prediction display confidence ≥ {sample['confidence']:.2f}; CLEAN boxes: {sample['clean_boxes']}; DEGRADED boxes: {sample['degraded_boxes']}.")
+        left, right = st.columns(2)
+        with left:
+            st.markdown('**CLEAN input**')
+            st.image(sample['pictures']['original.jpg'], width='stretch')
+            st.markdown('**CLEAN predictions**')
+            st.image(sample['pictures']['clean_predictions.jpg'], width='stretch')
+        with right:
+            st.markdown('**DEGRADED input**')
+            st.image(sample['pictures']['degraded.jpg'], width='stretch')
+            st.markdown('**DEGRADED predictions**')
+            st.image(sample['pictures']['degraded_predictions.jpg'], width='stretch')
+        st.caption('Selected image recipe: ' + ', '.join(f'{key}={val}' for key, val in sample['recipe'].items() if key != 'seed'))
+        st.caption('VisDrone2019-DET · AISKYEYE team, Tianjin University. Images are display-only; consult source dataset terms before redistribution.')
 
 with runs_tab:
     st.subheader('Run history')

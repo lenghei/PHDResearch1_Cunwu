@@ -1,0 +1,10 @@
+dataset_zip: E:\ForStudy\code\uavgap\datasets\VisDrone\VisDrone2019-DET-val.zip
+expected_images: 548
+smoke_images: 5
+checkpoint: E:\ForStudy\code\uavgap\datasets\local_runs\cv261102\cv261102_full_20261031T000013_d0be8587\training\yolov8s\weights\best.pt
+checkpoint_sha256: e564c819603bf36ac6d93e3acb0359e7d5a75503ce78458209e9a28113280667
+output_root: E:\ForStudy\code\uavgap\datasets\local_runs\cv261102\cv261102_full_20261031T000013_d0be8587\_evaluation_work
+imgsz: 1280
+batch: 2
+device: '0'
+allow_cpu_fallback: false

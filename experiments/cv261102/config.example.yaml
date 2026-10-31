@@ -1,0 +1,17 @@
+# Copy to config.local.yaml, then replace the example paths with your real files.
+# Use forward slashes in Windows paths. Do not commit config.local.yaml.
+# Choose ONE: original train ZIP (automatic local conversion), OR data_yaml.
+train_zip: 'CHANGEME/VisDrone2019-DET-train.zip'
+data_yaml: null
+val_zip: 'CHANGEME/VisDrone2019-DET-val.zip'
+weights: 'CHANGEME/yolov8s.pt'
+# Outputs are private, outside uavgap/main; null selects the standard local_runs path.
+output_root: null
+# Recorded reproducibility settings, revise only if necessary on the RTX 4060 laptop.
+epochs: 100
+train_imgsz: 640
+eval_imgsz: 1280
+batch: 4
+eval_batch: 2
+workers: 0
+seed: 42

@@ -1,0 +1,19 @@
+{
+  "data": "E:\\ForStudy\\code\\uavgap\\datasets\\local_runs\\cv261102\\cv261102_full_20261031T000013_d0be8587\\prepared_dataset\\visdrone10.yaml",
+  "epochs": 100,
+  "imgsz": 640,
+  "batch": 4,
+  "workers": 0,
+  "seed": 42,
+  "device": "0",
+  "amp": true,
+  "deterministic": true,
+  "val": true,
+  "save": true,
+  "plots": false,
+  "cache": false,
+  "patience": 100,
+  "project": "E:\\ForStudy\\code\\uavgap\\datasets\\local_runs\\cv261102\\cv261102_full_20261031T000013_d0be8587\\training",
+  "name": "yolov8s",
+  "exist_ok": false
+}

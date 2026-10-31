@@ -145,6 +145,59 @@ class RunView:
         folder = self.store.child(self.folder, 'preview')
         return [p for p in sorted(folder.glob('image_*.jpg')) if p.resolve().is_relative_to(self.store.root)]
 
+    def comparison_sets(self):
+        """Audited four-panel previews; source run and cloud thumbnails remain separate."""
+        names = ('original.jpg', 'degraded.jpg', 'clean_predictions.jpg', 'degraded_predictions.jpg')
+        if self.bundle is not None:
+            study = self.bundle['ExperimentID']
+            run_id = self.bundle['RunID']
+            root = self.store.child(self.store.child(self.store.root, study), run_id)
+        else:
+            root = self.folder
+            run_id = root.name
+        previews = self.store.child(root, 'image_comparison')
+        index_file = self.store.child(previews, 'manifest.json')
+        if not index_file.is_file():
+            return []
+        index = decode(index_file, 60_000)
+        if index.get('schema') != 1 or index.get('RunID') != run_id:
+            raise DataError('Invalid comparison manifest.')
+        entries = index.get('images', [])
+        if not isinstance(entries, list) or len(entries) > 5:
+            raise DataError('Invalid comparison image count.')
+        public_files = {}
+        if self.bundle is not None:
+            public_record = decode(self.store.child(root, 'manifest.json'), 32_768)
+            public_files = public_record.get('files') or {}
+            if public_files.get('image_comparison/manifest.json') != hashlib.sha256(index_file.read_bytes()).hexdigest():
+                raise DataError('Published comparison manifest checksum mismatch.')
+        result = []
+        for entry in entries:
+            image_id = entry.get('image_id')
+            if type(image_id) is not int or not 1 <= image_id <= 548:
+                raise DataError('Invalid comparison image ID.')
+            folder = self.store.child(previews, f'{image_id:04d}')
+            pictures = {}
+            for name in names:
+                file = self.store.child(folder, name)
+                if not file.is_file() or file.stat().st_size > 2_000_000:
+                    raise DataError('Comparison image missing or exceeds size limit: ' + name)
+                data = file.read_bytes()
+                checksum = hashlib.sha256(data).hexdigest()
+                if entry.get('files', {}).get(name) != checksum:
+                    raise DataError('Comparison image checksum mismatch: ' + name)
+                if self.bundle is not None:
+                    expected = f'image_comparison/{image_id:04d}/{name}'
+                    if public_files.get(expected) != checksum:
+                        raise DataError('Published image not listed in source manifest: ' + expected)
+                pictures[name] = data
+            result.append({'image_id': image_id, 'source_file': entry.get('source_file'),
+                           'recipe': entry.get('recipe', {}), 'pictures': pictures,
+                           'clean_boxes': entry.get('displayed_clean_boxes'),
+                           'degraded_boxes': entry.get('displayed_degraded_boxes'),
+                           'confidence': index.get('display_confidence', .25)})
+        return result
+
     def log_text(self):
         if self.bundle is not None:
             return None

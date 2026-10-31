@@ -1,12 +1,14 @@
 """Fixed native-ten FP32 inference and genuine COCO evaluation."""
-import os,time,traceback,datetime,uuid
+import os,time,traceback,datetime,uuid,re
 from pathlib import Path
 from .config import load_config,sha256,save
 
 def evaluate(config_path,full=False):
  begin=time.perf_counter();cfg=load_config(config_path)
  print('[1/4] Loading dataset and checkpoint...',flush=True)
- out=Path(cfg['output_root'])/('git03_vm03_'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S')+'_'+uuid.uuid4().hex[:8]);out.mkdir(parents=True,exist_ok=False)
+ prefix=cfg.get('run_prefix', 'git03_vm03')
+ if not isinstance(prefix,str) or not re.fullmatch(r'[a-z][a-z0-9_]{0,63}',prefix):raise ValueError('Invalid configured run_prefix')
+ out=Path(cfg['output_root'])/(prefix+'_'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S')+'_'+uuid.uuid4().hex[:8]);out.mkdir(parents=True,exist_ok=False)
  for key in ['YOLO_CONFIG_DIR','MPLCONFIGDIR','TORCH_HOME','TMP','TEMP']:
   folder=out/'runtime'/key;folder.mkdir(parents=True);os.environ[key]=str(folder)
  (Path(os.environ['YOLO_CONFIG_DIR'])/'Ultralytics').mkdir()

@@ -1,0 +1,44 @@
+{
+  "train": {
+    "split": "train",
+    "images": 6471,
+    "labels": 343204,
+    "annotation_accounting": {
+      "rows": 353550,
+      "ignored": 10345,
+      "zero_area": 1,
+      "outside_image": 0,
+      "kept": 343204,
+      "zero_area_examples": [
+        {
+          "annotation": "VisDrone2019-DET-train/annotations/9999985_00000_d_0000020.txt",
+          "line": 12,
+          "box": [
+            611.0,
+            158.0,
+            4.0,
+            0.0
+          ],
+          "category": 4
+        }
+      ]
+    },
+    "source_zip_SHA256": "86a77eba93137bfc16e4993860de9245b0675c0dba0d3ab98fb458699e256f84"
+  },
+  "val": {
+    "split": "val",
+    "images": 548,
+    "labels": 38759,
+    "annotation_accounting": {
+      "rows": 40169,
+      "ignored": 1410,
+      "zero_area": 0,
+      "outside_image": 0,
+      "kept": 38759,
+      "zero_area_examples": []
+    },
+    "source_zip_SHA256": "abeea063037e5d20398837deb11084e652402a34ddf4f207bdf541a6f2a35ef9"
+  },
+  "yaml_SHA256": "6b1117f9098d6cc9513b7dd1868d489a79630bd010e808207d0e7224a5636a74",
+  "note": "Ignore/other and zero-area regions excluded from training targets; evaluation uses original ignore-union protocol."
+}

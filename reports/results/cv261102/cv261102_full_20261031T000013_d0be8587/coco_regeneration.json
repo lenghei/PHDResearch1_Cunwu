@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "metric_records": {
+    "per_area": 6,
+    "per_class": 60
+  },
+  "GT_SHA256": "5565c64733b39682f050569bdcba25929db050dec3cfd3df34fdebc2764963d3",
+  "predictions_COCO_SHA256": "6d183d664bf78968c76bb0e0cdf198ab7e732cf2e06b5c2b5a7011471f85c1ff",
+  "metrics_SHA256": "216b0c876584633496f6dcb7c6a14fe4e6b206c60f2eed49ef59d6287ab241a3"
+}

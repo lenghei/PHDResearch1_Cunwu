@@ -1,0 +1,118 @@
+{
+  "RunID": "cv261102_full_20261031T000013_d0be8587",
+  "ExperimentID": "cv261102",
+  "status": "PASS",
+  "scope": "FRESH_TRAINING_AND_DEVELOPMENT_VALIDATION_NOT_INDEPENDENT_TEST",
+  "created_at_UTC": "2026-10-31T00:00:13.825036+00:00",
+  "configuration": {
+    "epochs": 100,
+    "train_imgsz": 640,
+    "eval_imgsz": 1280,
+    "batch": 4,
+    "eval_batch": 2,
+    "workers": 0,
+    "seed": 42,
+    "train_zip": "E:\\ForStudy\\code\\uavgap\\datasets\\VisDrone\\VisDrone2019-DET-train.zip",
+    "data_yaml": null,
+    "val_zip": "E:\\ForStudy\\code\\uavgap\\datasets\\VisDrone\\VisDrone2019-DET-val.zip",
+    "weights": "E:\\ForStudy\\code\\uavgap\\models\\checkpoints\\yolov8s.pt",
+    "output_root": "E:\\ForStudy\\code\\uavgap\\datasets\\local_runs\\cv261102",
+    "config_source_SHA256": "ed5e6669e14292230057293e26090232058cd209b6683f934fc9522517926399",
+    "config_source": "E:\\ForStudy\\code\\uavgap\\main\\experiments\\cv261102\\config.local.yaml"
+  },
+  "system": {
+    "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "gpu_total_memory_bytes": 8585216000,
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "ultralytics": "8.4.61",
+    "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "os": "Windows-10-10.0.22631-SP0",
+    "train_images": 6471,
+    "validation_images": 548,
+    "train_annotation_scan": {
+      "annotation_files": 6471,
+      "rows": 353550,
+      "ignored": 10345,
+      "zero_area": 1,
+      "candidate_objects": 343204,
+      "zero_area_examples": [
+        {
+          "annotation": "VisDrone2019-DET-train/annotations/9999985_00000_d_0000020.txt",
+          "line": 12,
+          "box": [
+            611.0,
+            158.0,
+            4.0,
+            0.0
+          ],
+          "category": 4
+        }
+      ]
+    },
+    "validation_annotation_scan": {
+      "annotation_files": 548,
+      "rows": 40169,
+      "ignored": 1410,
+      "zero_area": 0,
+      "candidate_objects": 38759,
+      "zero_area_examples": []
+    },
+    "initial_weights_SHA256": "1f47a78bf100391c2a140b7ac73a1caae18c32779be7d310658112f7ac9aa78a",
+    "val_zip_SHA256": "abeea063037e5d20398837deb11084e652402a34ddf4f207bdf541a6f2a35ef9",
+    "train_zip_SHA256": "86a77eba93137bfc16e4993860de9245b0675c0dba0d3ab98fb458699e256f84",
+    "data_yaml_SHA256": null
+  },
+  "code_SHA256": {
+    "code/main/__init__.py": "f13c882683dec82411f820315124aed3236e8b53d2f3f795db6e5690db8800a8",
+    "code/main/admission.py": "9d4ddd81e775e82554ac5800d640620e69247fde37841932a3bb3652488aa1f8",
+    "code/main/bridge.py": "58c7b6526817a45191a767b3c6c70800c603a9bd1abdae5e53c737a40bf76260",
+    "code/main/config.py": "f3317ecb6b3de3543c432ce44a28143ca9186ed555fea0eacacf85fb663a1b1d",
+    "code/main/dataset.py": "3816ad4940abd084d0ccb68ef309c1bd50e2a969bbd27384cb5ba695dcd2eab5",
+    "code/main/degradation.py": "502ce3e60eb6b12337be8057ba5966a07cfe7b6178c99e897ef9174cff7367d7",
+    "code/main/evaluation.py": "04ab039bdd1c932893c067c320dd09f1799facb08ba4e182a323a24990cbeb4f",
+    "code/main/gap_analysis.py": "1edc6b4e24331cfdc6c9072dd1362929ac54b2508eeaafd2ed86f9f15d88b157",
+    "code/main/labels.py": "41025bef2a595ecbda05f5891a6cb7a73ebb0ca87226e6054814f2be79d34aeb",
+    "code/main/pipeline.py": "919eaa57fedcc170281249f9a9869f6dac8907793605c048fa5fc507338a6a2f",
+    "code/main/predictor.py": "331b23435e217bd304ba8c65a5b5cfa462a700041a15c988a7199267a01e48b6",
+    "code/main/run_report.py": "d280e6f5d29b1308b5a005e1cd6ac6d0b2d4a61bcaa00731490e5a779743b081",
+    "code/main/statistics.py": "d65a8dd08ae974c30deb7a6a6a0ad7725ccb78a5313070e4f9d2a8ab78607c4e",
+    "code/main/uvl.py": "9b36b07facbe84016625814fbbbc334a707908ffa113f5bf8b1c74c5daab573b",
+    "code/main/visualization.py": "f1b0f60e5045a1fc86d175a7c42c6200e143c804210daf0f4bca33e4c7995e6e",
+    "experiments/cv261102/prepare_data.py": "6807b584e9105d3acf6072c57ce68eee053d0febacbf41936e5302aaee2eccc9",
+    "experiments/cv261102/run.py": "e9c5eeddbc577794053bf028cba49655c7ac8b2493fc5c16625f585535c407ba",
+    "experiments/cv261102/validate_run.py": "5a45e5eb763ae0e178de241c2ceddd0b8c5fb7c5deaa6592260cce324c7abb8a",
+    "experiments/cv261102/tests/test_cv261102.py": "f9314daa6923f50eadf741ff7e86c8e63f2a4ad382ee3c19507f3bdd0b51d284"
+  },
+  "git": {
+    "commit": "f6b59d68bad766b17cc0f838c274865dd720d10a",
+    "working_tree_clean": false
+  },
+  "source": "VisDrone2019-DET",
+  "historical_csv": "NOT_USED",
+  "stage": "COMPLETE",
+  "result": {
+    "images": 548,
+    "trained_epochs": 100,
+    "AP50": 0.5041689748827122,
+    "AP50_95": 0.29624432837203357,
+    "AR50_95": 0.5317225023268554,
+    "csv_SHA256": {
+      "evaluation_timing.csv": "f95afde572c8997a0166eb059cf53279ff32715497de334d44c5c1aeb843e9b0",
+      "metrics_by_area.csv": "0187d72f235fcfa4d65f35666c6063aa40050ab1fde4bf8cd6c27b88a6780589",
+      "metrics_by_class.csv": "f40d87d5333e646719ccbb8ad4c634b8ac5c944f9f82335f53f0d7677bd6274e",
+      "metrics_overall.csv": "02c6d16926b8aeae40c8f1410e24e2e653bf0e0c53d92dc114cd5dc810309a19",
+      "training_epoch_times.csv": "5d49a13fd7a063aedcb74fa7ff8197261dc14b3913871c3b43556d954f41b3d9"
+    },
+    "metrics_SHA256": "216b0c876584633496f6dcb7c6a14fe4e6b206c60f2eed49ef59d6287ab241a3",
+    "predictions_raw_SHA256": "783652ff472c7d3ac8ada94f2f39c8013d032514fb730824789637b25dccf213",
+    "GT_SHA256": "5565c64733b39682f050569bdcba25929db050dec3cfd3df34fdebc2764963d3"
+  },
+  "source_checkpoint_SHA256": "e564c819603bf36ac6d93e3acb0359e7d5a75503ce78458209e9a28113280667",
+  "training_wall_seconds": 26979.132338299998,
+  "prepare_wall_seconds": 108.85082209999382,
+  "evaluation_wall_seconds": 240.61731200000213,
+  "coco_regeneration": "PASS",
+  "total_wall_seconds": 27453.7364216,
+  "completed_at_UTC": "2026-10-31T07:37:46.925621+00:00"
+}
