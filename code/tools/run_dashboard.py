@@ -24,8 +24,15 @@ if __name__ == '__main__':
                '--server.address=127.0.0.1', '--server.port=8501', '--server.headless=true',
                '--browser.gatherUsageStats=false', '--server.fileWatcherType=none',
                '--theme.base=light', '--theme.primaryColor=#087f8c']
+    # Redirect optional Python and plotting caches outside the Git repository.
+    cache_root = ROOT / 'datasets' / 'cache'
+    for folder in ('python', 'applications', 'matplotlib'):
+        (cache_root / folder).mkdir(parents=True, exist_ok=True)
     environment = os.environ.copy()
     environment['UAVGAP_DASHBOARD_MODE'] = 'local'
+    environment['PYTHONPYCACHEPREFIX'] = str(cache_root / 'python')
+    environment['XDG_CACHE_HOME'] = str(cache_root / 'applications')
+    environment['MPLCONFIGDIR'] = str(cache_root / 'matplotlib')
     process = subprocess.Popen(command, cwd=ROOT, env=environment)
     try:
         for _ in range(60):

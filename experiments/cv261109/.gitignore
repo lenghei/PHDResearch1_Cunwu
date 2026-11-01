@@ -1,0 +1,10 @@
+config.local.yaml
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.venv_flamapy/
+images/
+annotations/
+preview/
+local_runs/

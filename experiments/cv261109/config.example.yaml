@@ -1,0 +1,6 @@
+# Local configuration is private. Copy to config.local.yaml only if VM1 has no local config.
+dataset_zip: '${UAVGAP_VISDRONE_VAL_ZIP}'
+dataset_zip_sha256: 'abeea063037e5d20398837deb11084e652402a34ddf4f207bdf541a6f2a35ef9'
+expected_images: 548
+flamapy_python: '${UAVGAP_FLAMAPY_PYTHON}'
+degradation_seed: 20261028

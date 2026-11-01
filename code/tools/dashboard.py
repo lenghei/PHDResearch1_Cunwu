@@ -56,8 +56,13 @@ if STUDIES[label] not in LEGACY_STUDIES:
     render_discovered_study(store, STUDIES[label])
     st.stop()
 
+legacy_store = store
 try:
     records = store.history(STUDIES[label])
+    if not records and store.mode == 'local':
+        # Preserve historical pages even when only their public snapshot exists.
+        legacy_store = DashboardStore(mode='cloud')
+        records = legacy_store.history(STUDIES[label])
 except (DataError, OSError) as exc:
     st.error(str(exc))
     st.stop()
@@ -72,7 +77,7 @@ lookup = {r['RunID']: r for r in records}
 selection = st.selectbox('Run · newest first', run_ids,
                          format_func=lambda key: f"{lookup[key]['started_at'][:19].replace('T', ' ')} UTC · {lookup[key]['mode']} · {lookup[key]['status']}")
 try:
-    run = store.view(STUDIES[label], selection)
+    run = legacy_store.view(STUDIES[label], selection)
     result = run.read('result.json') or run.read('summary.json', {})
     detailed_summary = run.read('summary.json', {})
 except (DataError, OSError) as exc:

@@ -1,33 +1,43 @@
-# Dashboard
+# UAV-GAP Dashboard
 
-Local viewer: run `code/tools/run_dashboard.py` from PyCharm with the dashboard environment. Alternatively, from the Git root:
+Both modes run the same Streamlit application, `code/tools/dashboard.py`.
+
+- **Local:** run `code/tools/run_dashboard.py` from the outer project root `uavgap/`. This launcher starts `dashboard.py` with `UAVGAP_DASHBOARD_MODE=local`, using `.venv_dashboard`. Open `http://127.0.0.1:8501`.
+- **Cloud:** Streamlit Community Cloud entry point is `code/tools/dashboard.py`, with `code/tools/requirements.txt` as the requirements file. Cloud mode only reads committed results.
+
+## Automatic discovery
+
+The experiment menu is constructed from saved run directories on every page rerun; there is no experiment name registry to edit.
+
+In **local mode** the dashboard combines:
+
+1. `uavgap/datasets/local_runs/<ExperimentID>/<RunID>/` for complete local run metadata, including native `selection.json` + `result.json` FM_P runs, and older `run.json`/`summary.json` formats.
+2. `uavgap/main/reports/results/<ExperimentID>/<RunID>/` for SHA-verified published snapshots and supported CSV experiments when their private runs are not present.
+
+If a RunID exists in both places, the local run is preferred. A local CV261109 run additionally displays the original/degraded JPEG previews under `preview/`. Published-only snapshots show saved configuration and generation evidence without source images.
+
+In **cloud mode** only `main/reports/results/` is readable. Neither local runs, user data, checkpoints nor private configuration are accessed. New experiment pages appear after committing new compatible result folders and the Streamlit app reruns. No edit to `dashboard.py` or manual study registration is necessary.
+
+Supported saved formats:
+
+- Published schema-2 `manifest.json` + verified `snapshot.json`.
+- Published experiment `manifest.json` with CSV evidence.
+- Local `selection.json` + `result.json` (CV261109 and compatible future experiments).
+- Legacy local `run.json` and `summary.json`.
+- Local identity-valid `result.json` with `RunID` and `ExperimentID` for other simple experiments.
+
+Select **Refresh** in the sidebar or reload the page to discover files written since the last run. This is a read-only viewer: it does not perform inference, image transformations or metrics recalculation. Image-generation runs display `AP: NOT_EVALUATED` when detection has not been run. Large outputs and raw predictions are not published automatically.
+
+## Local setup
+
+From `E:\\ForStudy\\code\\uavgap` in PowerShell:
 
 ```powershell
-$env:UAVGAP_DASHBOARD_MODE = 'local'
-python -m streamlit run code/tools/dashboard.py --server.address=127.0.0.1
+& .\\.venv\\Scripts\\python.exe -B main/code/tools/run_dashboard.py
 ```
 
-Cloud viewer: Streamlit Community Cloud entry point `code/tools/dashboard.py`; dependencies `code/tools/requirements.txt`. The cloud viewer reads only reviewed, versioned snapshots under `reports/results/<experiment>/<RunID>/`.
+If `.venv_dashboard` is not installed, create it once and install `main/code/tools/requirements.txt`. The launcher creates no project files or run results.
 
-Each run has its own `manifest.json` with the snapshot SHA256. Add or delete an entire RunID directory to publish or remove that result; there is no global result index. See `reports/results/README.md` for the publishing command.
+## Matched YOLO image comparisons
 
-The dashboard is read-only; it does not execute inference, model training or metric recalculation. Complete predictions and local data remain outside Git. Historical development results are not independent test results.
-
-## Matched image comparisons
-
-From the project root (`uavgap`), after the VM1 full-paired Run has passed:
-
-```powershell
-$run = '.\datasets\local_runs\vm1_flamapy_yolo26s_validation\<RunID>'
-& .\.venv\Scripts\python.exe -B main/code/tools/publish_image_comparison.py --run $run --ids 1 2 3
-```
-
-This reads the original dataset ZIP, saved transformed images and already evaluated predictions. It produces local `image_comparison/` previews. It does not run the detector or recalculate AP.
-
-After checking redistribution rights for the source images and attribution, optionally publish the selected previews:
-
-```powershell
-& .\.venv\Scripts\python.exe -B main/code/tools/publish_image_comparison.py --run $run --ids 1 2 3 --publish --acknowledge-license
-```
-
-Review the generated files under `reports/results/vm1_flamapy_yolo26s_validation/<RunID>/image_comparison/` before committing. The Dashboard's **Image comparisons** tab reads the local evidence or these audited public thumbnails. Do not publish full datasets, raw predictions, or private configuration files.
+After a VM1 full-paired run is validated, use `code/tools/publish_image_comparison.py` with the `--run` argument for the original local evidence. Check redistribution rights before committing any selected source thumbnails.

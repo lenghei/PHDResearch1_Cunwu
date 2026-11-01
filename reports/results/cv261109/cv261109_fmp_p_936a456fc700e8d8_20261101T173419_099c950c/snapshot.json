@@ -1,0 +1,88 @@
+{
+  "RunID": "cv261109_fmp_p_936a456fc700e8d8_20261101T173419_099c950c",
+  "ExperimentID": "cv261109",
+  "mode": "FM_P_GENERATION",
+  "status": "PASS",
+  "files": {
+    "run.json": {
+      "RunID": "cv261109_fmp_p_936a456fc700e8d8_20261101T173419_099c950c",
+      "ExperimentID": "cv261109",
+      "status": "PASS",
+      "mode": "FM_P_GENERATION"
+    },
+    "result.json": {
+      "status": "PASS",
+      "scope": "FULL_548_FM_P_GENERATION",
+      "generated_images": 548,
+      "configuration_id": "p_936a456fc700e8d8",
+      "FlamaPy_valid_configurations": 46368,
+      "annotation_rows": 40169,
+      "ignored_annotation_rows": 1410,
+      "zero_area_annotation_rows": 0,
+      "elapsed_seconds": 62.74
+    },
+    "summary.json": {
+      "RunID": "cv261109_fmp_p_936a456fc700e8d8_20261101T173419_099c950c",
+      "ExperimentID": "cv261109",
+      "status": "PASS",
+      "mode": "FM_P_GENERATION",
+      "dataset": {
+        "images": 548,
+        "source": "VisDrone2019-DET-val"
+      },
+      "configuration": {
+        "id": "p_936a456fc700e8d8",
+        "features": [
+          "JPEG_q50",
+          "Motion_k15",
+          "Normal"
+        ],
+        "numeric_parameters": {
+          "JPEG_q50": {
+            "quality": 50
+          },
+          "Motion_k15": {
+            "kernel": 15,
+            "angle_min": 0,
+            "angle_max": 180
+          },
+          "Normal": {
+            "gain": 1.0,
+            "bias": 0
+          }
+        },
+        "effect_order": [
+          "atmosphere",
+          "illumination",
+          "blur",
+          "rolling_shutter",
+          "noise",
+          "downscale",
+          "compression"
+        ]
+      },
+      "timing": {
+        "wall_seconds": 62.74
+      },
+      "metrics": {
+        "AP": "NOT_EVALUATED",
+        "model_inference": "NOT_RUN"
+      }
+    },
+    "provenance.json": {
+      "source_RunID": "cv261109_fmp_p_936a456fc700e8d8_20261101T173419_099c950c",
+      "UVL_SHA256": "2033bb61456d29cb82e9d3e15c8491715db330c28cd9f1a0a1895d148ba48dec",
+      "image_manifest_SHA256": "94679da0b65d266926d0ba5ea24606d789ab9929fc4982d73b8e4b798c83cc4f",
+      "source_dataset_ZIP_SHA256": "abeea063037e5d20398837deb11084e652402a34ddf4f207bdf541a6f2a35ef9",
+      "generator_SHA256": "0e4451df339f3ffe48df9858d6b454fcb03ed4dac2c51b21dfe6ee7514d6e555",
+      "audit": {
+        "RunID": "cv261109_fmp_p_936a456fc700e8d8_20261101T173419_099c950c",
+        "status": "PASS",
+        "files_checked": 548,
+        "images_regenerated": 3,
+        "source_ZIP_SHA256": "abeea063037e5d20398837deb11084e652402a34ddf4f207bdf541a6f2a35ef9",
+        "image_manifest_SHA256": "94679da0b65d266926d0ba5ea24606d789ab9929fc4982d73b8e4b798c83cc4f"
+      }
+    }
+  }
+}
