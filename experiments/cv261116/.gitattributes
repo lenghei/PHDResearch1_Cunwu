@@ -1,0 +1,3 @@
+*.py text eol=lf
+*.uvl text eol=lf
+*.json text eol=lf

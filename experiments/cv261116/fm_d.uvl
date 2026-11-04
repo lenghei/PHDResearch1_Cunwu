@@ -1,0 +1,67 @@
+namespace YOLODetector
+
+features
+    Detector {abstract}
+        mandatory
+            Architecture
+                alternative
+                    YOLOv8
+                    YOLO11
+                    YOLO26
+                    LEAF_YOLO
+            ModelScale
+                alternative
+                    Nano
+                    Small
+            Weights
+                alternative
+                    COCO_ZeroShot
+                    VisDrone_FT
+            TrainResolution
+                alternative
+                    Train640
+                    Train1280
+            TrainAugmentation
+                mandatory
+                    HSV_Default
+                    Geometric_Default
+                optional
+                    Albu_Default
+                    NoiseAug
+                    MotionBlurAug
+                    ExposureAug
+                    JPEGAug
+                    HazeAug
+            InferResolution
+                alternative
+                    Infer640
+                    Infer960
+                    Infer1280
+                    Infer1536
+            InferenceStrategy
+                alternative
+                    FullFrame
+                    SAHI_Slicing
+            PostProcessing
+                alternative
+                    NMS
+                    EndToEnd_NMSFree
+            Precision
+                alternative
+                    FP32
+                    FP16
+                    INT8
+        optional
+            Preprocessing
+                or
+                    CLAHE_Pre
+                    Gamma_Pre
+                    Denoise_Pre
+                    Deblur_Pre
+            TTA
+
+constraints
+    LEAF_YOLO => Nano & VisDrone_FT & Train640 & NMS
+    EndToEnd_NMSFree => YOLO26
+    COCO_ZeroShot => Train640 & !NoiseAug & !MotionBlurAug & !ExposureAug & !JPEGAug & !HazeAug
+    SAHI_Slicing => !TTA

@@ -1,0 +1,8 @@
+*.py text eol=lf
+*.md text eol=lf
+results/*.csv text eol=lf
+results/*.json text eol=lf
+results/*.html text eol=lf
+results/*.svg text eol=lf
+results/*.png binary
+results/*.pdf binary
