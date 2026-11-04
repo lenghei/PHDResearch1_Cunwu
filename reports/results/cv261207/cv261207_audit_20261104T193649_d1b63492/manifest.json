@@ -1,0 +1,13 @@
+{
+  "schema": 2,
+  "RunID": "cv261207_audit_20261104T193649_d1b63492",
+  "ExperimentID": "cv261207",
+  "status": "PASS_CPU_AUDIT",
+  "mode": "CV261207_DUAL_VARIABILITY",
+  "started_at": "2026-11-04T19:40:39.203705+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "aa84dac68f1f413b477cff4a13836a328728745060fbb002aca2dcfb23939dd8",
+  "files": {
+    "snapshot.json": "aa84dac68f1f413b477cff4a13836a328728745060fbb002aca2dcfb23939dd8"
+  }
+}

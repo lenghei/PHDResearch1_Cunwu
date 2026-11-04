@@ -52,6 +52,11 @@ with st.sidebar:
     st.divider()
     st.caption('Saved summaries only. No inference, training or AP recalculation.' if store.mode == 'cloud' else 'Complete local evidence. No inference, training or AP recalculation.')
 
+if STUDIES[label] == 'cv261207':
+    from dashboard_cv261207 import render
+    render(store, chart)
+    st.stop()
+
 if STUDIES[label] not in LEGACY_STUDIES:
     render_discovered_study(store, STUDIES[label])
     st.stop()

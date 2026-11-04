@@ -1,0 +1,92 @@
+{
+  "RunID": "cv261207_audit_20261104T193649_d1b63492",
+  "ExperimentID": "cv261207",
+  "mode": "CV261207_DUAL_VARIABILITY",
+  "status": "PASS_CPU_AUDIT",
+  "files": {
+    "summary.json": {
+      "RunID": "cv261207_audit_20261104T193649_d1b63492",
+      "ExperimentID": "cv261207",
+      "status": "PASS_CPU_AUDIT",
+      "scope": "DUAL_VARIABILITY_EVIDENCE",
+      "mode": "CV261207_DUAL_VARIABILITY",
+      "source_audit_RunID": "cv261207_audit_20261104T193649_d1b63492",
+      "source_hashes": {
+        "model_validation.json": "512e63948997ed9d116acacd46bf31b107355b993e3206108a2b1ba64e7bb6c6",
+        "selection_manifest.json": "b59d3b19f2a1260c1464576631e6161bf22b858c5ea66e7df82b0ea7acd42b35",
+        "static_gap.json": "b5cbacc3b975618851f05db97dbfa7166db273c509ebbf6298388267054e8833"
+      },
+      "FM_P": {
+        "count": 46368,
+        "sha256": "2033bb61456d29cb82e9d3e15c8491715db330c28cd9f1a0a1895d148ba48dec"
+      },
+      "FM_D": {
+        "valid_count": 635904,
+        "training_variants": 844,
+        "UVL_SHA256": "13eb9182f48c448f1355d5c34d39c464d384e675e86fac9c5d07b58645ddd0e6"
+      },
+      "sampling": {
+        "seed": 20261104,
+        "eligible_FM_P": 26496,
+        "full_FM_P": 46368,
+        "per_configuration_inclusion_probability": 0.0037741545893719805,
+        "rolling_shutter_excluded": 19872
+      },
+      "pairwise_coverage": {
+        "achieved": 1163,
+        "feasible": 1163,
+        "impossible": 37
+      },
+      "planned_pairs": 500,
+      "static": {
+        "exact_identity": 1,
+        "conservative": 3,
+        "supervisor_proxy": 18
+      },
+      "formal_evaluation": "DATASET_BLOCKED",
+      "pair_runs": []
+    },
+    "result.json": {
+      "RunID": "cv261207_audit_20261104T193649_d1b63492",
+      "ExperimentID": "cv261207",
+      "status": "PASS_CPU_AUDIT",
+      "scope": "DUAL_VARIABILITY_EVIDENCE",
+      "mode": "CV261207_DUAL_VARIABILITY",
+      "source_audit_RunID": "cv261207_audit_20261104T193649_d1b63492",
+      "source_hashes": {
+        "model_validation.json": "512e63948997ed9d116acacd46bf31b107355b993e3206108a2b1ba64e7bb6c6",
+        "selection_manifest.json": "b59d3b19f2a1260c1464576631e6161bf22b858c5ea66e7df82b0ea7acd42b35",
+        "static_gap.json": "b5cbacc3b975618851f05db97dbfa7166db273c509ebbf6298388267054e8833"
+      },
+      "FM_P": {
+        "count": 46368,
+        "sha256": "2033bb61456d29cb82e9d3e15c8491715db330c28cd9f1a0a1895d148ba48dec"
+      },
+      "FM_D": {
+        "valid_count": 635904,
+        "training_variants": 844,
+        "UVL_SHA256": "13eb9182f48c448f1355d5c34d39c464d384e675e86fac9c5d07b58645ddd0e6"
+      },
+      "sampling": {
+        "seed": 20261104,
+        "eligible_FM_P": 26496,
+        "full_FM_P": 46368,
+        "per_configuration_inclusion_probability": 0.0037741545893719805,
+        "rolling_shutter_excluded": 19872
+      },
+      "pairwise_coverage": {
+        "achieved": 1163,
+        "feasible": 1163,
+        "impossible": 37
+      },
+      "planned_pairs": 500,
+      "static": {
+        "exact_identity": 1,
+        "conservative": 3,
+        "supervisor_proxy": 18
+      },
+      "formal_evaluation": "DATASET_BLOCKED",
+      "pair_runs": []
+    }
+  }
+}
