@@ -38,6 +38,17 @@ def render(store, chart):
     cards[2].metric('Frozen pair plan', summary['planned_pairs'])
     cards[3].metric('Formal pair runs', sum(p['scope']=='TEST_DEV' for p in summary.get('pair_runs', [])))
     st.write('Formal evaluation: ' + summary['formal_evaluation'])
+    admission = summary.get('admission')
+    if admission:
+        st.subheader('Checkpoint admission')
+        st.caption('Archive integrity and checkpoint fitness are separate from independent test admission.')
+        st.dataframe(pd.DataFrame(admission['candidates'])[
+            ['id', 'model', 'candidate_status', 'training_membership', 'checkpoint_selection',
+             'historical_testdev_evaluation_or_tuning', 'formal_admission']],
+            hide_index=True, width='stretch')
+        overlap = pd.DataFrame.from_dict(admission['archive_overlap'], orient='index')
+        st.dataframe(overlap, width='stretch')
+        st.info('The frozen 500-pair plan binds the CV261102 YOLOv8s checkpoint.')
     st.subheader('Sampling')
     st.json({'uniform': summary['sampling'], 'pairwise': summary['pairwise_coverage']}, expanded=False)
     st.subheader('Static coverage')

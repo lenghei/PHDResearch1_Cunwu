@@ -108,6 +108,37 @@ def empirical(pairs, manifest, static):
             'scope': 'Five bound inference configurations; no full FM_D gap inference.', 'rows': rows}
 
 
+def publish_snapshot(name, status, scope, report):
+    out = PUBLIC / 'reports/results/cv261207' / name
+    out.mkdir(parents=True)
+    brief = {'RunID': name, 'ExperimentID': 'cv261207', 'status': status,
+             'scope': scope, 'mode': 'CV261207_DUAL_VARIABILITY', **report}
+    bundle = {'RunID': name, 'ExperimentID': 'cv261207', 'mode': brief['mode'],
+              'status': status, 'files': {'summary.json': brief}}
+    save(out / 'snapshot.json', bundle)
+    checksum = sha256(out / 'snapshot.json')
+    save(out / 'manifest.json', {'schema': 2, 'RunID': name, 'ExperimentID': 'cv261207',
+                                 'status': status, 'mode': brief['mode'],
+                                 'started_at': datetime.now(timezone.utc).isoformat(),
+                                 'bundle': 'snapshot.json', 'SHA256': checksum,
+                                 'files': {'snapshot.json': checksum}})
+    return out
+
+
+def publish_admission(run):
+    from admission import public_summary
+    hashes = verify_hashes(run, ('run.json', 'admission.json', 'summary.json'))
+    meta = load(run / 'run.json')
+    if (meta.get('RunID') != run.name or meta.get('mode') != 'admission'
+            or meta.get('status') != 'DATASET_BLOCKED'):
+        raise ValueError('Expected a sealed CPU admission audit.')
+    evidence = load(run / 'admission.json')
+    report = summarize(resolve_run(evidence['source_audit_RunID']), [])
+    report['admission'] = public_summary(evidence)
+    report['source_hashes']['admission.json'] = hashes['admission.json']
+    print(publish_snapshot(run.name, meta['status'], meta['scope'], report))
+
+
 def execute(args):
     if not args.audit:
         raise ValueError('--audit is required.')
@@ -117,18 +148,7 @@ def execute(args):
     if args.mode == 'publish':
         if any(r['scope'] != 'TEST_DEV' for r in report['pair_runs']):
             raise ValueError('Engineering AP remains local; publish the CPU summary separately.')
-        out = PUBLIC / 'reports/results/cv261207' / audit.name
-        out.mkdir(parents=True)
-        brief = {'RunID': audit.name, 'ExperimentID': 'cv261207', 'status': 'PASS_CPU_AUDIT',
-                 'scope': 'DUAL_VARIABILITY_EVIDENCE', 'mode': 'CV261207_DUAL_VARIABILITY', **report}
-        bundle = {'RunID': audit.name, 'ExperimentID': 'cv261207', 'mode': brief['mode'],
-                  'status': brief['status'], 'files': {'summary.json': brief, 'result.json': brief}}
-        save(out / 'snapshot.json', bundle)
-        checksum = sha256(out / 'snapshot.json')
-        save(out / 'manifest.json', {'schema': 2, 'RunID': audit.name, 'ExperimentID': 'cv261207',
-                                     'status': brief['status'], 'mode': brief['mode'],
-                                     'started_at': datetime.now(timezone.utc).isoformat(), 'bundle': 'snapshot.json',
-                                     'SHA256': checksum, 'files': {'snapshot.json': checksum}})
+        out = publish_snapshot(audit.name, 'PASS_CPU_AUDIT', 'DUAL_VARIABILITY_EVIDENCE', report)
     else:
         out = new_run(args.mode)
         static = load(audit / 'static_gap.json')

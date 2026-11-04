@@ -1,0 +1,13 @@
+{
+  "schema": 2,
+  "RunID": "cv261207_admission_20261104T211249_32d83def",
+  "ExperimentID": "cv261207",
+  "status": "DATASET_BLOCKED",
+  "mode": "CV261207_DUAL_VARIABILITY",
+  "started_at": "2026-11-04T21:14:19.423323+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "677e64f6457bdb8c1bf22abfe47cfdc10e3652937ab04c0d0c844e4d69da4cc6",
+  "files": {
+    "snapshot.json": "677e64f6457bdb8c1bf22abfe47cfdc10e3652937ab04c0d0c844e4d69da4cc6"
+  }
+}

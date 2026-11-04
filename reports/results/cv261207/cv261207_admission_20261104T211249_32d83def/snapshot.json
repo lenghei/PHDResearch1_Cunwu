@@ -1,0 +1,120 @@
+{
+  "RunID": "cv261207_admission_20261104T211249_32d83def",
+  "ExperimentID": "cv261207",
+  "mode": "CV261207_DUAL_VARIABILITY",
+  "status": "DATASET_BLOCKED",
+  "files": {
+    "summary.json": {
+      "RunID": "cv261207_admission_20261104T211249_32d83def",
+      "ExperimentID": "cv261207",
+      "status": "DATASET_BLOCKED",
+      "scope": "CPU_CHECKPOINT_AND_SPLIT_AUDIT",
+      "mode": "CV261207_DUAL_VARIABILITY",
+      "source_audit_RunID": "cv261207_audit_20261104T193649_d1b63492",
+      "source_hashes": {
+        "model_validation.json": "512e63948997ed9d116acacd46bf31b107355b993e3206108a2b1ba64e7bb6c6",
+        "selection_manifest.json": "b59d3b19f2a1260c1464576631e6161bf22b858c5ea66e7df82b0ea7acd42b35",
+        "static_gap.json": "b5cbacc3b975618851f05db97dbfa7166db273c509ebbf6298388267054e8833",
+        "admission.json": "0eaff4a5e97bd0dd4cd030ed609b5d53d2449d61ab58341084a32fbdd494ebfc"
+      },
+      "FM_P": {
+        "count": 46368,
+        "sha256": "2033bb61456d29cb82e9d3e15c8491715db330c28cd9f1a0a1895d148ba48dec"
+      },
+      "FM_D": {
+        "valid_count": 635904,
+        "training_variants": 844,
+        "UVL_SHA256": "13eb9182f48c448f1355d5c34d39c464d384e675e86fac9c5d07b58645ddd0e6"
+      },
+      "sampling": {
+        "seed": 20261104,
+        "eligible_FM_P": 26496,
+        "full_FM_P": 46368,
+        "per_configuration_inclusion_probability": 0.0037741545893719805,
+        "rolling_shutter_excluded": 19872
+      },
+      "pairwise_coverage": {
+        "achieved": 1163,
+        "feasible": 1163,
+        "impossible": 37
+      },
+      "planned_pairs": 500,
+      "static": {
+        "exact_identity": 1,
+        "conservative": 3,
+        "supervisor_proxy": 18
+      },
+      "formal_evaluation": "DATASET_BLOCKED",
+      "pair_runs": [],
+      "admission": {
+        "status": "DATASET_BLOCKED",
+        "dataset": "VisDrone2019-DET-test-dev",
+        "dataset_sha256": "78b0c5078a14ee43d0b803a354e76016d7260d1704cfd1c2dc821858d839e261",
+        "testdev_images": 1610,
+        "formal_pairs_measured": 0,
+        "archive_overlap": {
+          "train": {
+            "images": 6471,
+            "matching_ids": 0,
+            "matching_image_sha256": 0
+          },
+          "val": {
+            "images": 548,
+            "matching_ids": 0,
+            "matching_image_sha256": 0
+          }
+        },
+        "candidates": [
+          {
+            "id": "ck01",
+            "model": "yolo26s",
+            "checkpoint_sha256": "1b3861902e01416f199f2242cb43618f7680848cabf5f5df9546f2b404f0c488",
+            "native10": true,
+            "epochs_logged": 100,
+            "training_membership": "RECORDED_TRAIN_VAL_PATHS_CREATION_BYTES_UNVERIFIED",
+            "checkpoint_selection": "RECORDED_VAL_SELECTION_SELECTED_EPOCH_UNKNOWN",
+            "historical_testdev_evaluation_or_tuning": "UNVERIFIED",
+            "candidate_status": "CPU_READY_DEVELOPMENT_ONLY",
+            "formal_admission": "DATASET_BLOCKED"
+          },
+          {
+            "id": "ck05",
+            "model": "yolov8s",
+            "checkpoint_sha256": "96c84ece325eccf07edefd231f088f758ba5fa6a75a4b577e8db32a94bfeeb8b",
+            "native10": true,
+            "epochs_logged": 100,
+            "training_membership": "RECORDED_TRAIN_VAL_PATHS_CREATION_BYTES_UNVERIFIED",
+            "checkpoint_selection": "RECORDED_VAL_SELECTION_SELECTED_EPOCH_UNKNOWN",
+            "historical_testdev_evaluation_or_tuning": "UNVERIFIED",
+            "candidate_status": "CPU_READY_DEVELOPMENT_ONLY",
+            "formal_admission": "DATASET_BLOCKED"
+          },
+          {
+            "id": "ck06",
+            "model": "yolo11s",
+            "checkpoint_sha256": "839a3dcc962f2496777b87b7494b0584a74c940e03f75b7e6a7f699df798e0f1",
+            "native10": true,
+            "epochs_logged": 100,
+            "training_membership": "RECORDED_TRAIN_VAL_PATHS_CREATION_BYTES_UNVERIFIED",
+            "checkpoint_selection": "RECORDED_VAL_SELECTION_SELECTED_EPOCH_UNKNOWN",
+            "historical_testdev_evaluation_or_tuning": "UNVERIFIED",
+            "candidate_status": "CPU_READY_DEVELOPMENT_ONLY",
+            "formal_admission": "DATASET_BLOCKED"
+          },
+          {
+            "id": "cv261102",
+            "model": "yolov8s",
+            "checkpoint_sha256": "e564c819603bf36ac6d93e3acb0359e7d5a75503ce78458209e9a28113280667",
+            "native10": true,
+            "epochs_logged": 100,
+            "training_membership": "BOUND_TO_RECORDED_ARCHIVES",
+            "checkpoint_selection": "RECORDED_VAL_SELECTION_WITH_ARCHIVE_SHA",
+            "historical_testdev_evaluation_or_tuning": "UNVERIFIED",
+            "candidate_status": "CPU_READY_DEVELOPMENT_ONLY",
+            "formal_admission": "DATASET_BLOCKED"
+          }
+        ]
+      }
+    }
+  }
+}

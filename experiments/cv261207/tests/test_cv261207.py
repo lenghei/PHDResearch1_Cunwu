@@ -60,6 +60,34 @@ class ProtocolTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 verify_hashes(out, ('run.json',))
 
+    def test_checkpoint_review_requires_all_domains_and_matching_files(self):
+        from admission import EVIDENCE_DOMAINS, verify_review
+        from common import sha256
+        with TemporaryDirectory() as temp:
+            root = Path(temp)
+            private = root / 'datasets'
+            private.mkdir()
+            checkpoint = 'a' * 64
+            proofs = {}
+            for domain in EVIDENCE_DOMAINS:
+                path = private / f'{domain}.txt'
+                path.write_text(domain, encoding='utf-8')
+                proofs[domain] = {'status':'VERIFIED_INDEPENDENT',
+                                  'evidence':[{'path':path.relative_to(root).as_posix(), 'sha256':sha256(path)}]}
+            decision = {'checkpoint_reviews':{checkpoint:proofs}}
+            verify_review(decision, {checkpoint}, root)
+            with self.assertRaisesRegex(ValueError, 'checkpoint-specific'):
+                verify_review({'review_evidence':'Reviewed'}, {checkpoint}, root)
+            with self.assertRaisesRegex(ValueError, 'checkpoint-specific'):
+                verify_review(decision, {'b'*64}, root)
+            proofs['training_membership']['status'] = 'UNVERIFIED'
+            with self.assertRaisesRegex(ValueError, 'training_membership'):
+                verify_review(decision, {checkpoint}, root)
+            proofs['training_membership']['status'] = 'VERIFIED_INDEPENDENT'
+            path.write_text('changed', encoding='utf-8')
+            with self.assertRaisesRegex(ValueError, 'SHA'):
+                verify_review(decision, {checkpoint}, root)
+
     def test_oracle_boundaries(self):
         self.assertEqual(pair_outcome([.1,.2], 50, .1, 50), 'PASS')
         self.assertEqual(pair_outcome([.09,.1], 50, .1, 50), 'UNCERTAIN')

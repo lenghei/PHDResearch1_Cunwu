@@ -10,7 +10,7 @@ import sys
 import time
 import traceback
 
-from common import (RUNS, SCRIPT, FMP, FMD, VAL, TEST, BASELINE, CHECKPOINT, PUBLIC,
+from common import (RUNS, SCRIPT, FMP, FMD, VAL, TEST, BASELINE, CHECKPOINT, PUBLIC, ROOT,
                     load, source, save, seal, sha256, resolve_run, new_run, verify_hashes, file_id)
 from audit import input_audit, split_audit, verify_uvls
 from evaluation import Device, pair, runtime, verify, PROTOCOL
@@ -70,7 +70,7 @@ def audit_plan(name):
     return out, manifest
 
 
-def readiness(audit, approval):
+def readiness(audit, approval, specs):
     gate = load(audit / 'dataset_gate.json')
     if gate['archive_status'] != 'PASS':
         raise ValueError('DATASET_BLOCKED: original archive admission failed.')
@@ -81,8 +81,10 @@ def readiness(audit, approval):
             or decision.get('test_dev_sha256') != gate['archives']['test-dev']['sha256']
             or decision.get('dataset_gate_sha256') != sha256(audit / 'dataset_gate.json')
             or decision.get('selection_sha256') != sha256(audit / 'selection_manifest.json')
-            or not decision.get('review_evidence') or decision.get('protocol') != PROTOCOL):
+            or decision.get('protocol') != PROTOCOL):
         raise ValueError('DATASET_BLOCKED: missing signed-off evidence or frozen identity mismatch.')
+    from admission import verify_review
+    verify_review(decision, {s['detector']['checkpoint_sha256'] for s in specs}, ROOT)
     if sha256(TEST) != decision['test_dev_sha256']:
         raise ValueError('Test-dev ZIP changed after preflight.')
 
@@ -95,9 +97,12 @@ def compare_repeats(left, right):
     a, b = [load(path / 'configuration.json') for path in (first, second)]
     if first == second or a != b:
         raise ValueError('Repeat runs must have different RunIDs and identical configurations.')
-    if (sha256(first / 'metrics.json') != sha256(second / 'metrics.json')
-            or sha256(first / 'image_manifest.jsonl') != sha256(second / 'image_manifest.jsonl')):
-        raise ValueError('Repeat metrics or pixel provenance differ.')
+    comparable = ['metrics.json', 'ground_truth.json', 'image_manifest.jsonl']
+    if a['split'] == TEST.stem:
+        comparable.append('bootstrap.json')
+    for name in comparable:
+        if sha256(first / name) != sha256(second / name):
+            raise ValueError(f'Repeat evidence differs: {name}')
     with gzip.open(first / 'predictions.jsonl.gz', 'rb') as stream_a, gzip.open(second / 'predictions.jsonl.gz', 'rb') as stream_b:
         while True:
             block = stream_a.read(1024 * 1024)
@@ -124,6 +129,14 @@ def batch_admission(args):
                 or load(path / 'configuration.json')['dataset_sha256'] != sha256(TEST)):
             raise ValueError('Formal repeat input changed.')
         verify_hashes(path, ('bootstrap.json',))
+    paths = [resolve_run(name) for name in args.run]
+    measured_seconds = [load(p/'timing.json')['pair_wall_seconds'] for p in paths]
+    sizes = [sum(f.stat().st_size for f in p.iterdir() if f.is_file()) for p in paths]
+    if any(not 0 < x <= 28800 for x in measured_seconds):
+        raise ValueError('Invalid qualification timings.')
+    return {'qualification_runs':args.run, 'pair_wall_seconds':measured_seconds,
+            'pair_evidence_bytes':sizes, 'seconds_reserved_per_pair':1.25*max(measured_seconds),
+            'bytes_reserved_per_pair':2*max(sizes), 'scope':'Measured pair plus planning margin; other pairs may cost more.'}
 
 
 def processed_pairs(selection):
@@ -174,13 +187,15 @@ def choose(args, manifest, formal):
 
 
 def worker(args):
+    started = time.perf_counter()
+    cost = None
     audit, selection = audit_plan(args.audit)
     formal = args.mode in ('full', 'batch')
-    if formal:
-        readiness(audit, args.approval)
     specs = choose(args, selection, formal)
+    if formal:
+        readiness(audit, args.approval, specs)
     if args.mode == 'batch':
-        batch_admission(args)
+        cost = batch_admission(args)
         completed = processed_pairs(selection)
         specs = [spec for spec in specs if spec['pair_id'] not in completed]
     if not specs:
@@ -192,7 +207,11 @@ def worker(args):
     out = None
     device = None
     for spec in specs:
-        if shutil.disk_usage(RUNS).free < 8 * 1024**3:
+        if cost and args.budget_seconds-(time.perf_counter()-started) < cost['seconds_reserved_per_pair']:
+            print('[CV261207] Budget reserve reached; remaining pairs stay queued.', flush=True)
+            return 2
+        reserve = cost['bytes_reserved_per_pair'] if cost else 0
+        if shutil.disk_usage(RUNS).free < 8 * 1024**3 + reserve:
             raise RuntimeError('Less than 8 GiB free; pair not started.')
         out = new_run('formal' if formal else 'smoke')
         try:
@@ -210,11 +229,10 @@ def worker(args):
 def supervise(args):
     if args.budget_seconds is None or not 1 <= args.budget_seconds <= (28800 if args.mode in ('full', 'batch') else 600):
         raise ValueError('Supply an explicit bounded --budget-seconds.')
-    audit, _ = audit_plan(args.audit)
+    audit, selection = audit_plan(args.audit)
     if args.mode in ('full', 'batch'):
-        readiness(audit, args.approval)
-    if args.mode == 'batch':
-        batch_admission(args)
+        readiness(audit, args.approval, choose(args, selection, True))
+    cost = batch_admission(args) if args.mode == 'batch' else None
     out = new_run('execution')
     lock = RUNS / '.gpu.lock'
     token = lock.open('x', encoding='utf-8')
@@ -223,6 +241,8 @@ def supervise(args):
     try:
         with token:
             token.write(out.name + '\n')
+        if cost:
+            save(out / 'qualification_cost.json', cost)
         active = subprocess.run(['nvidia-smi', '--query-gpu=utilization.gpu', '--format=csv,noheader,nounits'],
                                 text=True, capture_output=True, check=True, timeout=10)
         if max(map(int, active.stdout.split())) > 20:
@@ -234,8 +254,8 @@ def supervise(args):
                 raise TimeoutError('Budget elapsed during preflight.')
             result = subprocess.run([sys.executable, '-B', str(SCRIPT), *sys.argv[1:], '--worker'],
                                     timeout=remaining, stdout=log, stderr=subprocess.STDOUT, env=env)
-        status = 'PASS' if result.returncode == 0 else 'FAILED'
-        if result.returncode != 0:
+        status = {0:'PASS', 2:'PARTIAL'}.get(result.returncode, 'FAILED')
+        if result.returncode not in (0, 2):
             raise RuntimeError(f'GPU worker failed; see {out / "execution.log"}')
     except subprocess.TimeoutExpired:
         status = 'PARTIAL'
@@ -252,7 +272,7 @@ def supervise(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('mode', nargs='?', default='preflight',
-                        choices=('preflight', 'smoke', 'smoke-grid', 'demo', 'full', 'batch', 'verify',
+                        choices=('preflight', 'admission', 'publish-admission', 'smoke', 'smoke-grid', 'demo', 'full', 'batch', 'verify',
                                  'regenerate', 'repeat-check', 'figures', 'publish', 'learn'))
     parser.add_argument('--source', type=Path, action='append', default=[])
     parser.add_argument('--history', type=Path, action='append', default=[])
@@ -267,6 +287,14 @@ def main():
     args = parser.parse_args()
     if args.mode == 'preflight':
         preflight(args)
+    elif args.mode == 'admission':
+        from admission import run
+        run(audit_plan(args.audit)[0])
+    elif args.mode == 'publish-admission':
+        from outputs import publish_admission
+        if len(args.run) != 1:
+            parser.error('publish-admission requires one --run.')
+        publish_admission(resolve_run(args.run[0]))
     elif args.mode in ('verify', 'regenerate'):
         for name in args.run:
             print(json.dumps(verify(resolve_run(name), regenerate=args.mode == 'regenerate')))
@@ -282,7 +310,7 @@ def main():
     elif args.worker:
         if (RUNS / '.gpu.lock').read_text(encoding='utf-8').strip() != os.environ.get('CV261207_WORKER'):
             raise ValueError('Use the bounded worker supervisor.')
-        worker(args)
+        sys.exit(worker(args))
     else:
         supervise(args)
 
