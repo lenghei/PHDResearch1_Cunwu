@@ -1,0 +1,13 @@
+{
+  "schema": 2,
+  "RunID": "cv261207_vm26review_20261106T212756_fdf80ed8",
+  "ExperimentID": "cv261207",
+  "status": "COMPLETE_WITH_LIMITATIONS",
+  "mode": "CV261207_DUAL_VARIABILITY",
+  "started_at": "2026-11-06T21:35:26.382893+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "3d29a8d956b46513a3b174cb5c13c92dd052776e36ec8cc18e90675e3af35d58",
+  "files": {
+    "snapshot.json": "3d29a8d956b46513a3b174cb5c13c92dd052776e36ec8cc18e90675e3af35d58"
+  }
+}

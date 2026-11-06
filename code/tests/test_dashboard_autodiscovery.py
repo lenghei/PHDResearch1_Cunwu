@@ -84,7 +84,9 @@ class DiscoveryTests(unittest.TestCase):
 
     def test_crlf_to_lf_conversion_is_accepted(self):
         path = self.folder / 'csv/metrics_overall.csv'
-        original = path.read_bytes().replace(b'\n', b'\r\n')
+        normalized = path.read_bytes().replace(b'\r\n', b'\n')
+        original = normalized.replace(b'\n', b'\r\n')
+        path.write_bytes(normalized)
         expected = hashlib.sha256(original).hexdigest()
         self.manifest['result']['csv_SHA256']['metrics_overall.csv'] = expected
         self.save_manifest()

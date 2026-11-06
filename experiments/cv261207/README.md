@@ -51,3 +51,22 @@ checksums identify the local evidence. They do not grant public access to it.
 Dependencies: the existing YOLO and FlamaPy environments and Matplotlib for
 figures. CUDA is required for GPU modes. No training or dependency installation
 is performed by this entry point.
+
+## Historical interaction evidence
+
+[Verified VM26 findings](HISTORICAL_EVIDENCE.md) cover 54 development configurations.
+They do not admit test-dev or add formal pairs.
+
+```powershell
+& $py -B main/experiments/cv261207/historical_review.py review
+& $py -B main/experiments/cv261207/history_gate_review.py
+& $py -B main/experiments/cv261207/summarize_history.py --run <review-RunID> --gate <gate-RunID>
+& $py -B main/experiments/cv261207/publish_history.py --run <review-RunID> --gate <gate-RunID>
+```
+
+The review verifies archived metrics and raw predictions, reproduces the saved
+200-draw intervals, and independently rematches two raw configurations and six
+bootstrap draws. A depth-2 tree describes observed gains; image-disjoint held-out
+performance is not reported. Figures and full provenance stay in the local run.
+The explicit publish command exports only small verified summaries to the
+read-only dashboard. It does not commit or push.

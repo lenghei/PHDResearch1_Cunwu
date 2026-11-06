@@ -29,6 +29,9 @@ def render(store, chart):
         st.warning(f'Verification failed: {exc}')
         return
     st.caption(f"{run['RunID']} · {run['source']} · {run['status']}")
+    if summary.get('historical_vm26'):
+        render_history(st, pd, px, chart, summary['historical_vm26'])
+        return
     if not summary.get('FM_P'):
         st.info('This run has no review summary. Select a saved evidence summary.')
         return
@@ -67,3 +70,39 @@ def render(store, chart):
     st.subheader('Evidence hashes')
     st.json(summary['source_hashes'], expanded=False)
     st.caption('Empirical gap and held-out rules are available only after formal evaluation.')
+
+
+def render_history(st, pd, px, chart, history):
+    st.warning('Historical development evidence only. Independent test-dev admission remains blocked.')
+    with st.container(horizontal=True):
+        st.metric('Measured historical configurations', history['configurations'])
+        st.metric('Shared development images', history['images'])
+        st.metric('Checkpoints', len(history['checkpoints']))
+        st.metric('Formal pairs', 0)
+    st.caption('VM26 RunID: vm26_r001 · native10 · pr01 · FP32 · no new GPU execution')
+    cells=pd.DataFrame(history['cells'])
+    cells['AP50:95 (%)']=cells['AP50_95']*100
+    cells['Blur']=cells['blur'].map({0:'No added blur',2:'Severe added blur'})
+    chart(px.line(cells.sort_values('resolution'), x='resolution', y='AP50:95 (%)',
+                  color='jpeg', line_dash='Blur', facet_col='model', markers=True,
+                  labels={'jpeg':'Extra JPEG','resolution':'Inference input size'}))
+    gains=pd.DataFrame(history['gains'])
+    gains['AP difference (pp)']=gains['estimate']*100
+    gains['Blur']=gains['blur'].map({0:'No added blur',2:'Severe added blur'})
+    chart(px.bar(gains, x='model', y='AP difference (pp)', color='jpeg', facet_col='Blur',
+                 barmode='group', title='AP50:95 difference: 1280 minus 640'))
+    intervals=pd.DataFrame(history['headline_intervals'])
+    intervals['Contrast (pp)']=intervals['estimate']*100
+    intervals['upper_error']=(intervals['joint36_high']-intervals['estimate'])*100
+    intervals['lower_error']=(intervals['estimate']-intervals['joint36_low'])*100
+    chart(px.scatter(intervals,x='model',y='Contrast (pp)',facet_col='effect',
+                     error_y='upper_error',error_y_minus='lower_error',
+                     title='Original 36-contrast family: 95% simultaneous image-bootstrap intervals'))
+    st.caption('200 paired image draws. No flight-cluster or training-seed uncertainty. Q85 and 960 intervals were not evaluated.')
+    st.subheader('Descriptive learned rules')
+    st.code(history['rules'])
+    st.info('Held-out image-and-configuration validation: NOT_EVALUATED. All aggregate responses share the same 300 development images.')
+    st.subheader('Contribution evidence')
+    st.dataframe(pd.DataFrame(history['contributions']),hide_index=True,width='stretch')
+    st.subheader('Source hashes')
+    st.json(history['source_hashes'],expanded=False)
