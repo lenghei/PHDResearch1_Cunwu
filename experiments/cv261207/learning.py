@@ -7,6 +7,19 @@ DEFAULT_TAU = .10
 DEFAULT_LIMIT = 50.0
 
 
+def fold_membership(train, test):
+    if {r['group'] for r in train} & {r['group'] for r in test}:
+        return 'DEGRADATION_LEAKAGE'
+    for row in train+test:
+        images=row.get('image_sha256')
+        if (not isinstance(images,list) or not images or len(images)!=len(set(images))
+                or any(not isinstance(s,str) or len(s)!=64 or any(c not in '0123456789abcdef' for c in s) for s in images)):
+            return 'IMAGE_MEMBERSHIP_UNVERIFIED'
+    if set().union(*(set(r['image_sha256']) for r in train)) & set().union(*(set(r['image_sha256']) for r in test)):
+        return 'IMAGE_LEAKAGE'
+    return 'PASS'
+
+
 def training_rows(records, tau=DEFAULT_TAU, limit=DEFAULT_LIMIT):
     rows = []
     for record in records:
@@ -28,7 +41,8 @@ def training_rows(records, tau=DEFAULT_TAU, limit=DEFAULT_LIMIT):
         status = pair_outcome(ci, record['timing']['mean_pipeline_ms'], tau, limit)
         if status in ('PASS', 'FAIL', 'UNCERTAIN'):
             rows.append({'group': c['degradation']['degradation_id'], 'label': status,
-                         'features': features, 'run': record['run']['RunID']})
+                         'features': features, 'run': record['run']['RunID'],
+                         'image_sha256': c.get('evaluation_image_sha256')})
     return rows
 
 
@@ -41,6 +55,9 @@ def evaluate(records):
         return {'status': 'ML_INSUFFICIENT_EVIDENCE', 'labeled_pairs': len(rows),
                 'degradation_groups': len(groups), 'class_counts': counts,
                 'reason': 'Requires at least 20 groups, with each observed label present in five groups.'}
+    if any(not row['image_sha256'] for row in rows):
+        return {'status':'ML_INSUFFICIENT_EVIDENCE', 'labeled_pairs':len(rows),
+                'reason':'Image membership is required to verify image-disjoint grouped folds.'}
     try:
         from sklearn.dummy import DummyClassifier
         from sklearn.feature_extraction import DictVectorizer
@@ -62,6 +79,10 @@ def evaluate(records):
             test_groups = {group_ids[i] for i in test}
             if train_groups & test_groups:
                 raise ValueError('Degradation leakage between grouped folds.')
+            boundary=fold_membership([rows[i] for i in train],[rows[i] for i in test])
+            if boundary!='PASS':
+                return {'status':'ML_INSUFFICIENT_EVIDENCE', 'labeled_pairs':len(rows),
+                        'reason':boundary}
             vector = DictVectorizer(sparse=False)
             x_train = vector.fit_transform([observations[i] for i in train])
             x_test = vector.transform([observations[i] for i in test])

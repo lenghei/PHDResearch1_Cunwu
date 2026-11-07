@@ -41,6 +41,8 @@ class HistoricalDashboardTests(unittest.TestCase):
             self.assertFalse(app.exception)
             option=next(x for x in app.sidebar.selectbox[0].options if 'cv261207' in x.lower())
             app.sidebar.selectbox[0].select(option).run()
+            selected=next(s for s in app.selectbox if s.label=='Saved run')
+            selected.set_value(next(i for i,v in enumerate(selected.options) if 'vm26review' in v)).run()
             self.assertFalse(app.exception)
             self.assertEqual(len(app.get('plotly_chart')),3)
             self.assertTrue(any('admission remains blocked' in w.value for w in app.warning))

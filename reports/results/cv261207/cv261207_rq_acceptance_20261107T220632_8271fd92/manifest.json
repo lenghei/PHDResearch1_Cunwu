@@ -1,0 +1,13 @@
+{
+  "schema": 2,
+  "RunID": "cv261207_rq_acceptance_20261107T220632_8271fd92",
+  "ExperimentID": "cv261207",
+  "status": "PARTIAL",
+  "mode": "CV261207_DUAL_VARIABILITY",
+  "started_at": "2026-11-07T22:11:42.872891+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "69ce967e363678400120907c7427c908fdabc78516ec2f9f17c42653d73069f3",
+  "files": {
+    "snapshot.json": "69ce967e363678400120907c7427c908fdabc78516ec2f9f17c42653d73069f3"
+  }
+}

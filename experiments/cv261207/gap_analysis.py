@@ -81,11 +81,11 @@ def static_audit(fmp, configs):
 def pair_outcome(ci, latency_ms, tau, limit_ms):
     if latency_ms is not None and latency_ms > limit_ms:
         return 'FAIL'
+    if ci is not None and all(x is not None for x in ci) and ci[1] < tau:
+        return 'FAIL'
     if ci is None or any(x is None for x in ci) or latency_ms is None:
         return 'NOT_EVALUATED'
     lower, upper = ci
-    if upper < tau:
-        return 'FAIL'
     if lower >= tau:
         return 'PASS'
     return 'UNCERTAIN'

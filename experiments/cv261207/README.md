@@ -70,3 +70,29 @@ bootstrap draws. A depth-2 tree describes observed gains; image-disjoint held-ou
 performance is not reported. Figures and full provenance stay in the local run.
 The explicit publish command exports only small verified summaries to the
 read-only dashboard. It does not commit or push.
+
+## RQ1–RQ4 acceptance
+
+`rq_evidence.py` verifies accepted inputs, exports the 34-feature compatibility
+matrix, joins 279 unique historical development responses, evaluates conditional
+subset gaps and prepares a separate cross-architecture v2 plan. It preserves the
+frozen 500-pair v1 plan and the independent-test gate.
+
+```powershell
+& $py -B main/experiments/cv261207/rq_evidence.py
+& $py -B main/experiments/cv261207/rq_evidence.py --live-demo
+& $py -B main/experiments/cv261207/rq_figures.py --from-run <acceptance-RunID>
+& $py -B main/experiments/cv261207/rq_publish.py --run <acceptance-RunID>
+& $py -B main/experiments/cv261207/rq_publish.py --run <acceptance-RunID> --link-local --figures <figures-RunID>
+```
+
+The default reuses saved GPU evidence. `--live-demo` runs one development image
+under a 120-second worker limit; it does not train or run a formal pair. Figures
+export PNG, SVG, PDF and source CSV. A new figure run preserves earlier versions.
+The local `rq_index.html` links the latest accepted report and figure book.
+
+Held-out learning scores require both configuration and image separation.
+Shared-image descriptive fits do not meet that gate. Unknown latency does not
+establish PASS; a verified AP failure can establish FAIL independently.
+The matched-augmentation protocol has a runnable CPU validator, not an accepted
+training executor. RQ4 remains NOT_EVALUATED.

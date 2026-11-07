@@ -29,6 +29,9 @@ def render(store, chart):
         st.warning(f'Verification failed: {exc}')
         return
     st.caption(f"{run['RunID']} · {run['source']} · {run['status']}")
+    if summary.get('rq_acceptance'):
+        render_acceptance(st,pd,px,chart,summary['rq_acceptance'])
+        return
     if summary.get('historical_vm26'):
         render_history(st, pd, px, chart, summary['historical_vm26'])
         return
@@ -106,3 +109,39 @@ def render_history(st, pd, px, chart, history):
     st.dataframe(pd.DataFrame(history['contributions']),hide_index=True,width='stretch')
     st.subheader('Source hashes')
     st.json(history['source_hashes'],expanded=False)
+
+
+def render_acceptance(st,pd,px,chart,summary):
+    st.warning('Independent test-dev admission remains blocked. Formal measured pairs: 0.')
+    with st.container(horizontal=True):
+        st.metric('Valid FM_P',f"{summary['FM_P']['count']:,}")
+        st.metric('Valid FM_D',f"{summary['FM_D']['count']:,}")
+        st.metric('Historical development responses',summary['historical_unique_responses'])
+        st.metric('Shared development images',summary['shared_development_images'])
+    st.caption('FM_D: SAT plus exact factorization and structural cross-check; no independent BDD count.')
+    st.subheader('RQ1–RQ4 acceptance')
+    st.dataframe(pd.DataFrame(summary['research_questions'])[['RQ','status','result','blocker']],
+                 hide_index=True,width='stretch')
+    st.subheader('Static coverage policies')
+    static=pd.DataFrame(summary['static'])
+    static['covered']=pd.to_numeric(static['covered'])
+    chart(px.bar(static,x='checkpoint',y='covered',color='policy',barmode='group',
+                 labels={'covered':'Covered FM_P configurations'}))
+    st.caption('Coverage is a source-evidence policy, not measured detector robustness.')
+    st.subheader('Measured-subset gap diagnostics')
+    gap=pd.DataFrame(summary['subset_gaps'])
+    gap=gap[(gap['size']=='tiny') & (pd.to_numeric(gap['tau'])==.1)]
+    st.dataframe(gap[['blur','jpeg','tested_detectors','subset_state']],hide_index=True,width='stretch')
+    st.info('Four purposive contexts and six measured endpoints per context. Missing latency prevents PASS labels. No population or full-space gap estimate.')
+    st.subheader('Learning validation')
+    st.info('ML_INSUFFICIENT_EVIDENCE: all responses share the same image population. Held-out scores remain NOT_EVALUATED.')
+    st.dataframe(pd.DataFrame(summary['descriptive_model_fits']),hide_index=True,width='stretch')
+    st.caption('These are in-sample descriptive fits. Fitting seeds do not measure detector training-seed variability.')
+    st.subheader('Detector-feature compatibility')
+    st.dataframe(pd.DataFrame(summary['feature_compatibility']),hide_index=True,width='stretch')
+    st.caption(f"V1: {summary['original_frozen_pairs']} planned. V2: {summary['v2_planned_pairs']} separately planned, zero executed.")
+    st.info('Targeted augmentation and gap closure: NOT_EVALUATED. No YOLO training was started.')
+    st.subheader('Execution cost')
+    st.write(f"New bounded GPU-demo worker wall time: {summary['new_GPU_worker_seconds']:.3f} s. This is not GPU occupancy or full-pair throughput.")
+    st.subheader('Evidence hashes')
+    st.json(summary['source_hashes'],expanded=False)
