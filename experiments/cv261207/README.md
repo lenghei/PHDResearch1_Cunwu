@@ -96,3 +96,24 @@ Shared-image descriptive fits do not meet that gate. Unknown latency does not
 establish PASS; a verified AP failure can establish FAIL independently.
 The matched-augmentation protocol has a runnable CPU validator, not an accepted
 training executor. RQ4 remains NOT_EVALUATED.
+
+## New development measurements
+
+`development_v1.py` freezes the 248 validation IDs outside the historical
+300-image fitting set and two new degradation configurations. It measures
+native10 FP32 predictions, replays COCO metrics, and saves 200 image-bootstrap
+draws. Validation selection exposure remains; formal test-dev stays blocked.
+
+`development_recovery.py` preserves interrupted files and recovers statistics
+from complete saved predictions. A continuation skips verified measurements
+and uses its own bounded execution record. Lost timing is not reconstructed.
+
+`development_analysis.py` reports matched resolution contrasts, AP/latency
+states, finite-subset diagnostics and fixed development regression baselines.
+`development_figures.py` exports the source-linked figure update; PDF merging
+uses `pypdf` in `UAVGAP_PDF_PYTHON`, or the current interpreter.
+`development_delivery.py` publishes only small verified dashboard summaries.
+
+The separate clean-control canary has a 600-second limit and cannot start
+long training. Its preparation audits all 6,471 training annotations and
+builds a derived label view without changing original ZIP files.

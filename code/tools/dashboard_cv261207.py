@@ -29,6 +29,9 @@ def render(store, chart):
         st.warning(f'Verification failed: {exc}')
         return
     st.caption(f"{run['RunID']} · {run['source']} · {run['status']}")
+    if summary.get('development_study'):
+        render_development(st,pd,px,chart,summary['development_study'])
+        return
     if summary.get('rq_acceptance'):
         render_acceptance(st,pd,px,chart,summary['rq_acceptance'])
         return
@@ -145,3 +148,51 @@ def render_acceptance(st,pd,px,chart,summary):
     st.write(f"New bounded GPU-demo worker wall time: {summary['new_GPU_worker_seconds']:.3f} s. This is not GPU occupancy or full-pair throughput.")
     st.subheader('Evidence hashes')
     st.json(summary['source_hashes'],expanded=False)
+
+
+def render_development(st,pd,px,chart,summary):
+    st.warning('Development evidence only. Independent test-dev admission remains blocked; formal pairs: 0.')
+    with st.container(horizontal=True):
+        st.metric('New measured pairs',summary['unique_new_pairs'])
+        st.metric('Image IDs per pair',summary['image_IDs'])
+        st.metric('Distinct image byte hashes',summary['unique_image_hashes'])
+        st.metric('Historical responses',summary['historical_unique_responses'])
+    st.caption('The 248 validation IDs and two degradation configurations were excluded from rule fitting. Historical checkpoint selection used validation images.')
+    st.dataframe(pd.DataFrame(summary['research_questions']),hide_index=True,width='stretch')
+    pairs=pd.DataFrame(summary['pairs'])
+    for key in ('resolution','map50','map50_95','mean_pipeline_ms'):pairs[key]=pd.to_numeric(pairs[key])
+    pairs['AP50:95 (%)']=100*pairs['map50_95']
+    st.subheader('Measured AP and cost')
+    st.caption(summary['timing_scope'])
+    chart(px.scatter(pairs,x='mean_pipeline_ms',y='AP50:95 (%)',color='checkpoint',symbol='condition',
+                     hover_data=['resolution','RunID'],labels={'mean_pipeline_ms':'Cached-input pipeline (ms/image)'}))
+    st.dataframe(pairs[['checkpoint','condition','resolution','map50','map50_95','mean_pipeline_ms','RunID']],
+                 hide_index=True,width='stretch')
+    st.subheader('Same-checkpoint resolution effects')
+    effects=pd.DataFrame(summary['resolution_effects'])
+    if not effects.empty:
+        for key in ('estimate','ci95_low','ci95_high'):effects[key]=pd.to_numeric(effects[key])
+        effects['AP difference (pp)']=effects['estimate']*100
+        effects['upper']=(effects['ci95_high']-effects['estimate']).clip(lower=0)*100
+        effects['lower']=(effects['estimate']-effects['ci95_low']).clip(lower=0)*100
+        chart(px.scatter(effects,x='checkpoint',y='AP difference (pp)',color='condition',facet_col='size',
+                    error_y='upper',error_y_minus='lower',title='1280 minus 640; pointwise paired 95% intervals'))
+    st.caption('200 image draws. These two conditions do not identify an isolated Blur×JPEG interaction.')
+    st.subheader('Measured subset outcomes')
+    st.caption('Tiny AP50:95 >= 0.10 and mean cached-input pipeline <= 100 ms, with interval guards.')
+    st.dataframe(pd.DataFrame(summary['states']),hide_index=True,width='stretch')
+    st.dataframe(pd.DataFrame(summary['diagnostics']),hide_index=True,width='stretch')
+    st.info('Purposive finite-subset diagnostics; no estimate for the full FM_P population.')
+    st.subheader('Held-out development regression')
+    st.dataframe(pd.DataFrame(summary['heldout_regression']),hide_index=True,width='stretch')
+    st.warning('Only two new degradation groups. PASS/FAIL classifier validation: ML_INSUFFICIENT_EVIDENCE.')
+    with st.expander('Fixed fitted rules and out-of-domain limits'):
+        st.code(summary['rules'])
+        st.json(summary['learning'])
+    st.subheader('Engineering training check')
+    st.json(summary['canary'])
+    st.info('Targeted-augmentation efficacy and gap closure: NOT_EVALUATED. No long training was started.')
+    with st.expander('Reproducibility and uncertainty'):
+        st.json(summary['repeat'])
+        for item in summary['limitations']:st.write(item)
+        st.json(summary['source_hashes'])
