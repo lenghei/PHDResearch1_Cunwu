@@ -1,3 +1,6 @@
+<!-- development-update-20261108 -->
+Latest update: [new development measurements](DEVELOPMENT_EVIDENCE.md), `cv261207_development_delivery_20261108T194939_4be5d3c4`. The earlier acceptance below is retained as a dated historical state.
+
 # RQ1–RQ4 acceptance details
 
 Source acceptance: `cv261207_rq_acceptance_20261107T220632_8271fd92`. Figure run: `cv261207_rq_figures_20261107T221015_cf1dcb63`.

@@ -14,6 +14,7 @@ import traceback
 from common import HERE, RUNS, load, save, source, sha256, new_run, resolve_run, seal
 from development_v1 import bootstrap_exact, verify_pair, checked
 from evaluation import evaluate_saved
+from development_guard import bounded_run
 
 STUDY='cv261207_development_20261107T235344_5fcd2d79'
 FIRST='cv261207_dev_pair_20261107T235417_9a537fcd'
@@ -74,6 +75,10 @@ def recover():
 
 def execute(recovery):
     process_gate();study=resolve_run(STUDY);verify_pair(FIRST,study);verify_pair(recovery.name,study)
+    for prior in RUNS.glob('cv261207_development_continuation_*'):
+        record=prior/'author_execution_ticket.json'
+        if record.exists() and load(record).get('original_study')==STUDY:
+            raise RuntimeError('This study already has a continuation attempt. Inspect its saved result; do not repeat it.')
     if not load(recovery/'verification.json')['repeat_bootstrap_equal']:raise ValueError('Repeat gate not met.')
     plan=load(study/'protocol.json');completed=[FIRST];out=new_run('development_continuation')
     budget=5400.;started=time.perf_counter();lock=RUNS/'.gpu.lock'
@@ -95,11 +100,11 @@ def execute(recovery):
             if remaining<max(900,1.5*measured)+900:break
             before={p.name for p in RUNS.glob('cv261207_dev_pair_*')}
             with (out/f'pair_{index:02}.log').open('x',encoding='utf-8') as stream:
-                result=subprocess.run([sys.executable,'-B',str(HERE/'development_v1.py'),'worker','--run',STUDY,'--pair',spec['id']],
-                    stdout=stream,stderr=subprocess.STDOUT,timeout=min(1800,remaining-900),
+                result=bounded_run([sys.executable,'-B',str(HERE/'development_v1.py'),'worker','--run',STUDY,'--pair',spec['id']],
+                    stream,timeout=min(1790,remaining-910),
                     env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1','PYTHONIOENCODING':'utf-8'})
             fresh=[p for p in RUNS.glob('cv261207_dev_pair_*') if p.name not in before]
-            if result.returncode or len(fresh)!=1:raise RuntimeError('Worker failed; no retry. Inspect pair log.')
+            if result or len(fresh)!=1:raise RuntimeError('Worker failed; no retry. Inspect pair log.')
             verify_pair(fresh[0].name,study);durable(fresh[0]);completed.append(fresh[0].name)
             save(out/'progress.json',{'completed_runs':completed,'unique_pairs':len(completed),
                  'elapsed_seconds':time.perf_counter()-started,'remaining_seconds':budget-(time.perf_counter()-started)})

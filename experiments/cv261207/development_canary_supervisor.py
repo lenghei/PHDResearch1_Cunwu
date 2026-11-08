@@ -9,6 +9,7 @@ import time
 import traceback
 from common import HERE,RUNS,load,save,new_run,resolve_run,source,seal,sha256,verify_hashes
 from development_recovery import process_gate,durable
+from development_guard import bounded_run
 
 
 def execute(preparation,continuation):
@@ -30,10 +31,10 @@ def execute(preparation,continuation):
     with lock.open('x',encoding='utf-8') as stream:stream.write(out.name)
     try:
         with (out/'execution.log').open('x',encoding='utf-8') as stream:
-            status=subprocess.run([sys.executable,'-B',str(HERE/'development_canary_v1.py'),'worker',
-                     '--run',preparation.name,'--output',out.name],stdout=stream,stderr=subprocess.STDOUT,timeout=600,
+            status=bounded_run([sys.executable,'-B',str(HERE/'development_canary_v1.py'),'worker',
+                     '--run',preparation.name,'--output',out.name],stream,timeout=590,
                      env={**os.environ,'PYTHONIOENCODING':'utf-8','PYTHONDONTWRITEBYTECODE':'1'})
-        if status.returncode or not (out/'result.json').exists():raise RuntimeError('Canary failed; inspect execution.log. No retry.')
+        if status or not (out/'result.json').exists():raise RuntimeError('Canary failed; inspect execution.log. No retry.')
         checked=load(out/'result.json')
         if checked['status']!='CANARY_PASS' or checked['optimizer_steps']!=1:raise ValueError('Canary acceptance failed.')
         save(out/'supervisor.json',{'status':'CANARY_PASS','total_worker_wall_seconds':time.perf_counter()-start,

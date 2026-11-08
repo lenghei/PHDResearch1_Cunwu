@@ -14,7 +14,8 @@ def render(store, chart):
     if not runs:
         st.info('No verified summaries available.')
         return
-    selected = st.selectbox('Saved run', list(range(len(runs))),
+    preferred=next((i for i,r in enumerate(runs) if '_development_delivery_' in r['RunID']),0)
+    selected = st.selectbox('Saved run', list(range(len(runs))),index=preferred,
                             format_func=lambda i: runs[i]['RunID'])
     run = runs[selected]
     reader = DashboardStore(mode='cloud') if run['source'] == 'published' and store.mode == 'local' else store
@@ -29,6 +30,8 @@ def render(store, chart):
         st.warning(f'Verification failed: {exc}')
         return
     st.caption(f"{run['RunID']} · {run['source']} · {run['status']}")
+    if summary.get('analysis_RunID') and 'unique_new_pairs' in summary:
+        summary={'development_study':summary}
     if summary.get('development_study'):
         render_development(st,pd,px,chart,summary['development_study'])
         return
@@ -168,6 +171,8 @@ def render_development(st,pd,px,chart,summary):
                      hover_data=['resolution','RunID'],labels={'mean_pipeline_ms':'Cached-input pipeline (ms/image)'}))
     st.dataframe(pairs[['checkpoint','condition','resolution','map50','map50_95','mean_pipeline_ms','RunID']],
                  hide_index=True,width='stretch')
+    with st.expander('Execution costs'):
+        st.json(summary['execution_cost'])
     st.subheader('Same-checkpoint resolution effects')
     effects=pd.DataFrame(summary['resolution_effects'])
     if not effects.empty:
@@ -185,7 +190,11 @@ def render_development(st,pd,px,chart,summary):
     st.info('Purposive finite-subset diagnostics; no estimate for the full FM_P population.')
     st.subheader('Held-out development regression')
     st.dataframe(pd.DataFrame(summary['heldout_regression']),hide_index=True,width='stretch')
-    st.warning('Only two new degradation groups. PASS/FAIL classifier validation: ML_INSUFFICIENT_EVIDENCE.')
+    st.dataframe(pd.DataFrame(summary.get('heldout_relations',[])),hide_index=True,width='stretch')
+    with st.expander('Checkpoint differences in resolution response'):
+        st.dataframe(pd.DataFrame(summary.get('cross_checkpoint_effects',[])),hide_index=True,width='stretch')
+        st.caption('Matched checkpoint contrasts; training provenance and selected weights prevent architecture-causal attribution.')
+    st.info('Only two new degradation groups. PASS/FAIL classifier validation: ML_INSUFFICIENT_EVIDENCE.')
     with st.expander('Fixed fitted rules and out-of-domain limits'):
         st.code(summary['rules'])
         st.json(summary['learning'])

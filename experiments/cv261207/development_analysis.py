@@ -9,7 +9,7 @@ import numpy as np
 
 from common import HERE,ROOT,RUNS,FLAMA,load,save,source,sha256,new_run,resolve_run,seal,verify_hashes
 from historical_review import csv_file,table
-from development_v1 import BASE,verify_pair
+BASE=RUNS/'cv261207_rq_acceptance_20261107T220632_8271fd92'
 
 
 def outcome(ap_ci,latency_ci,tau,limit):
@@ -21,13 +21,25 @@ def outcome(ap_ci,latency_ci,tau,limit):
 
 
 def analyze(continuation):
+    from development_v1 import verify_pair
     result=load(continuation/'result.json');ticket=load(continuation/'author_execution_ticket.json')
     study=resolve_run(ticket['original_study']);plan=load(study/'protocol.json');out=new_run('development_analysis')
-    names=result['completed_runs'];rows=[];ci_rows=[];classes=[];cost=[];draws={};evidence=[]
+    verify_hashes(BASE,('measured_learning_features.csv','static_coverage_by_checkpoint.csv'))
+    expected_members=load(study/'image_members.json')
+    expected_sha=[r['image_SHA256'] for r in expected_members]
+    names=result['completed_runs'];rows=[];ci_rows=[];classes=[];cost=[];draws={};evidence=[];tensor_audit=[]
     if len(set(names))!=len(names):raise ValueError('Duplicate measurement RunID.')
     for name in names:
         p=verify_pair(name,study);cfg=load(p/'configuration.json');spec=cfg['pair']
         if spec not in plan['pairs']:raise ValueError('Measurement outside frozen plan.')
+        if cfg['image_SHA256']!=expected_sha or cfg['cache_manifest_sha256']!=sha256(study/'cache_manifest.json'):
+            raise ValueError('Measurement image or pixel population differs.')
+        with (p/'image_manifest.jsonl').open(encoding='utf-8') as stream:
+            manifest=[json.loads(line) for line in stream]
+        expected_shape=[1,3,spec['d']['resolution'],spec['d']['resolution']]
+        if len(manifest)!=248 or any(r['tensor']!={'NCHW':expected_shape,'dtype':'torch.float32'} for r in manifest):
+            raise ValueError('Actual network tensor shape or precision differs.')
+        tensor_audit.append({'RunID':name,'images':248,'NCHW':expected_shape,'dtype':'torch.float32','status':'PASS'})
         metrics=load(p/'metrics.json');boot=load(p/'bootstrap.json');timing=load(p/'timing.json')
         if boot['draws']['seed']!=plan['bootstrap_seed'] or boot['draws']['samples']!=200:raise ValueError('Bootstrap plan differs.')
         condition='Downscale x1.5' if 'Downscale_x1_5' in spec['p']['leaves'] else 'Extra JPEG Q25'
@@ -42,12 +54,17 @@ def analyze(continuation):
         ci_rows.extend({**common,**{k:v for k,v in r.items() if k!='ci95'},'ci95_low':r['ci95'][0],
                        'ci95_high':r['ci95'][1],'bootstrap_sha256':sha256(p/'bootstrap.json')} for r in boot['intervals'])
         classes.extend({**common,**r,'metrics_sha256':sha256(p/'metrics.json')} for r in metrics['per_class'])
-        cost.append({**common,**{k:v for k,v in timing.items() if k not in ('samples','mean_pipeline_ci95')}})
+        cost.append({**common,**{k:v for k,v in timing.items() if k not in ('samples','mean_pipeline_ci95')},
+             'bootstrap_seconds':boot['seconds'],
+             'GPU_forward_profiler_seconds':sum(r['forward_ms'] for r in timing['samples'])/1000,
+             'synchronized_prediction_seconds':sum(r['predict_ms'] for r in timing['samples'])/1000})
         draws[spec['id']]=boot['draws']
         evidence.extend(source(p/n) for n in ('configuration.json','metrics.json','bootstrap.json','timing.json',
                                                'predictions.jsonl.gz','ground_truth.json','image_manifest.jsonl','SHA256SUMS.txt'))
     if len({r['pair_id'] for r in rows})!=len(names):raise ValueError('Repeated condition counted as new pair.')
+    if len({r['GT_sha256'] for r in rows})!=1:raise ValueError('GT provenance differs between paired conditions.')
     csv_file(out/'configuration_metrics.csv',rows);csv_file(out/'confidence_intervals.csv',ci_rows)
+    save(out/'tensor_validation.json',tensor_audit)
     csv_file(out/'per_class_metrics.csv',classes);csv_file(out/'timing.csv',cost)
     gains=[]
     for c in ('ck01','ck05','ck06'):
@@ -67,6 +84,26 @@ def analyze(continuation):
                           'method':'pointwise paired image percentile bootstrap','seed':plan['bootstrap_seed'],
                           'RunID_1280':high['RunID'],'RunID_640':low['RunID'],'scope':'DEVELOPMENT_ONLY'})
     csv_file(out/'resolution_effects.csv',gains)
+    comparisons=[]
+    for condition in plan['conditions']:
+        for size in ('all','tiny','small','medium','large'):
+            for metric in ('map50','map50_95','ar50_95'):
+                group=[r for r in gains if r['condition_id']==condition['id'] and r['size']==size and r['metric']==metric]
+                for reference,target in (('ck01','ck05'),('ck01','ck06'),('ck05','ck06')):
+                    found={r['checkpoint']:r for r in group}
+                    if reference not in found or target not in found:continue
+                    a,b=found[reference],found[target]
+                    def effect_samples(checkpoint):
+                        selected=[r for r in rows if r['checkpoint']==checkpoint and r['condition_id']==condition['id'] and r['size']==size]
+                        hi=next(r for r in selected if r['resolution']==1280);lo=next(r for r in selected if r['resolution']==640)
+                        return np.array(draws[hi['pair_id']]['values'][size][metric])-np.array(draws[lo['pair_id']]['values'][size][metric])
+                    sample=effect_samples(target)-effect_samples(reference);bounds=np.quantile(sample,[.025,.975])
+                    comparisons.append({'reference_checkpoint':reference,'target_checkpoint':target,'condition':a['condition'],
+                       'condition_id':condition['id'],'size':size,'metric':metric,'estimate':b['estimate']-a['estimate'],
+                       'ci95_low':float(bounds[0]),'ci95_high':float(bounds[1]),'resamples':200,
+                       'definition':'(1280-640)_target - (1280-640)_reference',
+                       'scope':'DEVELOPMENT_ONLY; checkpoint contrast, not architecture causation'})
+    if comparisons:csv_file(out/'cross_checkpoint_effects.csv',comparisons)
     classified=[];static=table(BASE/'static_coverage_by_checkpoint.csv')
     for r in rows:
         if r['size'] not in ('all','tiny','small'):continue
@@ -110,10 +147,26 @@ def analyze(continuation):
                          'NOT_EVALUATED':count['NOT_EVALUATED'],'subset_state':state,'population_gap':'NOT_EVALUATED'})
     csv_file(out/'static_empirical_diagnostics.csv',confusion);csv_file(out/'subset_gaps.csv',gaps)
     members=load(study/'image_members.json');sha=Counter(r['image_SHA256'] for r in members)
+    records={r['id']:r for r in load(study/'records.json')};duplicate_details=[]
+    old_records=load(ROOT/'datasets/research_archive/variability/experiments/vm03_gpu_pilot/runs/vm03_r003/records.json')
+    prior_ids={r['stem'] for r in old_records};current_ids={r['stem'] for r in records.values()}
+    if prior_ids & current_ids or len(prior_ids | current_ids)!=548:raise ValueError('Historical/complement population differs.')
+    for value,count in sha.items():
+        if count<2:continue
+        group=[r for r in members if r['image_SHA256']==value]
+        duplicate_details.append({'image_sha256':value,'members':[{'image_id':r['image_id'],
+           'ZIP_member':r['ZIP_member'],'annotation_SHA256':r['annotation_SHA256'],
+           'valid_objects':len(records[r['image_id']]['objects']),
+           'ignore_regions':len(records[r['image_id']]['ignore_regions'])} for r in group],
+           'original_annotations_preserved':True,'correct_annotation':'UNRESOLVED'})
+    save(out/'duplicate_image_audit.json',duplicate_details)
     save(out/'validation_boundaries.json',{'scope':'DEVELOPMENT_ONLY','formal_pairs':0,'test_dev_gate':'DATASET_BLOCKED',
        'image_ID_overlap_old300':0,'image_SHA_overlap_old300':0,'selected_image_IDs':248,'unique_image_byte_SHA':len(sha),
+       'historical_plus_new_validation_IDs':548,'entire_validation_split_used_in_development':True,
+       'future_test_reuse':'These IDs must not be relabeled as an untouched final test cohort.',
        'duplicate_byte_groups':[s for s,n in sha.items() if n>1],
        'bootstrap_limitations':['One byte-identical image pair remains in the frozen 248-ID population.',
+          'The duplicate pair has 41/40 valid boxes and 2/0 ignore regions; the annotation discrepancy is unresolved.',
           'Image resampling does not control scene/flight clustering or checkpoint training-seed variability.',
           'Intervals are pointwise exploratory intervals, without simultaneous familywise correction.'],
        'configurations':2,'configuration_selection':'Purposive, not uniform FM_P sampling',
@@ -161,6 +214,33 @@ def fit(out):
               'method':name,'seed':seed,'measured_AP':float(y[i]),'predicted_AP':float(pred[i])} for i,r in enumerate(test))
             if name!='forest':rules.append(name+f' seed={seed}\n'+export_text(model,feature_names=list(vector.get_feature_names_out()),decimals=5))
     csv_file(out/'heldout_regression.csv',scores);csv_file(out/'heldout_predictions.csv',predictions)
+    relations=[]
+    for name in ('rule_stump','tree','forest'):
+        for seed in (42,73,101):
+            selected=[r for r in predictions if r['method']==name and r['seed']==seed]
+            for checkpoint in ('ck01','ck05','ck06'):
+                for condition in ('Downscale x1.5','Extra JPEG Q25'):
+                    pair=[r for r in selected if r['checkpoint']==checkpoint and r['condition']==condition]
+                    if len(pair)!=2:continue
+                    high=next(r for r in pair if '_R1280' in r['pair_id']);low=next(r for r in pair if '_R640' in r['pair_id'])
+                    truth=high['measured_AP']-low['measured_AP'];prediction=high['predicted_AP']-low['predicted_AP']
+                    relations.append({'method':name,'seed':seed,'checkpoint':checkpoint,'condition':condition,
+                        'measured_resolution_effect':truth,'predicted_resolution_effect':prediction,
+                        'absolute_error':abs(truth-prediction),'same_direction':bool(np.sign(truth)==np.sign(prediction)),
+                        'scope':'TWO_GROUP_DEVELOPMENT_RELATION_DIAGNOSTIC'})
+    if relations:
+        csv_file(out/'heldout_relation_predictions.csv',relations)
+        summary=[]
+        for method in ('rule_stump','tree','forest'):
+            for seed in (42,73,101):
+                group=[r for r in relations if r['method']==method and r['seed']==seed]
+                summary.append({'method':method,'seed':seed,'relations':len(group),'degradation_groups':2,
+                    'effect_MAE':float(np.mean([r['absolute_error'] for r in group])),
+                    'direction_correct':sum(r['same_direction'] for r in group),'direction_denominator':len(group),
+                    'positive_effects':sum(r['measured_resolution_effect']>0 for r in group),
+                    'negative_effects':sum(r['measured_resolution_effect']<0 for r in group),
+                    'zero_effects':sum(r['measured_resolution_effect']==0 for r in group)})
+        csv_file(out/'heldout_relation_summary.csv',summary)
     (out/'rules.txt').write_text('\n\n'.join(rules),encoding='utf-8')
     save(out/'learning_acceptance.json',{'status':'PARTIAL_DEVELOPMENT_REGRESSION','classifier':'ML_INSUFFICIENT_EVIDENCE',
         'fit_rows':279,'fit_image_IDs':300,'heldout_image_IDs':248,'heldout_configurations':len(test),'heldout_degradation_groups':2,

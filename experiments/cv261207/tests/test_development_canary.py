@@ -35,5 +35,18 @@ class CanaryTests(unittest.TestCase):
         self.assertEqual(trainer._oom_retries,3)
         self.assertEqual(trainer.train_loader.dataset.epoch,0)
 
+    def test_continuous_hooks_reject_exact_heldout_levels(self):
+        from unittest.mock import patch
+        from types import SimpleNamespace
+        image=np.zeros((8,8,3),dtype=np.uint8)
+        fake=SimpleNamespace(uniform=lambda *args:15.,normal=lambda *args:np.zeros(image.shape))
+        with patch('numpy.random.default_rng',return_value=fake):
+            _,params=augment_pixels(image,'NoiseAug',42)
+            self.assertNotIn(params['sigma'],(5.5,15,30))
+        values=iter((.5,200.))
+        with patch('numpy.random.default_rng',return_value=SimpleNamespace(uniform=lambda *args:next(values))):
+            _,params=augment_pixels(image,'HazeAug',42)
+            self.assertNotIn(params['beta'],(.5,1.5))
+
 
 if __name__=='__main__':unittest.main()

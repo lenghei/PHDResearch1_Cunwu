@@ -11,7 +11,8 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from common import ROOT,RUNS,load,save,source,sha256,new_run,resolve_run,seal
+from matplotlib.lines import Line2D
+from common import ROOT,RUNS,load,save,source,sha256,new_run,resolve_run,seal,verify_hashes
 from historical_review import table,csv_file
 
 OLD=RUNS/'cv261207_rq_figures_20261107T221015_cf1dcb63'
@@ -22,7 +23,8 @@ def render(analysis,canary=None):
     python=Path(os.environ.get('UAVGAP_PDF_PYTHON',sys.executable))
     subprocess.run([str(python),'-c','import pypdf'],check=True,timeout=30)
     out=new_run('development_figures');manifest={};plt.rcParams.update({'font.size':10,'axes.spines.top':False,'axes.spines.right':False})
-    old=load(OLD/'figure_evidence.json')
+    verify_hashes(OLD,('figure_evidence.json','fig09.csv'))
+    old=load(OLD/'figure_evidence.json')['figures']
     for i in range(1,8):
         stem=f'fig{i:02}'
         for ext in ('csv','png','svg','pdf'):shutil.copyfile(OLD/(stem+'.'+ext),out/(stem+'.'+ext))
@@ -47,20 +49,47 @@ def render(analysis,canary=None):
     colors={'ck01':'#087f8c','ck05':'#4463c7','ck06':'#a25caf'}
     for r in rows:
         ax.scatter(float(r['mean_pipeline_ms']),100*float(r['map50_95']),color=colors[r['checkpoint']],
-                   marker='o' if r['condition']=='Downscale x1.5' else 's',s=70)
-        ax.annotate(NAMES[r['checkpoint']]+' '+r['resolution'],(float(r['mean_pipeline_ms']),100*float(r['map50_95'])),
-                    xytext=(4,4),textcoords='offset points',fontsize=8)
+                   marker='o' if r['condition']=='Downscale x1.5' else 's',s=70,
+                   facecolors=colors[r['checkpoint']] if int(r['resolution'])==1280 else 'white',
+                   edgecolors=colors[r['checkpoint']],linewidths=1.5)
+    handles=[Line2D([],[],color=color,label=NAMES[c]) for c,color in colors.items()]
+    handles.extend([Line2D([],[],marker='o',color='gray',ls='',label='Downscale x1.5'),
+                    Line2D([],[],marker='s',color='gray',ls='',label='Extra JPEG Q25'),
+                    Line2D([],[],marker='o',color='gray',markerfacecolor='white',ls='',label='640 input'),
+                    Line2D([],[],marker='o',color='gray',ls='',label='1280 input')])
+    ax.set_position([.10,.24,.84,.53]);fig.legend(handles=handles,loc='upper center',bbox_to_anchor=(.5,.91),ncol=3,fontsize=8)
     ax.set(xlabel='Mean cached-PNG decode + prediction/NMS + raw-write time (ms/image)',ylabel='AP50:95 (%)')
-    ax.grid(alpha=.15);ax.text(.01,.02,'Circle: downscale x1.5 | Square: extra JPEG Q25\nGeneration, cold initialization and GPU occupancy are separate.',transform=ax.transAxes,fontsize=8)
+    ax.grid(alpha=.15);fig.text(.10,.14,'Generation, cold initialization and GPU occupancy are separate from the displayed pipeline.',fontsize=8)
     finish(fig,stem)
     gains=[r for r in table(analysis/'resolution_effects.csv') if r['size']=='all' and r['metric']=='map50_95']
-    fig,ax,stem=begin(9,'Same-checkpoint resolution effect: 1280 minus 640',gains,analysis/'resolution_effects.csv')
+    history=table(OLD/'fig09.csv')
+    combined=[{'cohort':'new248','checkpoint':r['checkpoint'],'contrast':r['condition'],
+               'estimate':r['estimate'],'low':r['ci95_low'],'high':r['ci95_high'],'interval':'pointwise paired95'} for r in gains]
+    combined.extend({'cohort':'historical300','checkpoint':r['checkpoint'],'contrast':'R_B_J',
+            'estimate':r['estimate'],'low':r['joint36_low'],'high':r['joint36_high'],'interval':'simultaneous joint36'} for r in history)
+    fig,ax,stem=begin(9,'Historical interaction and new same-checkpoint contrasts',combined,analysis/'resolution_effects.csv')
+    fig.set_size_inches(14,6);ax.set_position([.10,.24,.27,.58])
+    for i,r in enumerate(history):
+        ax.plot([100*float(r['joint36_low']),100*float(r['joint36_high'])],[i,i],color=colors[r['checkpoint']])
+        ax.scatter(100*float(r['estimate']),i,color=colors[r['checkpoint']])
+    ax.set_yticks(range(len(history)),[NAMES[r['checkpoint']] for r in history]);ax.invert_yaxis();ax.axvline(0,color='gray',ls='--')
+    ax.set_title('VM26: Resolution x Blur x JPEG\n300 images; original joint36 intervals',fontsize=11)
+    ax.set_xlabel('Three-way contrast (pp)')
+    ax=fig.add_axes([.69,.24,.28,.58])
     for i,r in enumerate(gains):
         point,lo,hi=[100*float(r[k]) for k in ('estimate','ci95_low','ci95_high')]
-        ax.errorbar(point,i,xerr=[[max(0,point-lo)],[max(0,hi-point)]],fmt='o',color=colors[r['checkpoint']],capsize=3)
+        ax.plot([lo,hi],[i,i],color=colors[r['checkpoint']],linewidth=1.5)
+        ax.scatter(point,i,color=colors[r['checkpoint']],s=32,zorder=3)
     ax.set_yticks(range(len(gains)),[NAMES[r['checkpoint']]+' | '+r['condition'] for r in gains]);ax.invert_yaxis()
-    ax.axvline(0,color='gray',ls='--');ax.set_xlabel('AP50:95 difference (percentage points), pointwise 95% paired interval')
-    ax.set_position([.32,.24,.62,.60]);finish(fig,stem)
+    ax.axvline(0,color='gray',ls='--');ax.set_xlabel('1280 minus 640 AP50:95 (pp)')
+    ax.set_title('New conditions: 248 image IDs\nPointwise paired intervals',fontsize=11)
+    for text in fig.texts:
+        if text.get_text().startswith('DEVELOPMENT_ONLY | 248'):
+            text.set_text('DEVELOPMENT_ONLY | Left: historical 300; right: new 248 image IDs | Separate cohorts; AP is not pooled.')
+        elif text.get_text().startswith('Pointwise image bootstrap'):
+            text.set_text('Left: original simultaneous 36-contrast family. Right: pointwise paired intervals. Neither is independent-test evidence.')
+    manifest[stem]['historical_source']=source(OLD/'fig09.csv')
+    finish(fig,stem)
     states=[r for r in table(analysis/'pair_states.csv') if r['size']=='tiny' and float(r['tau'])==.1 and
             float(r['latency_limit_ms'])==100 and r['policy']=='exact_identity']
     fig,ax,stem=begin(10,'Measured subset: Tiny AP >= 0.10 and mean pipeline <= 100 ms',states,analysis/'pair_states.csv')
@@ -70,15 +99,21 @@ def render(analysis,canary=None):
     ax.set_yticks(range(len(states)),[NAMES[r['checkpoint']]+' '+r['resolution']+' | '+r['condition'] for r in states],fontsize=8)
     ax.invert_yaxis();ax.set_xticks([]);ax.set_xlim(0,1);ax.set_position([.38,.24,.56,.60])
     finish(fig,stem)
-    size_rows=[r for r in allrows if r['size'] in ('tiny','small','medium','large')]
-    fig,ax,stem=begin(11,'Original-coordinate target-size AP in the two frozen conditions',size_rows,analysis/'configuration_metrics.csv')
+    size_rows=[r for r in table(analysis/'resolution_effects.csv') if r['size'] in ('tiny','small','medium','large')
+               and r['metric'] in ('map50_95','ar50_95')]
+    fig,ax,stem=begin(11,'Size-dependent resolution effects: AP and AR',size_rows,analysis/'resolution_effects.csv')
     bins=['tiny','small','medium','large']
-    for checkpoint in NAMES:
-        for condition,style in (('Downscale x1.5','-'),('Extra JPEG Q25','--')):
-            selected=[r for r in size_rows if r['checkpoint']==checkpoint and r['condition']==condition and int(r['resolution'])==1280]
-            if len(selected)==4:ax.plot(bins,[100*float(next(r for r in selected if r['size']==b)['map50_95']) for b in bins],
-               style,marker='o',color=colors[checkpoint],label=NAMES[checkpoint]+' | '+condition)
-    ax.set(ylabel='AP50:95 (%)',xlabel='Size bin in original image coordinates | input 1280');ax.legend(fontsize=8,ncol=2);finish(fig,stem)
+    ax.set_position([.08,.27,.40,.50]);right=fig.add_axes([.57,.27,.40,.50])
+    for axis,metric,label in ((ax,'map50_95','AP50:95'),(right,'ar50_95','AR50:95')):
+        for checkpoint in NAMES:
+            for condition,style in (('Downscale x1.5','-'),('Extra JPEG Q25','--')):
+                selected=[r for r in size_rows if r['checkpoint']==checkpoint and r['condition']==condition and r['metric']==metric]
+                if len(selected)==4:axis.plot(bins,[100*float(next(r for r in selected if r['size']==b)['estimate']) for b in bins],
+                   style,marker='o',color=colors[checkpoint],label=NAMES[checkpoint]+' | '+condition)
+        axis.axhline(0,color='gray',ls=':');axis.set(ylabel=label+' difference (pp)',xlabel='Original-coordinate size bin')
+    handles,labels=ax.get_legend_handles_labels();fig.legend(handles,labels,loc='upper center',bbox_to_anchor=(.52,.90),fontsize=8,ncol=3)
+    fig.text(.10,.14,'1280 minus 640, same checkpoint. Point estimates shown; paired intervals are in the source table.',fontsize=8)
+    finish(fig,stem)
     canary_data=load(canary/'result.json') if canary and (canary/'result.json').exists() else {'status':'NOT_EVALUATED'}
     rows=[{'group':canary_data.get('group','clean_control'),'status':canary_data['status'],
             'exposures':canary_data.get('network_image_exposures'),'updates':canary_data.get('optimizer_steps'),

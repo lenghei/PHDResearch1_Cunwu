@@ -1,3 +1,6 @@
+<!-- development-update-20261108 -->
+Latest update: [new development measurements](DEVELOPMENT_EVIDENCE.md), `cv261207_development_delivery_20261108T194939_4be5d3c4`. The earlier acceptance below is retained as a dated historical state.
+
 # RQ1–RQ4 evidence acceptance
 
 This is an evidence and execution report, not a manuscript results section.

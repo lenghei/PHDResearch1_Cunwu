@@ -23,7 +23,9 @@ def augment_pixels(image,group,seed):
     rng=np.random.default_rng(seed);x=image.astype(np.float32);parameters={}
     if group=='clean_control':return image.copy(),parameters
     if group=='NoiseAug':
-        sigma=float(rng.uniform(3,35));parameters={'sigma':sigma}
+        sigma=float(rng.uniform(3,35))
+        if sigma in (5.5,15,30):sigma=float(np.nextafter(sigma,35.))
+        parameters={'sigma':sigma}
         x+=rng.normal(0,sigma,image.shape).astype(np.float32)
     elif group=='MotionBlurAug':
         k=int(rng.choice([9,11,13,17,19,23]));angle=float(rng.uniform(0,180));parameters={'kernel':k,'angle':angle}
@@ -38,7 +40,9 @@ def augment_pixels(image,group,seed):
         if not ok:raise ValueError('Augmentation encode failed.')
         x=cv2.imdecode(data,cv2.IMREAD_COLOR).astype(np.float32)
     elif group=='HazeAug':
-        beta=float(rng.uniform(.15,1.8));light=float(rng.uniform(190,240));parameters={'beta':beta,'airlight':light}
+        beta=float(rng.uniform(.15,1.8));light=float(rng.uniform(190,240))
+        if beta in (.5,1.5):beta=float(np.nextafter(beta,1.8))
+        parameters={'beta':beta,'airlight':light}
         t=float(np.exp(-beta));x=x*t+light*(1-t)
     else:raise ValueError('Unknown augmentation group.')
     return np.clip(x,0,255).astype(np.uint8),parameters
@@ -97,7 +101,7 @@ def prepare():
     import yaml
     data={'path':str(out/'dataset'),'train':'images/train','val':'images/val','names':dict(enumerate(VIS_NAMES))}
     (out/'dataset.yaml').write_text(yaml.safe_dump(data,sort_keys=False),encoding='utf-8')
-    proto={'version':'CV261207_MATCHED_CANARY_V1','scope':'CANARY_ENGINEERING_ONLY / DEVELOPMENT_ONLY',
+    proto={'version':'CV261207_MATCHED_CANARY_V2','scope':'CANARY_ENGINEERING_ONLY / DEVELOPMENT_ONLY',
         'initial_checkpoint':ck['checkpoint'],'source_original_protocol':source(BASE_PROTOCOL),
         'group':'clean_control','available_hooks':['clean_control','NoiseAug','MotionBlurAug','ExposureAug','JPEGAug','HazeAug'],
         'train':64,'development':16,'epochs':1,'imgsz':1280,'batch':2,'nbs':64,
