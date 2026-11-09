@@ -103,3 +103,8 @@ parameter-admitted stratum. Its pairwise core is a CPU design, not measured AP.
 Uniform sample-size/cost tables remain planning sensitivities. An eight-point
 saturated fit is not accepted as held-out failure-rule learning. No learned UVL
 constraint or augmentation efficacy is inferred from the factorial study.
+
+`joint_design.py` prepares feature-only joint coverage, reusing accepted points.
+`renderer_preflight.py --design-run <RunID>` checks its unmeasured recipes on six
+fixed source images under a 300-second CPU cap. It saves pixel identities and
+generation timings, without detector inference or AP evaluation.
