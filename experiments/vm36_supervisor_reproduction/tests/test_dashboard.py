@@ -35,10 +35,28 @@ class SummaryTests(unittest.TestCase):
             target=next(s for s in selector.options if s.startswith('VM36'))
             with patch('subprocess.Popen',side_effect=AssertionError('Viewer must not start a worker')):
                 selector.select(target).run(timeout=25)
+                saved=next(s for s in app.selectbox if s.label=='Saved VM36 run')
+                preparation=next(i for i,name in enumerate(saved.options) if '_protocol_v2_' in name)
+                saved.set_value(preparation).run(timeout=25)
             self.assertFalse(app.exception)
             self.assertIn('548',[m.value for m in app.metric])
             self.assertEqual(next(m.value for m in app.metric if m.label=='New measured pairs'),'0')
             self.assertEqual(next(m.value for m in app.metric if m.label=='Formal measured pairs'),'0')
+
+    def test_measured_component_renders_without_starting_a_worker(self):
+        try:from streamlit.testing.v1 import AppTest
+        except ImportError:self.skipTest('Use the dashboard environment.')
+        script='''from dashboard_vm36 import render_measurements
+render_measurements({'validated_validation_images':548,'new_measured_pairs':1,'formal_measured_pairs':0,
+    'worker_wall_seconds':60,'status':'PARTIAL','forward_profiler_seconds':1.0,'source_hashes':{},
+    'effects':[],'gates':[{'branch':'test fixture','status':'NO_EXPERIMENT'}],
+    'metrics':[{'checkpoint':'ck05','resolution':640,'JPEG':25,'images':548,'map50':.3,
+        'map50_95':.2,'AP_CI_low':.1,'AP_CI_high':.3,'ar50_95':.4}]})'''
+        with patch('subprocess.Popen',side_effect=AssertionError('No worker in viewer')):
+            app=AppTest.from_string(script).run(timeout=20)
+        self.assertFalse(app.exception)
+        self.assertEqual(next(m.value for m in app.metric if m.label=='New measured pairs'),'1')
+        self.assertTrue(app.warning)
 
     def test_cloud_never_falls_back_to_private_datasets(self):
         try:from streamlit.testing.v1 import AppTest

@@ -25,7 +25,8 @@ def render(store):
     if not runs:
         st.info('No reviewed summary is available in this mode. Cloud mode does not read local evidence.')
         return
-    preferred=next((i for i,r in enumerate(runs) if r['mode']=='SUPERVISOR_ALIGNED_PREPARATION'),0)
+    preferred=next((i for i,r in enumerate(runs) if r['mode']=='FULL548_R_JPEG' and r['status'] in ('VALIDATED','PARTIAL')),
+        next((i for i,r in enumerate(runs) if r['mode']=='SUPERVISOR_ALIGNED_PREPARATION'),0))
     selection=st.selectbox('Saved VM36 run',range(len(runs)),index=preferred,format_func=lambda i:runs[i]['RunID'])
     row=runs[selection]
     reader=DashboardStore(mode='cloud') if row['source']=='published' and store.mode=='local' else store
@@ -35,6 +36,9 @@ def render(store):
     if data is None:
         st.info('This historical preparation run has no final VM36 summary. Select the aligned V2 run.');return
     st.caption(row['RunID']+' · '+data['status'])
+    if data.get('measured_study'):
+        render_measurements(data)
+        return
     with st.container(horizontal=True):
         st.metric('Validation images checked',data['validated_validation_images'])
         st.metric('New measured pairs',data['new_measured_pairs'])
@@ -53,5 +57,36 @@ def render(store):
         st.subheader('Saved CPU equivalence check')
         st.dataframe(pd.DataFrame([data['CPU_benchmark']]),hide_index=True,width='stretch')
         st.caption('Existing 248-image predictions; not a new full-split detector experiment or GPU speed measurement.')
+    st.subheader('Evidence identities')
+    st.json(data['source_hashes'],expanded=False)
+
+
+def render_measurements(data):
+    import pandas as pd
+    import plotly.express as px
+    import streamlit as st
+    with st.container(horizontal=True):
+        st.metric('Validation images per pair',data['validated_validation_images'])
+        st.metric('New measured pairs',data['new_measured_pairs'])
+        st.metric('Formal measured pairs',data['formal_measured_pairs'])
+        elapsed=data.get('worker_wall_seconds')
+        st.metric('Worker wall time',f'{elapsed/60:.1f} min' if elapsed is not None else 'Not recorded')
+    st.info('Full validation split; development only. JPEG Q75 is not CLEAN. Intervals condition on fixed checkpoints.')
+    if data['status']=='PARTIAL':st.warning('The budget ended before all planned pairs were validated. Missing pairs are not estimated.')
+    values=pd.DataFrame(data['metrics'])
+    if not values.empty:
+        values['model']=values['checkpoint'].map({'ck05':'YOLOv8s','ck01':'YOLO26s'})
+        values['condition']=values['model']+' · Q'+values['JPEG'].astype(str)
+        chart=px.line(values.sort_values('resolution'),x='resolution',y='map50_95',color='condition',markers=True,
+            labels={'resolution':'Inference resolution','map50_95':'COCO AP50:95 (0–1)','condition':'Checkpoint / JPEG'})
+        st.plotly_chart(chart,width='stretch')
+        st.dataframe(values[['model','resolution','JPEG','images','map50','map50_95','AP_CI_low','AP_CI_high','ar50_95']],hide_index=True,width='stretch')
+    if data['effects']:
+        st.subheader('Matched resolution and JPEG effects')
+        st.dataframe(pd.DataFrame(data['effects']),hide_index=True,width='stretch')
+        st.caption('200 paired image draws; pointwise 95% intervals. No training-seed or independent-flight inference.')
+    st.subheader('Research gates')
+    st.dataframe(pd.DataFrame(data['gates']),hide_index=True,width='stretch')
+    st.caption(f"Summed forward profiler: {data['forward_profiler_seconds']:.2f} s. This is a component, not total GPU occupancy or deployment latency.")
     st.subheader('Evidence identities')
     st.json(data['source_hashes'],expanded=False)
