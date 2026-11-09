@@ -25,8 +25,9 @@ def render(store):
     if not runs:
         st.info('No reviewed summary is available in this mode. Cloud mode does not read local evidence.')
         return
-    preferred=next((i for i,r in enumerate(runs) if r['mode']=='FULL548_R_JPEG' and r['status'] in ('VALIDATED','PARTIAL')),
-        next((i for i,r in enumerate(runs) if r['mode']=='SUPERVISOR_ALIGNED_PREPARATION'),0))
+    preferred=next((i for i,r in enumerate(runs) if r['mode']=='FULL548_FACTORIAL' and r['status']=='VALIDATED'),
+        next((i for i,r in enumerate(runs) if r['mode']=='FULL548_R_JPEG' and r['status'] in ('VALIDATED','PARTIAL')),
+        next((i for i,r in enumerate(runs) if r['mode']=='SUPERVISOR_ALIGNED_PREPARATION'),0)))
     selection=st.selectbox('Saved VM36 run',range(len(runs)),index=preferred,format_func=lambda i:runs[i]['RunID'])
     row=runs[selection]
     reader=DashboardStore(mode='cloud') if row['source']=='published' and store.mode=='local' else store
@@ -68,6 +69,7 @@ def render_measurements(data):
     with st.container(horizontal=True):
         st.metric('Validation images per pair',data['validated_validation_images'])
         st.metric('New measured pairs',data['new_measured_pairs'])
+        if data.get('combined_measured_pairs') is not None:st.metric('Combined measured pairs',data['combined_measured_pairs'])
         st.metric('Formal measured pairs',data['formal_measured_pairs'])
         elapsed=data.get('worker_wall_seconds')
         st.metric('Worker wall time',f'{elapsed/60:.1f} min' if elapsed is not None else 'Not recorded')

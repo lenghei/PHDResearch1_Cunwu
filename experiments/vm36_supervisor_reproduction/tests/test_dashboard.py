@@ -47,7 +47,7 @@ class SummaryTests(unittest.TestCase):
         try:from streamlit.testing.v1 import AppTest
         except ImportError:self.skipTest('Use the dashboard environment.')
         script='''from dashboard_vm36 import render_measurements
-render_measurements({'validated_validation_images':548,'new_measured_pairs':1,'formal_measured_pairs':0,
+render_measurements({'validated_validation_images':548,'new_measured_pairs':2,'combined_measured_pairs':8,'formal_measured_pairs':0,
     'worker_wall_seconds':60,'status':'PARTIAL','forward_profiler_seconds':1.0,'source_hashes':{},
     'effects':[],'gates':[{'branch':'test fixture','status':'NO_EXPERIMENT'}],
     'metrics':[{'checkpoint':'ck05','resolution':640,'JPEG':25,'images':548,'map50':.3,
@@ -55,7 +55,8 @@ render_measurements({'validated_validation_images':548,'new_measured_pairs':1,'f
         with patch('subprocess.Popen',side_effect=AssertionError('No worker in viewer')):
             app=AppTest.from_string(script).run(timeout=20)
         self.assertFalse(app.exception)
-        self.assertEqual(next(m.value for m in app.metric if m.label=='New measured pairs'),'1')
+        self.assertEqual(next(m.value for m in app.metric if m.label=='New measured pairs'),'2')
+        self.assertEqual(next(m.value for m in app.metric if m.label=='Combined measured pairs'),'8')
         self.assertTrue(app.warning)
 
     def test_cloud_never_falls_back_to_private_datasets(self):

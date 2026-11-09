@@ -77,3 +77,29 @@ Motion orientation, rolling-shutter geometry and other missing runtime bindings
 still need resolution before those conditions can be measured. Formal test-dev
 remains blocked. Matched three-seed augmentation training is resource-blocked.
 Software acceptance does not establish scientific completion of RQ1–RQ4.
+
+## Completing missing corners
+
+`complete_factorial.py` selects only the two missing ck01/1280 JPEG conditions
+from the immutable six-pair source. It checks source hashes, checkpoint health,
+disk/GPU memory and a conservative measured cost estimate. Its independent
+worker limit is 1,800 seconds. The original run and its budget stay unchanged.
+Do not rerun this GPU command to view or regenerate results.
+
+After the explicitly authorized completion worker has stopped successfully:
+
+```powershell
+& .venv/Scripts/python.exe -B main/experiments/vm36_supervisor_reproduction/factorial_analysis.py --completion-run <missing-corners-RunID>
+```
+
+This CPU command creates a new joined analysis without copying old predictions.
+It verifies all eight corners, bootstrap pairing and protocol identity; exports
+AP/AR, size and per-class effects; and compares the two checkpoint DIDs.
+Per-class intervals are marked unavailable because the source bootstrap did not
+save per-class draws. The joined page reports six reused and two new conditions.
+
+The follow-up audit separates the full logical population from a rendering-
+parameter-admitted stratum. Its pairwise core is a CPU design, not measured AP.
+Uniform sample-size/cost tables remain planning sensitivities. An eight-point
+saturated fit is not accepted as held-out failure-rule learning. No learned UVL
+constraint or augmentation efficacy is inferred from the factorial study.
