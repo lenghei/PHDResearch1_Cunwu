@@ -117,3 +117,38 @@ uses `pypdf` in `UAVGAP_PDF_PYTHON`, or the current interpreter.
 The separate clean-control canary has a 600-second limit and cannot start
 long training. Its preparation audits all 6,471 training annotations and
 builds a derived label view without changing original ZIP files.
+
+## Supervisor plan audit
+
+See [SUPERVISOR_PLAN_COMPLIANCE.md](SUPERVISOR_PLAN_COMPLIANCE.md) for page-level
+requirements and [the release policy](SUPERVISOR_REPRODUCIBILITY_POLICY.md) for
+the unresolved raw-evidence publication decision. Contribution numbers in the
+plan are separate from RQ numbers.
+
+From the local project root:
+
+```powershell
+& $py -B main/experiments/cv261207/supervisor_compliance.py --pdf <plan.pdf> --pdf-python <python-with-pypdf>
+& $py -B main/experiments/cv261207/supervisor_finish.py --run <new-audit-RunID> --pdf-python <python-with-pypdf>
+& $py -B main/experiments/cv261207/supervisor_figures.py --run <new-audit-RunID> --pdf-python <python-with-pypdf>
+```
+
+Render and inspect all twelve PDF pages before final acceptance. Record the
+reviewer, `status: PASS`, `PDF_sha256` and the twelve `rendered_pages` filename/SHA
+pairs in the Run's `visual_review_input.json`. Rendered files belong in
+`pdf_qa_final/`. Acceptance rejects missing or stale review evidence.
+
+```powershell
+& $py -B main/experiments/cv261207/supervisor_accept.py --run <new-audit-RunID>
+& $py -B main/experiments/cv261207/supervisor_replay.py --pair <accepted-development-pair-RunID>
+& $py -B main/experiments/cv261207/supervisor_replay.py --pair <accepted-development-pair-RunID> --metrics
+```
+
+The audit is CPU-only and has one 1,800-second wall budget across its stages.
+CPU operation profiles use actual input shapes, with THOP's `2 × MAC` convention;
+they exclude NMS and are not GPU latency measurements. Replay defaults to hash
+verification. `--metrics` recomputes COCO AP from saved predictions and GT in a
+new Run, without changing the source. Sealed audit Runs cannot be continued.
+
+Local output: `datasets/local_runs/cv261207/<RunID>/index.html`. Demonstration
+pixels: `datasets/cache/cv261207/<RunID>/`. Neither is a public-data fallback.
