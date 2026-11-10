@@ -170,3 +170,23 @@ does not by itself imply a negative 1280-minus-640 difference. Pointwise interva
 do not establish training-seed effects.
 Shared validation images do not constitute independent predictive validation.
 Cloud mode continues to read committed summaries only.
+
+## Scientific stage after the 80-point study
+
+The `post80_*` tools never launch GPU inference or training:
+
+- `post80_replay.py --request <task.txt>` recomputes all saved predictions on CPU
+  under a measured-cost wall limit. It preserves the original evaluator.
+- `post80_science.py --prepare <task.txt>` checks saved contrasts and freezes legal
+  missing P configurations. FlamaPy runs in `.venv_flamapy`.
+- `post80_loader.py` checks all 6,471 images with a private label-path adapter,
+  followed by repeated CPU batches. Source images are neither copied nor edited.
+- `post80_provenance.py --science-run <RunID> --loader-run <RunID>` records direct
+  checkpoint, dataset and training-readiness evidence.
+- `post80_finalize.py --science-run <RunID> --replay-run <RunID> --loader-run <RunID>`
+  requires complete CPU replay before building the evidence report and figures.
+
+Use the project `.venv` and the existing source RunIDs. Each preparation creates
+a new private run. The four-point Normal-reference proposal needs a separate
+finite GPU allocation. Its six comparisons remain exploratory. A majority-class
+diagnostic is not an independently validated failure rule.
