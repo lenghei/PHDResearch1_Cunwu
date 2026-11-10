@@ -190,3 +190,23 @@ Use the project `.venv` and the existing source RunIDs. Each preparation creates
 a new private run. The four-point Normal-reference proposal needs a separate
 finite GPU allocation. Its six comparisons remain exploratory. A majority-class
 diagnostic is not an independently validated failure rule.
+
+## Normal-reference completion
+
+`normal_reference.py` admits exactly the four frozen Normal-only pairs, using
+gain 1, bias 0 and all 548 validation images. A new author record binds their
+IDs to a single 7,200-second worker allocation. A consumed execution ticket
+cannot start another GPU attempt. Historical budgets and the accepted 80
+responses remain unchanged.
+
+After the worker stops, regenerate the controlled comparisons on CPU:
+
+```powershell
+& .venv/Scripts/python.exe -B main/experiments/vm36_supervisor_reproduction/normal_reference_analysis.py --worker-run <Normal-worker-RunID>
+```
+
+Differences use degraded minus Normal. Resolution DID compares the degraded
+1280-minus-640 change with the Normal change. Saved paired COCO draws provide
+AP/AR intervals; timing differences are descriptive across separate runs.
+The analysis keeps the original 20-context cohort separate from the augmented
+21-context cohort. Neither is an independent test or full-space gap estimate.
