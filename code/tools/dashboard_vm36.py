@@ -25,10 +25,11 @@ def render(store):
     if not runs:
         st.info('No reviewed summary is available in this mode. Cloud mode does not read local evidence.')
         return
-    preferred=next((i for i,r in enumerate(runs) if r['mode']=='JOINT_COVERAGE_RESULTS' and r['status'] in ('VALIDATED','PARTIAL')),
+    preferred=next((i for i,r in enumerate(runs) if r['mode']=='COMPLETE20_SUBSET_RESULTS' and r['status'] in ('VALIDATED','PARTIAL')),
+        next((i for i,r in enumerate(runs) if r['mode']=='JOINT_COVERAGE_RESULTS' and r['status'] in ('VALIDATED','PARTIAL')),
         next((i for i,r in enumerate(runs) if r['mode']=='FULL548_FACTORIAL' and r['status']=='VALIDATED'),
         next((i for i,r in enumerate(runs) if r['mode']=='FULL548_R_JPEG' and r['status'] in ('VALIDATED','PARTIAL')),
-        next((i for i,r in enumerate(runs) if r['mode']=='SUPERVISOR_ALIGNED_PREPARATION'),0))))
+        next((i for i,r in enumerate(runs) if r['mode']=='SUPERVISOR_ALIGNED_PREPARATION'),0)))))
     selection=st.selectbox('Saved VM36 run',range(len(runs)),index=preferred,format_func=lambda i:runs[i]['RunID'])
     row=runs[selection]
     reader=DashboardStore(mode='cloud') if row['source']=='published' and store.mode=='local' else store
@@ -108,6 +109,10 @@ def render_joint(data):
         st.metric('Measured states',str(coverage['measured_states'])+'/1033')
         st.metric('New worker wall time',f"{data['worker_wall_seconds']/3600:.2f} h")
     st.info('All 548 validation images per accepted pair. Coverage refers to the restricted 7,488-pair projection, not fault detection or independent testing.')
+    if data.get('complete20_study'):
+        st.caption('This study targets responses for 20 selected contexts and four fixed settings. The original 26-point core already supplied feature-state coverage; accepted counts are shown above.')
+        st.subheader('Finite-subset primary outcomes')
+        st.json(data['finite20_primary_gap_counts'],expanded=False)
     if data['status']=='PARTIAL':st.warning('Some frozen points were not accepted. Missing outcomes remain unknown.')
     st.subheader('Measured conditions')
     values=pd.DataFrame(data['metrics'])

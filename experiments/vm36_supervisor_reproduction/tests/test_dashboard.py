@@ -103,5 +103,20 @@ render_joint({'coverage':{'measured_states':459},'new_measured_pairs':0,'combine
         self.assertEqual(next(m.value for m in app.metric if m.label=='Combined accepted pairs'),str(expected['combined_measured_pairs']))
         self.assertEqual(next(m.value for m in app.metric if m.label=='New accepted pairs'),str(expected['new_measured_pairs']))
 
+    def test_complete20_saved_summary_is_visible_without_a_worker(self):
+        try:from streamlit.testing.v1 import AppTest
+        except ImportError:self.skipTest('Use the dashboard environment.')
+        candidates=sorted((ROOT/'datasets/local_runs/vm36_supervisor_reproduction').glob('*_full20_results_*/summary.json'))
+        if not candidates:self.skipTest('Complete-grid worker has no terminal summary yet.')
+        expected=json.loads(candidates[-1].read_text(encoding='utf-8'))
+        with patch.dict(os.environ,{'UAVGAP_DASHBOARD_MODE':'local'}),patch('subprocess.Popen',side_effect=AssertionError('No GPU from the viewer')):
+            app=AppTest.from_file(str(PUBLIC/'code/tools/dashboard.py')).run(timeout=25)
+            selector=next(s for s in app.selectbox if s.label=='Experiment')
+            selector.select(next(s for s in selector.options if s.startswith('VM36'))).run(timeout=25)
+            saved=next(s for s in app.selectbox if s.label=='Saved VM36 run')
+            saved.set_value(next(i for i,name in enumerate(saved.options) if name==expected['RunID'])).run(timeout=25)
+        self.assertFalse(app.exception)
+        self.assertEqual(next(m.value for m in app.metric if m.label=='Combined accepted pairs'),str(expected['combined_measured_pairs']))
+
 
 if __name__=='__main__':unittest.main()

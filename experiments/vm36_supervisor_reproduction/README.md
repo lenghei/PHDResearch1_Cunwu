@@ -136,3 +136,37 @@ either source. Original UAVDT DET/MOT records and local SOT frames stay separate
 `training_readiness.py` reports matched-training requirements and historical
 cost screening; it never starts training. These CPU audits do not admit an
 independent test or authorize another GPU task.
+
+## Matched follow-up and finite subset
+
+`matched_followup.py` verifies the 26 unique measurements, treats the two summary
+versions as aliases, and compares controlled contrasts, conditional subset
+completion and probability sampling separately. It does not query a detector.
+
+`training_data_readiness.py` audits the original 6,471-image ZIP and writes a
+private candidate label view. `loader_seed_diagnostic.py` separates label validity
+from small CPU augmentation-repeat checks. `post26_readiness.py` records
+test-dev/UAVDT admission and the unexecuted matched-training matrix. None starts
+training or changes original data.
+
+The authorized full follow-up completes the same 20 contexts × four settings.
+The original 26 points and the first three matched additions are reused, leaving
+51 points in the second worker. `full20_completion.py` requires the frozen
+manifest and a new author record. Its absolute day deadline retains the first
+new-study start; a stage restart cannot reset it. Partial outputs remain partial.
+Completed-pair resumption requires another explicit record, unchanged protocol
+and verified sealed outputs; no exact mid-pair recovery is claimed.
+
+After that worker stops:
+
+```powershell
+& .venv/Scripts/python.exe -B main/experiments/vm36_supervisor_reproduction/full20_results.py --worker-run <full20-remainder-RunID>
+& .venv/Scripts/python.exe -B main/experiments/vm36_supervisor_reproduction/full20_acceptance.py --analysis-run <full20-results-RunID>
+```
+
+The CPU result contains actual metrics, within-context resolution differences,
+matched context contrasts and finite subset gap states. A negative context DID
+does not by itself imply a negative 1280-minus-640 difference. Pointwise intervals
+do not establish training-seed effects.
+Shared validation images do not constitute independent predictive validation.
+Cloud mode continues to read committed summaries only.
