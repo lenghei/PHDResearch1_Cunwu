@@ -108,3 +108,31 @@ constraint or augmentation efficacy is inferred from the factorial study.
 `renderer_preflight.py --design-run <RunID>` checks its unmeasured recipes on six
 fixed source images under a 300-second CPU cap. It saves pixel identities and
 generation timings, without detector inference or AP evaluation.
+
+## Frozen joint-coverage batch
+
+`joint_batch.py` measures the eighteen frozen additions to the accepted eight
+pairs. Its separate 14,400-second worker cap includes cache generation,
+inference, COCO replay, bootstrap and reports. It checks the first complete-pair
+cost before continuing. A single-use authorization ticket prevents repeating
+the batch. This is a restricted 1,872 × 4 projection, not full FM_D coverage.
+
+After the worker stops, run the CPU acceptance and summary:
+
+```powershell
+& .venv/Scripts/python.exe -B main/experiments/vm36_supervisor_reproduction/joint_analysis.py --batch-run <joint18-RunID>
+& .venv/Scripts/python.exe -B main/experiments/vm36_supervisor_reproduction/joint_acceptance.py --analysis-run <joint-results-RunID>
+```
+
+Only sealed full-split results count. The summary separates accepted pairs,
+feature-state coverage, measured outcomes and missing detector settings.
+Unmatched recipes are not used as controlled interaction contrasts. The original
+eight JPEG corners remain the source for their paired contrasts.
+
+`continuation_audit.py` reviews checkpoint/test-dev provenance.
+`uavdt_toolkit_source.py`, `uavdt_reconcile.py` and `uavdt_boundary.py` trace
+official annotations, converted geometry and ignore semantics without editing
+either source. Original UAVDT DET/MOT records and local SOT frames stay separate.
+`training_readiness.py` reports matched-training requirements and historical
+cost screening; it never starts training. These CPU audits do not admit an
+independent test or authorize another GPU task.

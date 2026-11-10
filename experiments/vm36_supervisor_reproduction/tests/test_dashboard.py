@@ -72,5 +72,36 @@ render_measurements({'validated_validation_images':548,'new_measured_pairs':2,'c
         self.assertFalse(app.exception)
         self.assertTrue(app.info)
 
+    def test_joint_results_are_tables_without_unmatched_lines(self):
+        try:from streamlit.testing.v1 import AppTest
+        except ImportError:self.skipTest('Use the dashboard environment.')
+        script='''from dashboard_vm36 import render_joint
+render_joint({'coverage':{'measured_states':459},'new_measured_pairs':0,'combined_measured_pairs':8,
+ 'worker_wall_seconds':1.,'status':'PARTIAL','metrics':[{'checkpoint':'TEST_ONLY','resolution':640,
+ 'features':'fixture','images':548,'map50':0.,'map50_95':0.,'ar50_95':0.,'AP_CI_low':0.,'AP_CI_high':0.,'mean_cached_pipeline_ms':0.}],
+ 'gap_sensitivity':[],'gates':{},'learning':{'status':'NOT_TESTED'},'source_hashes':{}})'''
+        with patch('subprocess.Popen',side_effect=AssertionError('No worker from the viewer')):
+            app=AppTest.from_string(script).run(timeout=20)
+        self.assertFalse(app.exception)
+        self.assertEqual(next(m.value for m in app.metric if m.label=='Combined accepted pairs'),'8')
+        self.assertTrue(app.warning)
+
+    def test_accepted_joint_summary_is_visible_in_local_app(self):
+        try:from streamlit.testing.v1 import AppTest
+        except ImportError:self.skipTest('Use the dashboard environment.')
+        candidates=sorted((ROOT/'datasets/local_runs/vm36_supervisor_reproduction').glob('*_joint_results_*/summary.json'))
+        if not candidates:self.skipTest('No terminal joint result exists yet.')
+        expected=json.loads(candidates[-1].read_text(encoding='utf-8'))
+        with patch.dict(os.environ,{'UAVGAP_DASHBOARD_MODE':'local'}),patch('subprocess.Popen',side_effect=AssertionError('Viewer cannot run experiments')):
+            app=AppTest.from_file(str(PUBLIC/'code/tools/dashboard.py')).run(timeout=25)
+            selector=next(s for s in app.selectbox if s.label=='Experiment')
+            selector.select(next(s for s in selector.options if s.startswith('VM36'))).run(timeout=25)
+            saved=next(s for s in app.selectbox if s.label=='Saved VM36 run')
+            selected=next(i for i,name in enumerate(saved.options) if name==expected['RunID'])
+            saved.set_value(selected).run(timeout=25)
+        self.assertFalse(app.exception)
+        self.assertEqual(next(m.value for m in app.metric if m.label=='Combined accepted pairs'),str(expected['combined_measured_pairs']))
+        self.assertEqual(next(m.value for m in app.metric if m.label=='New accepted pairs'),str(expected['new_measured_pairs']))
+
 
 if __name__=='__main__':unittest.main()

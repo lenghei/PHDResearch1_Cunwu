@@ -25,9 +25,10 @@ def render(store):
     if not runs:
         st.info('No reviewed summary is available in this mode. Cloud mode does not read local evidence.')
         return
-    preferred=next((i for i,r in enumerate(runs) if r['mode']=='FULL548_FACTORIAL' and r['status']=='VALIDATED'),
+    preferred=next((i for i,r in enumerate(runs) if r['mode']=='JOINT_COVERAGE_RESULTS' and r['status'] in ('VALIDATED','PARTIAL')),
+        next((i for i,r in enumerate(runs) if r['mode']=='FULL548_FACTORIAL' and r['status']=='VALIDATED'),
         next((i for i,r in enumerate(runs) if r['mode']=='FULL548_R_JPEG' and r['status'] in ('VALIDATED','PARTIAL')),
-        next((i for i,r in enumerate(runs) if r['mode']=='SUPERVISOR_ALIGNED_PREPARATION'),0)))
+        next((i for i,r in enumerate(runs) if r['mode']=='SUPERVISOR_ALIGNED_PREPARATION'),0))))
     selection=st.selectbox('Saved VM36 run',range(len(runs)),index=preferred,format_func=lambda i:runs[i]['RunID'])
     row=runs[selection]
     reader=DashboardStore(mode='cloud') if row['source']=='published' and store.mode=='local' else store
@@ -37,6 +38,9 @@ def render(store):
     if data is None:
         st.info('This historical preparation run has no final VM36 summary. Select the aligned V2 run.');return
     st.caption(row['RunID']+' · '+data['status'])
+    if data.get('joint_study'):
+        render_joint(data)
+        return
     if data.get('measured_study'):
         render_measurements(data)
         return
@@ -90,5 +94,30 @@ def render_measurements(data):
     st.subheader('Research gates')
     st.dataframe(pd.DataFrame(data['gates']),hide_index=True,width='stretch')
     st.caption(f"Summed forward profiler: {data['forward_profiler_seconds']:.2f} s. This is a component, not total GPU occupancy or deployment latency.")
+    st.subheader('Evidence identities')
+    st.json(data['source_hashes'],expanded=False)
+
+
+def render_joint(data):
+    import pandas as pd
+    import streamlit as st
+    coverage=data['coverage']
+    with st.container(horizontal=True):
+        st.metric('New accepted pairs',data['new_measured_pairs'])
+        st.metric('Combined accepted pairs',data['combined_measured_pairs'])
+        st.metric('Measured states',str(coverage['measured_states'])+'/1033')
+        st.metric('New worker wall time',f"{data['worker_wall_seconds']/3600:.2f} h")
+    st.info('All 548 validation images per accepted pair. Coverage refers to the restricted 7,488-pair projection, not fault detection or independent testing.')
+    if data['status']=='PARTIAL':st.warning('Some frozen points were not accepted. Missing outcomes remain unknown.')
+    st.subheader('Measured conditions')
+    values=pd.DataFrame(data['metrics'])
+    st.dataframe(values[['checkpoint','resolution','features','images','map50','map50_95','ar50_95','AP_CI_low','AP_CI_high','mean_cached_pipeline_ms']],hide_index=True,width='stretch')
+    st.caption('AP and AR use 0–1 units. Latency covers cached-input verification/decode, predictor/NMS and raw writing; no standardized deployment claim.')
+    st.subheader('Tested-subset threshold sensitivity')
+    st.dataframe(pd.DataFrame(data['gap_sensitivity']),hide_index=True,width='stretch')
+    st.caption('Unmeasured settings are NOT_EVALUATED. A failed measured setting does not establish failure across all four settings.')
+    st.subheader('Research gates')
+    st.json(data['gates'],expanded=True)
+    st.json(data['learning'],expanded=False)
     st.subheader('Evidence identities')
     st.json(data['source_hashes'],expanded=False)
