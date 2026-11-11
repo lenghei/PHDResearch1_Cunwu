@@ -234,3 +234,29 @@ native10 initialization on CPU. `rq4_source_admission.py` compares the current
 source weights with a saved official release JSON using `--metadata`,
 `--prepared-run` and `--review-run`. It downloads no weights and cannot start
 training. Present-byte identity does not reconstruct historical training use.
+
+## RQ4 real training canary
+
+`rq4_real_canary.py` is a separate, bounded GPU entry. It requires an author task,
+a fresh execution ticket and the frozen 64/16 image lists. It leaves the earlier
+CPU-only trainer disabled. It checks actual optimizer/EMA updates, gradients,
+BatchNorm buffers and atomic FP32 save/reload.
+
+`rq4_fp32_repair.py <failed-RunID>` documents an explicit precision change after
+a failed AMP canary. It retains the original allocation and absolute deadline;
+it cannot grant more time or start a full training arm. Failed runs stay intact.
+
+The accepted engineering run used FP32. The initial AMP run stopped on nonfinite
+scaled gradients. A local counting hook was then removed before serialization.
+The final run completed one epoch and raw-prediction metric replay. These results
+do not measure augmentation effectiveness or validate exact training resume.
+
+Regenerate the CPU acceptance report from saved runs:
+
+```text
+python rq4_gpu_acceptance.py --failed <AMP-failure-RunID> <save-failure-RunID> --passed <FP32-canary-RunID>
+```
+
+Use the experiment directory for this command. Full matched training remains
+blocked by its resource allocation and unresolved augmentation parameters.
+The 12-run design keeps the same initialization within each seed-matched pair.
