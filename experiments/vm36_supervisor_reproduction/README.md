@@ -210,3 +210,27 @@ Differences use degraded minus Normal. Resolution DID compares the degraded
 AP/AR intervals; timing differences are descriptive across separate runs.
 The analysis keeps the original 20-context cohort separate from the augmented
 21-context cohort. Neither is an independent test or full-space gap estimate.
+
+## RQ4 training preparation
+
+```powershell
+& .venv/Scripts/python.exe -B main/experiments/vm36_supervisor_reproduction/rq4_preparation.py --prepare <author-task.txt>
+```
+
+This CPU-only entry checks all training inputs, the private label view, candidate
+COCO/native10 initialization files and the trainer dataset hook. Native effects
+reuse the existing generator before resize and mosaic. A no-op check compares
+the adapter with the installed loader, including the mosaic-off phase.
+
+Engineering fixtures test connectivity; they are not approved training recipes.
+Ranges, probabilities, missing motion/haze bindings, worker semantics and the
+checkpoint-selection rule remain separate admission decisions. The prototype
+trainer rejects `train()`. A new finite GPU allocation and a validated training
+entry are required before a canary. Historical checkpoints are not substitutes
+for freshly matched controls.
+
+`rq4_review.py --prepared-run <RunID>` verifies nested artifacts and repeats
+native10 initialization on CPU. `rq4_source_admission.py` compares the current
+source weights with a saved official release JSON using `--metadata`,
+`--prepared-run` and `--review-run`. It downloads no weights and cannot start
+training. Present-byte identity does not reconstruct historical training use.
