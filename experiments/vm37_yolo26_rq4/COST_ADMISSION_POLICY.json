@@ -1,0 +1,18 @@
+{
+  "version": "VM37_COST_ADMISSION_V1",
+  "frozen_before_optimized_full_epoch": true,
+  "training_population": 6471,
+  "development_population": 548,
+  "formal_epochs_per_arm": 100,
+  "required_arms_per_pair": 2,
+  "primary_estimate": "100 times each arm's measured complete first-epoch setup, training, internal validation and FP32 save duration",
+  "uncertainty_multiplier": 1.25,
+  "component_estimate": "Also report loader, non-optimizer batch time, actual update count, validation and save components. Adjusted update-count estimates are sensitivity analysis, not an exact runtime forecast.",
+  "unmeasured_targeted_arm": "Do not assume zero augmentation cost or a measured ALL_FIVE runtime.",
+  "research_evaluation_reserve": "Two arms times21 frozen contexts times the largest verified historical YOLO26s1280 complete-context wall time, including saved COCO replay and bootstrap cost",
+  "disk_reserve_bytes": 5368709120,
+  "checkpoint_disk_estimate": "200 times the measured full-epoch FP32 snapshot size, plus evaluation artifacts and the5GiB reserve",
+  "required_fit": "Both full arms, evaluation reserve and storage must fit the smaller of cumulative worker time remaining and the unchanged absolute allocation deadline.",
+  "non_admission": "A fit estimate does not itself implement or authorize an unreviewed formal entry. Any failed health, source, protocol or count gate blocks that branch.",
+  "if_no_fit": "RESOURCE_BLOCKED. Do not shorten epochs, change resolution, omit validation or disable health checks."
+}

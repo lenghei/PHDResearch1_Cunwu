@@ -1,0 +1,113 @@
+{
+  "supervisor_pdf_SHA256": "2f7620a017843e6f638591e85d373ead99c6e8192ab58fa3153665ed22b124af",
+  "ultralytics_version": "8.4.210",
+  "official_commit": {
+    "sha": "c6427a7816d42ab4022b5f9a0242fe93e40e1ff8",
+    "type": "commit",
+    "url": "https://api.github.com/repos/ultralytics/ultralytics/git/commits/c6427a7816d42ab4022b5f9a0242fe93e40e1ff8"
+  },
+  "official_release_URL": "https://github.com/ultralytics/ultralytics/releases/tag/v8.4.210",
+  "FMP_SHA256": "e6eadd633d1c14e0d6bc425f5e54421d592d766c65a6e5f20c61bc34dd76fb5c",
+  "FMD_SHA256": "4022d674822b97dbbe3712646b9a0f970af95d175ae358e63582029bc107571a",
+  "shared_adapter_origin": {
+    "rq4_training_backend.py": "b541c6985b086b04f0dc98a1b123fdafccaaad0575ac06b9bc936270b4456d31",
+    "rq4_dataset.py": "7a1683831567435d823ce82a3cee5b1a69ee02cefeb086e85edfc21d92402d6c",
+    "rq4_augmentation.py": "02d19e1dcfea44c64647649fefc2a0e21951044b59fb38b0aa7f7737c1abd4ca"
+  },
+  "historical_pairs": 84,
+  "historical_pairs_policy": "Read-only reference; no rerun.",
+  "actual_status": {
+    "full100_arms_completed": 0,
+    "matched_scientific_pairs": 0,
+    "decision": "RESOURCE_BLOCKED",
+    "augmentation_effectiveness": "NOT_EVALUATED",
+    "historical_VM36_pairs_rerun": 0,
+    "independent_test_dev": "DATASET_BLOCKED"
+  },
+  "acceptance_RunIDs": {
+    "evidence": "vm37_yolo26_rq4_evidence_summary_cpu_20261112T000137_e29e9600",
+    "resource": "vm37_yolo26_rq4_matched_budget_cpu_20261111T235845_34c7f6da",
+    "CPU": "vm37_yolo26_rq4_focused_regression_cpu_20261111T235941_ce168cdb",
+    "state_parity": "vm37_yolo26_rq4_optimization_parity_cpu_20261111T235905_5455807b",
+    "preservation": "vm37_yolo26_rq4_preservation_cpu_20261111T235905_93e9b8cc"
+  },
+  "source_initializations": [
+    {
+      "architecture": "YOLOv8s",
+      "seed": 42,
+      "COCO_source_SHA256": "1f47a78bf100391c2a140b7ac73a1caae18c32779be7d310658112f7ac9aa78a",
+      "native10_initialization_SHA256": "13903d5319d029f1d12a7eea2221218ecfb54d032e6a4150d5547f0a2b56a592"
+    },
+    {
+      "architecture": "YOLOv8s",
+      "seed": 43,
+      "COCO_source_SHA256": "1f47a78bf100391c2a140b7ac73a1caae18c32779be7d310658112f7ac9aa78a",
+      "native10_initialization_SHA256": "af786bb983026c92672ba52f385634c6e2dc89fca734c667e7bc6cb7c49eba5a"
+    },
+    {
+      "architecture": "YOLOv8s",
+      "seed": 44,
+      "COCO_source_SHA256": "1f47a78bf100391c2a140b7ac73a1caae18c32779be7d310658112f7ac9aa78a",
+      "native10_initialization_SHA256": "77bae3a85c6d91ad6efe36b5ab4b94e499d44bf830e0e0ff1f8812ea16130e5f"
+    },
+    {
+      "architecture": "YOLO26s",
+      "seed": 42,
+      "COCO_source_SHA256": "646f8bc3fe0a656803d95c294f7852321748cb29d13466a1af8862e2db384a1b",
+      "native10_initialization_SHA256": "d6de64f001a0657ac04b88340fea9baa5441998f78eba46704542585c034e674"
+    },
+    {
+      "architecture": "YOLO26s",
+      "seed": 43,
+      "COCO_source_SHA256": "646f8bc3fe0a656803d95c294f7852321748cb29d13466a1af8862e2db384a1b",
+      "native10_initialization_SHA256": "e1092656b814ee7e5c1649a504aaccc6e6c3cf20c4dbe93bb6702ff66dc2ffab"
+    },
+    {
+      "architecture": "YOLO26s",
+      "seed": 44,
+      "COCO_source_SHA256": "646f8bc3fe0a656803d95c294f7852321748cb29d13466a1af8862e2db384a1b",
+      "native10_initialization_SHA256": "467f083a0a7e1a5c6c34a6cc7aff3e1d32ccf023090cd1be58972dea79335006"
+    }
+  ],
+  "post_measurement_patch": {
+    "scope": "Input-integrity failure assertion only; no numerical training or metric change.",
+    "CPU_test_RunID": "vm37_yolo26_rq4_focused_regression_cpu_20261111T235941_ce168cdb",
+    "GPU_runs_after_patch": 0,
+    "measured_source": "GPU Runs retain protocol.json and exact source_snapshots.",
+    "formatting": "Removed one redundant trailing blank line; Python AST unchanged."
+  },
+  "public_exports": {
+    "engineering_summary.csv": "f2055a098da03cb5f8634120593de4e1f4d764c81337642a7d5ca108465843b7",
+    "research_metrics.csv": "eda9444f92af5e9dae31de6ab84fd09ccfdd1216db6880530b2f28c24ef84b8f",
+    "per_class_metrics.csv": "e4a4b079bbdc071696f847781551aa51ff45476240f3ae10da1cb076c9af42ad",
+    "results_provenance.csv": "b155b09745fe074c6c0466c868102e80a0df285f9b0f279a2ff4cc6bb20733a7",
+    "epoch_cost_and_loss.png": "78475070b1bf5c17862cbc6643f8f8b4aa4e5b0e277df042ca151914d1b6e0e0",
+    "epoch_cost_and_loss.pdf": "d7177509ee64a8444f44461ad46aeeb799c418c1e2d95a0f6fde80e17d022215"
+  },
+  "current_project_sources": {
+    "experiments/vm37_yolo26_rq4/budget_analysis.py": "ae7acc0ec14f5a484cfe0ad55c49c6427efbf0ee32d997e73d196029900a4cb0",
+    "experiments/vm37_yolo26_rq4/continue_costs.py": "9453aa15b58b920d5e7756f5efff664995ce74f7564999bee0095993088d5df6",
+    "experiments/vm37_yolo26_rq4/cpu_admission.py": "4424208cb517914f07237f57a9ce2e9d3e23511762aa338c3f92eeb25d7ab08f",
+    "experiments/vm37_yolo26_rq4/cpu_tests.py": "6c9e5365ab5f48a41d69d7ba6a167aa6518cea01814b303bdca0056fe1512e1b",
+    "experiments/vm37_yolo26_rq4/evidence.py": "680e45c632bb17dd19887fb0a9d1e1e3423e26ec945e5b2596c4fca88728247c",
+    "experiments/vm37_yolo26_rq4/external_audit.py": "c837ba93c2ebeafd0553ba412f1beb86667e650f840ecc2ca2b513bf1e36a25e",
+    "experiments/vm37_yolo26_rq4/finalize.py": "d0b0bf011d1b3dcd9d130b8d74de415cb4e9d1aebf9064be38bcf01c559b5dc2",
+    "experiments/vm37_yolo26_rq4/optimization_check.py": "bb3d4edb16f5b04d977c60a3f84a6c4fe912513a826505815abbc6dbd2af7fa4",
+    "experiments/vm37_yolo26_rq4/postflight.py": "4b9df1770ec83206901c895e138bc5d052459348555ae6d63d131048fd44462d",
+    "experiments/vm37_yolo26_rq4/research_inference.py": "78e5b1bcbe6b18ff092d8b910d9748e24f68e4a6c3b6cb15a00c946484266349",
+    "experiments/vm37_yolo26_rq4/study.py": "69a65be958eedc3cded9aa5274e4929f37f69b1b85e9c3d2272d3d2402bbb41e",
+    "experiments/vm37_yolo26_rq4/targeted_policy.py": "f0cb9e5bac60971e723ed9b32e494d67eb120b6e9769c3b37597c6b396225343",
+    "experiments/vm37_yolo26_rq4/telemetry.py": "de291a7cdd2bcc53cb02228da08d99ca02bbd96b59c74a3860ff994cb974a722",
+    "experiments/vm37_yolo26_rq4/training.py": "b99e01516cd0441b299b9bca6accdbe1d361b0ccb44dc809a49d15add1838247",
+    "experiments/vm37_yolo26_rq4/version_audit.py": "fb79a0a828232bbe8a3800a5d63a67aa168353d11d0a75bd22c0007e3ea746d7",
+    "experiments/vm37_yolo26_rq4/tests/test_admission.py": "a873b64b5eb476f6ab6d9778d70f0bd8645a43e02549a35b56ed0e8e7b0994b1",
+    "code/main/training_health.py": "ddaa96ec29e81846528eebb04025a84a752f13f513e2adbe92d273bb50428c38",
+    "code/main/training_data.py": "0241d8123c605f3bef60e034a89e4f0d2509cb6f4996ef87bf146e4369ff3017",
+    "code/main/training_effects.py": "02d19e1dcfea44c64647649fefc2a0e21951044b59fb38b0aa7f7737c1abd4ca",
+    "code/main/predictor_stable.py": "2eeb1deecb210089d0f7770fe5341ce6c92fcda61a0060a9182845d37118a14c",
+    "code/main/predictor.py": "dd4b4754df1761616532364d753fa6e2aa51e158d5c71a6f7fe8d46da15d9f47",
+    "code/main/labels.py": "de18a24b967048172cd6f16e3e3f79df777e8ce52ba0ec31c7f80c39e31595ce",
+    "code/main/statistics.py": "c2b9f907594a9adeef3d08dc07765bcbf0c5b3eaac3e59c72fa7024575ce09ee"
+  },
+  "checksum_convention": "Canonical Git blobs for this release; runtime protocol/source hashes identify the exact archived execution bytes."
+}

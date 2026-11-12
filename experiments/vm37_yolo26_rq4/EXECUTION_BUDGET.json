@@ -1,0 +1,9 @@
+{
+  "total_worker_seconds": 172800,
+  "initial_admission_seconds": 7200,
+  "new_allocation": true,
+  "reset_allowed": false,
+  "single_GPU_worker": true,
+  "runtime_ledger": "Local RunStore compute_allocation.json",
+  "old_VM36_budgets_reused": false
+}

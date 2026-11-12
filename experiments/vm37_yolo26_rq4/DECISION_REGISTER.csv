@@ -1,0 +1,15 @@
+decision,choice,alternative,reason,status
+Initialization,Verified COCO-derived native10 per-seed states,Historical best FT,Historical selected epochs and creation-time initialization are incompletely auditable.,FROZEN
+Library,8.4.210 official stable commit,8.4.61 verified legacy,Official source identity and native10 constructors checked; actual YOLO26 training and dense-head COCO replay passed.,ENGINEERING_ADMITTED
+Checkpoint selection,Final epoch100 EMA,Best-on-val,Same fixed rule without degraded-AP selection; explicit design choice.,FROZEN
+Targeted recipe,VM37_ALL_FIVE_V1,CPU fixtures,Explicit source-supported ranges and fixed priors;200 deterministic CPU examples; no favorable-AP tuning.,CPU_VALIDATED_EFFICACY_NOT_EVALUATED
+Class-name remapping,cls_remap=False,New automatic class-name remapping,Preserve the exact admitted COCO-derived native10 initialization tensors.,CONSTRUCTOR_AND_GPU_VERIFIED
+Optimizer,AdamW lr0=.01 nbs64 warmup3,optimizer=auto,Inherited candidate research settings with explicit optimizer and schedule; not universal optima.,FROZEN_CANDIDATE
+Health implementation,Grouped complete tensor checks,Per-tensor synchronization,Preserve all finite and BN/gradient/EMA/optimizer checks; CPU equality and real GPU Canary passed.,ENGINEERING_VERIFIED
+Pixel cache,Read-only native decode cache,Repeated pixel hashing,Retain pixel and target calculations; cache original-pixel hashes per decode and test equality.,ENGINEERING_VERIFIED
+Inference API,Stable setup adapter,Legacy end2end argument,New API uses nms and quantize; inherited NMS and postprocessing remain unchanged.,FULL548_REPLAY_VERIFIED
+Augmentation probabilities,Independent0.5 family gates,Single OneOf block,Documented fixed transform prior with compound combinations; efficacy remains unmeasured.,FROZEN_RESEARCH_CHOICE
+Continuous training,UVL numeric hulls with exact test-level rejection,Repeat discrete evaluation recipes,Retain FM_D capabilities and original FM_P evaluation rules; continuous draws are not discrete FM_P configurations.,EXPLICIT_SCOPE_LIMIT
+Haze convention,White airlight255,Legacy uncalibrated220,Published white-airlight equation convention with an explicit full-frame constant-depth approximation.,FROZEN_UNCALIBRATED_PROXY
+Budget admission,Complete100-plus100 pair,Start one arm and hope the other fits,Use measured full-data costs and an evaluation/storage reserve before either formal arm starts.,RESOURCE_BLOCKED_MEASURED_COST
+Post-training input SHA,Raise after preserving failed posthash evidence,Record unchanged=False without failing,Correct a postcondition gate; fault-injection CPU test passed; measured inputs were unchanged.,CPU_TESTED_AFTER_GPU_MEASUREMENTS
