@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 import importlib.util
 import json
+import math
 import os
 from pathlib import Path
 import shutil
@@ -167,7 +168,16 @@ def environment_check(bundle):
             raise ValueError('Installed official source changed: ' + relative)
 
 
-def authorize(bundle, protocol, authorization):
+def execution_remaining_seconds(authorization, charged=0., now=None):
+    if not math.isfinite(charged) or charged < 0:
+        raise ValueError('Invalid execution charge.')
+    now = now or datetime.now(timezone.utc)
+    consumed = sum(row['charged_seconds'] for row in authorization['completed_workers']) + charged
+    return max(0., min(authorization['total_seconds'] - consumed,
+                      (datetime.fromisoformat(authorization['absolute_deadline_UTC']) - now).total_seconds()))
+
+
+def authorize(bundle, protocol, authorization, *, initial_admission=True):
     from safety import available_seconds
     if not authorization.get('approved') or authorization.get('protocol_id') != protocol['id']:
         raise PermissionError('A new explicit protocol-specific authorization is required.')
@@ -182,20 +192,25 @@ def authorize(bundle, protocol, authorization):
     if admission.get('status') != 'PASS' or admission.get('ALL_FIVE_GPU_cost_measured') is not True:
         raise PermissionError('Both-arm measured resource admission is missing.')
     required = admission.get('required_complete_matrix_seconds')
-    if not isinstance(required, (int, float)) or required <= 0:
+    if isinstance(required, bool) or not isinstance(required, (int, float)) or not math.isfinite(required) or required <= 0:
         raise PermissionError('Missing complete-matrix cost, including evaluation and safety margin.')
     cost_file = within(bundle, admission['cost_evidence_relative'])
     if digest(cost_file) != admission['cost_evidence_SHA256']:
         raise PermissionError('Resource evidence changed.')
     remaining = available_seconds(authorization)
-    if required > remaining:
+    if remaining <= 0 or initial_admission and required > remaining:
         raise PermissionError('Complete matched matrix does not fit the unchanged deadline and budget.')
     return remaining
 
 
 def training_worker(out):
     plan = load(out / 'protocol.json')
-    check_worker_authorization(out.parent, Path(plan['bundle_path']), plan['protocol_name'])
+    bundle = Path(plan['bundle_path'])
+    check_worker_authorization(out.parent, bundle, plan['protocol_name'])
+    verify_bundle(bundle)
+    environment_check(bundle)
+    if digest(plan['initialization']['path']) != plan['initialization']['sha256']:
+        raise ValueError('Initialization changed after matrix preparation.')
     save(out / 'WORKER_STARTED.json', {'PID': os.getpid(), 'UTC': datetime.now(timezone.utc).isoformat()})
     runtime(out, gpu=True)
     import gc
@@ -287,7 +302,15 @@ def check_worker_authorization(parent, bundle, protocol_name):
     ticket = load(bundle / 'EXECUTION_TICKET.json')
     if ticket['RunID'] != parent.name or ticket['authorization_SHA256'] != digest(authorization_path):
         raise PermissionError('Worker does not belong to the authorized attempt.')
-    authorize(bundle, load(bundle / (protocol_name + '_protocol.json')), load(authorization_path))
+    authorization = load(authorization_path)
+    initial = ticket.get('initial_matrix_admission', {})
+    required = authorization['resource_admission']['required_complete_matrix_seconds']
+    if initial.get('status') != 'PASS' or initial.get('required_seconds') != required or initial.get('available_seconds', 0) < required:
+        raise PermissionError('The complete matrix was not admitted before execution.')
+    authorize(bundle, load(bundle / (protocol_name + '_protocol.json')), authorization, initial_admission=False)
+    charged = sum(load(path)['worker_seconds'] for path in parent.glob('charge_*.json'))
+    if execution_remaining_seconds(authorization, charged) <= 0:
+        raise PermissionError('The original authorized worker budget is exhausted.')
 
 
 def execute(bundle, data_root, protocol_name, authorization_path=None):
@@ -321,14 +344,17 @@ def execute(bundle, data_root, protocol_name, authorization_path=None):
         return parent
     from safety import run_owned, available_seconds
     ticket = bundle / 'EXECUTION_TICKET.json'
+    admitted_seconds = authorize(bundle, protocol, authorization)
     shutil.copyfile(authorization_path, parent / 'authorization.json')
     save(ticket, {'RunID': parent.name, 'authorization_SHA256': digest(authorization_path),
-                  'started_UTC': datetime.now(timezone.utc).isoformat(), 'retry_allowed': False})
+                  'started_UTC': datetime.now(timezone.utc).isoformat(), 'retry_allowed': False,
+                  'initial_matrix_admission': {'status': 'PASS', 'available_seconds': admitted_seconds,
+                    'required_seconds': authorization['resource_admission']['required_complete_matrix_seconds']}})
     charged = 0.
     status = 'PARTIAL_WITH_LIMITATIONS'
     try:
         for out, plan in plans:
-            remaining = min(available_seconds(authorization), authorization['total_seconds'] - charged)
+            remaining = execution_remaining_seconds(authorization, charged)
             if remaining < 60:
                 raise TimeoutError('The original authorized deadline or budget has expired.')
             save(out / 'WORKER_LEASE.json', {'deadline_UTC': (datetime.now(timezone.utc) + timedelta(seconds=remaining)).isoformat()})
@@ -342,7 +368,7 @@ def execute(bundle, data_root, protocol_name, authorization_path=None):
         # Run evaluation under the same total deadline, after all matched arms finish.
         eval_out = parent / 'evaluation'
         eval_out.mkdir()
-        remaining = min(available_seconds(authorization), authorization['total_seconds'] - charged)
+        remaining = execution_remaining_seconds(authorization, charged)
         result = run_owned([sys.executable, '-B', str(POST / 'evaluate.py'), '--bundle', str(bundle),
                            '--data-root', str(data_root), '--training-parent', str(parent), '--protocol', protocol_name],
                           eval_out, remaining, load(bundle / 'safety_policy.json'), dict(os.environ, CUDA_VISIBLE_DEVICES='0'))

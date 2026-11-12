@@ -10,7 +10,7 @@ POST = Path(__file__).resolve().parent
 sys.path.insert(0, str(POST))
 sys.path.insert(0, str(POST.parent))
 from safety import available_seconds, decide
-from portable import ROOT, authorize, within, matrix, load, renderer, install_accumulator, digest
+from portable import ROOT, authorize, within, matrix, load, renderer, install_accumulator, digest, execution_remaining_seconds, verify_bundle
 from evaluate import paired_contrasts
 
 
@@ -74,6 +74,48 @@ class PostCostTests(unittest.TestCase):
     def test_path_escape_rejected(self):
         with self.assertRaises(ValueError):
             within(POST, '../training.py')
+
+    def test_original_charges_and_current_execution_both_count(self):
+        now = datetime.now(timezone.utc)
+        auth = {'total_seconds': 1000, 'completed_workers': [{'charged_seconds': 200}],
+                'absolute_deadline_UTC': (now + timedelta(seconds=2000)).isoformat()}
+        self.assertEqual(execution_remaining_seconds(auth, 300, now), 500)
+        auth['absolute_deadline_UTC'] = (now + timedelta(seconds=100)).isoformat()
+        self.assertEqual(execution_remaining_seconds(auth, 300, now), 100)
+        self.assertEqual(execution_remaining_seconds(auth, 900, now), 0)
+
+    def test_later_arm_does_not_readmit_the_original_whole_matrix(self):
+        folder = ROOT / 'datasets/local_runs'
+        folder.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=folder) as temp:
+            bundle = Path(temp)
+            (bundle / 'bundle_manifest.json').write_text('{}', encoding='utf-8')
+            (bundle / 'cost.json').write_text('{"fixture":true}', encoding='utf-8')
+            protocol = {'id': 'TEST_ONLY', 'architectures': ['YOLO26s'], 'seeds': [42], 'arms': ['CONTROL', 'ALL_FIVE']}
+            auth = {'approved': True, 'protocol_id': 'TEST_ONLY', 'bundle_manifest_SHA256': digest(bundle / 'bundle_manifest.json'),
+                'arms': [list(row) for row in matrix(protocol)], 'cooling_confirmed': True, 'power_confirmed': True,
+                'machine_admitted': True, 'total_seconds': 1000, 'completed_workers': [],
+                'absolute_deadline_UTC': (datetime.now(timezone.utc) + timedelta(seconds=2000)).isoformat(),
+                'resource_admission': {'status': 'PASS', 'ALL_FIVE_GPU_cost_measured': True,
+                    'required_complete_matrix_seconds': 900, 'cost_evidence_relative': 'cost.json',
+                    'cost_evidence_SHA256': digest(bundle / 'cost.json')}}
+            self.assertEqual(authorize(bundle, protocol, auth), 1000)
+            auth['completed_workers'].append({'charged_seconds': 500})
+            with self.assertRaises(PermissionError):
+                authorize(bundle, protocol, auth)
+            self.assertEqual(authorize(bundle, protocol, auth, initial_admission=False), 500)
+
+    def test_changed_frozen_asset_is_rejected(self):
+        folder = ROOT / 'datasets/local_runs'
+        folder.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=folder) as temp:
+            bundle = Path(temp)
+            (bundle / 'asset.txt').write_text('original', encoding='utf-8')
+            (bundle / 'bundle_manifest.json').write_text(json.dumps({'files': {'asset.txt': digest(bundle / 'asset.txt')}}), encoding='utf-8')
+            verify_bundle(bundle)
+            (bundle / 'asset.txt').write_text('changed', encoding='utf-8')
+            with self.assertRaises(ValueError):
+                verify_bundle(bundle)
 
     def test_frozen_horizons_and_counts(self):
         from study import expected_steps

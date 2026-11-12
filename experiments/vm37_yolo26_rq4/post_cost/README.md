@@ -13,6 +13,10 @@ The formal study remains 100 epochs at 1280: YOLO26s/YOLOv8s, seeds 42/43/44, ma
 | `evaluate.py` | Raw predictions, native10 COCO metrics and paired image-bootstrap contrasts |
 | `verify_portable.py` | Isolated CPU dry-runs, initialization health and pixel checks |
 | `export_bundle.py` | Verified local ZIP containing frozen members only |
+| `short_cost.py` | One guarded 128-batch ALL_FIVE engineering check |
+| `full_all_five_cost.py` | One guarded full-epoch ALL_FIVE cost measurement |
+| `revise_bundle.py` | Versioned portable budget-accounting correction |
+| `summarize_measured_cost.py` | Verified cost, training counts and engineering CLEAN metrics |
 | `test_post_cost.py` | Budget, temperature, authorization and contrast tests |
 | `finalize.py` | Source-linked final decision and preservation checks |
 

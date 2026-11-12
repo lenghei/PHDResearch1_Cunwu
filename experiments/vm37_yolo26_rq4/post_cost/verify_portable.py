@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -85,7 +86,8 @@ save(out/'health_and_pixels.json',{'status':'PASS_CPU_ONLY','initializations':he
         raise RuntimeError('Portable source/health/pixel verification failed.')
     save(out / 'verification.json', {'status': 'CPU_VERIFIED_GPU_NOT_VALIDATED', 'bundle': str(bundle),
         'bundle_manifest_SHA256': sha256(bundle / 'bundle_manifest.json'), 'commands': statuses,
-        'unit_tests': 11, 'relocated_dry_runs': ['pilot20', 'formal100'], 'GPU_seconds': 0,
+        'unit_tests': int(re.search(r'Ran (\d+) tests', (out/'test_0.log').read_text()).group(1)),
+        'relocated_dry_runs': ['pilot20', 'formal100'], 'GPU_seconds': 0,
         'wall_seconds': time.perf_counter() - started, 'formal_training': 'NOT_RUN', 'pilot_training': 'NOT_RUN'}, out)
     write_atomic(out / 'diary.md', '# Portable CPU verification\n\nRan isolated commands from the assembled bundle. Verified relocated source/data paths, default execution refusal, initialization health and accepted evaluation pixels. No YOLO forward/backward or GPU test.\n', out)
     save(out / 'run.json', {'RunID': out.name, 'ExperimentID': EXPERIMENT, 'mode': 'PORTABLE_VERIFICATION_CPU',
