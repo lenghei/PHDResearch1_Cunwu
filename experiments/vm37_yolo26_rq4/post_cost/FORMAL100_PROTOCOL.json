@@ -1,0 +1,54 @@
+{
+  "id": "VM37_FORMAL100",
+  "status": "RESOURCE_BLOCKED_LOCAL",
+  "architectures": [
+    "YOLO26s",
+    "YOLOv8s"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "arms": [
+    "CONTROL",
+    "ALL_FIVE"
+  ],
+  "epochs": 100,
+  "training_images": 6471,
+  "development_images": 548,
+  "shared_training_args": {
+    "imgsz": 1280,
+    "batch": 2,
+    "nbs": 64,
+    "optimizer": "AdamW",
+    "lr0": 0.01,
+    "cos_lr": true,
+    "warmup_epochs": 3.0,
+    "amp": false,
+    "workers": 0,
+    "cls_remap": false,
+    "end2end": false,
+    "resume": false,
+    "device": "0"
+  },
+  "schedule_horizon_epochs": 100,
+  "selection": "Fixed epoch100 EMA",
+  "planned_counters_per_arm": {
+    "batches": 323600,
+    "updates": 10917,
+    "warmup_batches": 9708,
+    "last_update_position": 323574,
+    "pending_microbatches": 25
+  },
+  "contexts_per_checkpoint": 21,
+  "inference_resolutions": [
+    640,
+    1280
+  ],
+  "full_matrix_training_arms": 12,
+  "evaluation_configurations_per_matched_pair": 84,
+  "data_boundary": "Development validation only until independent data admission. No test-dev.",
+  "execute_default": false,
+  "server_budget": "New server-specific explicit resource authorization and measured admission required."
+}

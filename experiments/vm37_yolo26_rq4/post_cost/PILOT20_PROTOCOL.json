@@ -1,0 +1,164 @@
+{
+  "id": "PILOT_YOLO26S_CONTROL_VS_ALL_FIVE",
+  "version": "VM37_PILOT20_V1",
+  "status": "FROZEN_NOT_ADMITTED",
+  "architectures": [
+    "YOLO26s"
+  ],
+  "seeds": [
+    42
+  ],
+  "arms": [
+    "CONTROL",
+    "ALL_FIVE"
+  ],
+  "epochs": 20,
+  "training_images": 6471,
+  "development_images": 548,
+  "shared_training_args": {
+    "imgsz": 1280,
+    "batch": 2,
+    "nbs": 64,
+    "optimizer": "AdamW",
+    "lr0": 0.01,
+    "cos_lr": true,
+    "warmup_epochs": 3.0,
+    "amp": false,
+    "workers": 0,
+    "cls_remap": false,
+    "end2end": false,
+    "resume": false,
+    "device": "0"
+  },
+  "schedule_horizon_epochs": 20,
+  "scheduler": "Ultralytics8.4.210 cosine with its own20-epoch horizon",
+  "planned_counters_per_arm": {
+    "batches": 64720,
+    "updates": 2827,
+    "warmup_batches": 9708,
+    "last_update_position": 64694,
+    "pending_microbatches": 25
+  },
+  "planned_anchor_exposures_per_arm": 129420,
+  "initialization_rule": "Exact same native10 initialization SHA for both arms; no old cost or historical FT checkpoint.",
+  "selection": "Fixed epoch20 EMA",
+  "strategy_label": "ALL_FIVE is broad independent stochastic augmentation, not proven Gap-guided training.",
+  "policy_SHA256": "b0f19048c2dbb95b51bfa87583064e1c08eb39dc776eec387c9d60f27b38c6c6",
+  "duration_rationale": "Budget-driven exploratory choice, not an optimal epoch count or substitute for formal100.",
+  "evaluation": {
+    "scope": "DEVELOPMENT_ONLY",
+    "population": 548,
+    "resolutions": [
+      640,
+      1280
+    ],
+    "contexts": [
+      {
+        "id": "Normal",
+        "p": {
+          "id": "p_cdbfeb94b010c58d",
+          "leaves": [
+            "Normal"
+          ],
+          "attributes": {
+            "Normal": {
+              "gain": 1.0,
+              "bias": 0.0
+            }
+          }
+        },
+        "historical_source_pair": "p_cdbfeb94b010c58d__ck01_Infer1280",
+        "pixel_manifest_asset": "assets/evaluation_pixels/Normal.jsonl",
+        "pixel_manifest_SHA256": "709d2466db50a75016e84645bfdfbc04658d855e636764ed4badafce969827fe"
+      },
+      {
+        "id": "JPEG_Q25",
+        "p": {
+          "id": "p_59915f60d81c6f17",
+          "leaves": [
+            "Normal",
+            "JPEG_q25"
+          ],
+          "attributes": {
+            "JPEG_q25": {
+              "quality": 25.0
+            },
+            "Normal": {
+              "gain": 1.0,
+              "bias": 0.0
+            }
+          }
+        },
+        "historical_source_pair": "p_59915f60d81c6f17__ck01_Infer1280",
+        "pixel_manifest_asset": "assets/evaluation_pixels/JPEG_Q25.jsonl",
+        "pixel_manifest_SHA256": "613b50f28da5950a3c0f57905b23ad69950c30a5063455b712f1e7f03b7239e4"
+      },
+      {
+        "id": "JPEG_Q75",
+        "p": {
+          "id": "p_5a06deca286f53b2",
+          "leaves": [
+            "Normal",
+            "JPEG_q75"
+          ],
+          "attributes": {
+            "JPEG_q75": {
+              "quality": 75.0
+            },
+            "Normal": {
+              "gain": 1.0,
+              "bias": 0.0
+            }
+          }
+        },
+        "historical_source_pair": "p_5a06deca286f53b2__ck01_Infer1280",
+        "pixel_manifest_asset": "assets/evaluation_pixels/JPEG_Q75.jsonl",
+        "pixel_manifest_SHA256": "c218c9f669fd4b09e29af0afde6c57e7fddf88610f0926301b1b85cd0842cfea"
+      },
+      {
+        "id": "Gaussian_s15",
+        "p": {
+          "id": "p_9031c68f63a468d1",
+          "leaves": [
+            "Gauss_s15",
+            "Normal"
+          ],
+          "attributes": {
+            "Gauss_s15": {
+              "sigma": 15.0
+            },
+            "Normal": {
+              "gain": 1.0,
+              "bias": 0.0
+            }
+          }
+        },
+        "historical_source_pair": "p_9031c68f63a468d1__ck01_Infer1280",
+        "pixel_manifest_asset": "assets/evaluation_pixels/Gaussian_s15.jsonl",
+        "pixel_manifest_SHA256": "6f2dcea90ab2e8007e7377cb285df61b7f31b755a2ba15b804ccecbcee061089"
+      }
+    ],
+    "render_seed": 20261108,
+    "precision": "FP32",
+    "head": "dense one-to-many plus NMS",
+    "conf": 0.001,
+    "NMS_IoU": 0.7,
+    "max_det": 3000,
+    "max_nms": 30000,
+    "multi_label": true,
+    "class_aware": true,
+    "geometry": "square Letterbox; original bbox coordinates",
+    "GT_asset": "assets/ground_truth.json",
+    "GT_SHA256": "b391903ad7a9d52f7a98dfc59a62cdbeb4771629b38d02c65ca05edff56864e9",
+    "bootstrap_samples": 200,
+    "bootstrap_seed": 20261112,
+    "bootstrap_unit": "Same original-image position indices for all arms, resolutions and contexts; recompute aggregate COCO AP.",
+    "difference": "ALL_FIVE minus CONTROL",
+    "degradation_loss": "AP_Normal minus AP_condition",
+    "loss_change": "loss_ALL_FIVE minus loss_CONTROL; negative indicates smaller loss",
+    "not_full21_condition_gap": true,
+    "training_seed_uncertainty": "NOT_IDENTIFIED_BY_ONE_SEED"
+  },
+  "resource_gate": "Both complete arms, evaluation, saving, generation, validation and safety margin must fit the unchanged allocation and deadline.",
+  "execute_default": false
+}
