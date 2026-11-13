@@ -24,6 +24,10 @@ The formal study remains 100 epochs at 1280: YOLO26s/YOLOv8s, seeds 42/43/44, ma
 | `probe_workers.py` | Windows worker startup, ordering and trace investigation |
 | `regress_input.py` | Finite GPU regression against saved engineering states |
 | `finalize_input.py` | Source-linked speed, numerical and resource decision |
+| `build_v3.py` | Independent v3.1 package with unchanged scientific assets |
+| `portable_v3.py`, `evaluate_v3.py` | Optimized training and v3 authorization adapters |
+| `compare_v3.py`, `test_v3.py` | Integrated CPU parity, golden pixels and admission tests |
+| `validate_v3.py`, `finalize_v3.py` | Isolated local acceptance and source-linked delivery |
 | `finalize.py` | Source-linked final decision and preservation checks |
 
 No entry installs dependencies or uploads data. The portable bundle stays under the private run store. The authorization template denies execution. A destination machine needs measured cost and thermal admission; CPU verification does not establish multi-epoch GPU reliability.
@@ -39,3 +43,5 @@ python experiments/vm37_yolo26_rq4/post_cost/verify_input.py --batches 32 --repe
 ```
 
 The optimization is opt-in and keeps DataLoader workers at zero. It preserves the original renderer and policy. CPU input speed is separate from end-to-end training speed. GPU regressions require a fresh admitted ticket within the original deadline; the completed tickets cannot be reused.
+
+The v3.1 package applies one frozen input implementation to both matched arms. The original v2 executor remains available. Target-server benchmarks and formal training require separate explicit authorization, a target-host CPU receipt and complete resource admission. CPU validation does not establish Linux or multi-epoch GPU reliability.
