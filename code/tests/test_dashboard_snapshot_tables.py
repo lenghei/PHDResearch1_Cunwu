@@ -205,10 +205,11 @@ class CloudPageTests(unittest.TestCase):
             self.assertFalse(app.exception)
             self.assertFalse(app.error)
             metrics = {x.label: x.value for x in app.metric}
-            for key, value in (('Images', '548 per condition'), ('Epochs', '10 per arm'),
+            for key, value in (('Images per condition', '548'), ('Epochs per arm', '10'),
                                ('Training arms', '2'), ('Total evaluations', '4384'), ('Seed', '45'),
-                               ('Status', 'MATCHED PILOT'), ('Confirmed Gap closures', '0')):
+                               ('Confirmed Gap closures', '0')):
                 self.assertEqual(metrics[key], value)
+            self.assertTrue(any('MATCHED PILOT' in str(getattr(node, 'proto', '')) for node in app))
             captions = ' '.join(x.value for x in app.caption)
             self.assertIn('2.313% to 6.563% (+4.250 pp)', captions)
             self.assertIn('0.109% to 0.581% | Gap: FAIL to FAIL', captions)

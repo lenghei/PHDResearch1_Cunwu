@@ -718,21 +718,26 @@ def render_discovered_study(store, study: str) -> None:
         return
 
     gen = data.get('generation') or {}
-    top = st.columns(4)
     status = str(data.get('status') or 'UNKNOWN')
     matched = status == 'MATCHED_PILOT_COMPLETED_WITH_LIMITATIONS'
-    top[0].metric('Status', 'MATCHED PILOT' if matched else status)
     images = data.get('images')
-    top[1].metric('Images', f'{images} per condition' if data.get('images_per_condition') else
-                  str(images) if images is not None else '—')
-    if gen.get('valid_configurations') is not None:
-        top[2].metric('Valid FM_P configs', str(gen['valid_configurations']))
-        top[3].metric('Generation time', f"{gen['elapsed_seconds']:.2f} s" if gen.get('elapsed_seconds') is not None else '—')
+    epochs = data.get('epochs')
+    if matched:
+        st.badge('MATCHED PILOT', color='blue')
+        top = st.columns(2)
+        top[0].metric('Images per condition', images if images is not None else '—')
+        top[1].metric('Epochs per arm', epochs if epochs is not None else '—')
     else:
-        epochs = data.get('epochs')
-        top[2].metric('Epochs', f'{epochs} per arm' if data.get('epochs_per_strategy') else
-                      str(epochs) if epochs is not None else '—')
-        top[3].metric('Source', current['source'])
+        top = st.columns(4)
+        top[0].metric('Status', status)
+        top[1].metric('Images per condition' if data.get('images_per_condition') else 'Images',
+                      images if images is not None else '—')
+        if gen.get('valid_configurations') is not None:
+            top[2].metric('Valid FM_P configs', str(gen['valid_configurations']))
+            top[3].metric('Generation time', f"{gen['elapsed_seconds']:.2f} s" if gen['elapsed_seconds'] is not None else '—')
+        else:
+            top[2].metric('Epochs', epochs if epochs is not None else '—')
+            top[3].metric('Source', current['source'])
     st.caption(f"RunID: {selected} · source: {current['source']} · {data.get('scope', '')}")
     if matched:
         st.caption(status)
