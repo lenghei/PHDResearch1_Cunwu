@@ -21,7 +21,7 @@ FM_P describes degradations in UVL. FM_D describes detector, inference and train
 | [VM36 local Gap](reports/results/vm36_supervisor_reproduction) | Of 21 purposefully selected conditions, 4 were covered and 17 had a Gap across the 4 measured detector settings. |
 | [VM45 Motion × Haze](reports/results/vm45_motion_haze_gap_learning) | Overall AP50:95 interaction contrasts of +6.881 and +7.298 pp for YOLOv8s and YOLO26s. |
 | [VM47 Gaussian × JPEG](reports/results/vm47_gaussian_jpeg_factorial) | Overall AP50:95 interaction contrasts of +2.787 and +3.901 pp for the same checkpoints. |
-| [VM48 Motion-targeted pilot](reports/results/vm48_formal_rq4/motion_targeted_seed45_execution_20261118T210143_5ada2476) | Motion overall AP50:95 +4.250 pp. Motion Tiny AP rose from 0.109% to 0.581% (+0.471 pp, 95% paired-image interval +0.409 to +0.947 pp). **Zero confirmed Gap closures.** Normal AP −1.046 pp and Haze AP −1.684 pp. |
+| [VM48 Motion-targeted pilot](reports/results/vm48_formal_rq4/motion_targeted_seed45_execution_20261118T210143_5ada2476) | Motion overall AP50:95 +4.250 pp. Motion Tiny AP rose from 0.109% to 0.581% (+0.471 pp, 95% paired-image interval +0.409 to +0.947 pp). **Zero confirmed Gap closures.** Normal AP −1.046 pp and Haze AP −1.684 pp. [10-class results](reports/results/vm48_formal_rq4/motion_targeted_seed45_execution_20261118T210143_5ada2476/per_class_all_conditions.csv). |
 
 ## Experiments
 
