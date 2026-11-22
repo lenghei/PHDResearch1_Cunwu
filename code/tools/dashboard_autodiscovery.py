@@ -12,7 +12,7 @@ import math
 import re
 from pathlib import Path
 
-from dashboard_data import PUBLIC, DashboardStore, DataError, decode
+from dashboard_data import PUBLIC, DashboardStore, DataError, decode, read_published_snapshot
 
 KNOWN_STUDIES = {
     'vm1_flamapy_yolo26s_validation': 'VM1 · FlamaPy–YOLO26s validation',
@@ -25,8 +25,17 @@ HASH = re.compile(r'^[0-9a-f]{64}$')
 CSV_LIMIT = 1_000_000
 MAX_CSV_FILES = 30
 MAX_ROWS = 5_000
-DISALLOWED_COLUMNS = re.compile(r'password|secret|token|api.?key|private|(?:^|_)path|filepath|command|config|weights|user(name)?|email', re.I)
-PRIVATE_VALUES = re.compile(r'(^[A-Za-z]:[\\/]|/home/|/Users/|\\Users\\|(?:^|\s)\\\\)', re.I)
+ASSET_LIMIT = 2_000_000
+PUBLIC_FIGURES = {
+    'gap_tradeoffs.png': 'Gap transitions and trade-offs',
+    'Figure_C_class_degradation_heatmap.png': 'AP50:95 change by class and degradation',
+}
+CLASS_TABLE = 'per_class_all_conditions.csv'
+PAIRED_METRICS = {'ap': 'AP50:95', 'tiny': 'Tiny AP50:95', 'ms': 'Cached latency'}
+DISALLOWED_COLUMNS = re.compile(r'password|secret|token|api.?key|credential|authorization|private|(?:^|_)path|filepath|command|config|weights|user(name)?|email', re.I)
+PRIVATE_VALUES = re.compile(
+    r'(^[A-Za-z]:[\\/]|/home/|/Users/|\\Users\\|(?:^|\s)\\\\|gh[pousr]_|github_pat_)', re.I)
+PUBLIC_COLUMN = re.compile(r'[A-Za-z0-9_][A-Za-z0-9_. %():+\-]{0,119}')
 METRICS = ('AP50', 'AP50_95', 'AR50_95')
 
 
@@ -220,14 +229,19 @@ def _csv_rows(path: Path) -> list[dict]:
     if path.stat().st_size > CSV_LIMIT:
         raise DataError('Published CSV exceeds size limit: ' + path.name)
     rows = []
-    with path.open('r', encoding='utf-8-sig', newline='') as stream:
-        reader = csv.DictReader(stream)
-        if not reader.fieldnames or len(reader.fieldnames) > 40:
-            raise DataError('Invalid published CSV header: ' + path.name)
-        for row in reader:
-            if len(rows) >= MAX_ROWS or None in row:
-                raise DataError('Invalid or oversized published CSV: ' + path.name)
-            rows.append(row)
+    try:
+        with path.open('r', encoding='utf-8-sig', newline='') as stream:
+            reader = csv.DictReader(stream)
+            if (not reader.fieldnames or len(reader.fieldnames) > 40 or
+                    any(not name.strip() for name in reader.fieldnames) or
+                    len(set(reader.fieldnames)) != len(reader.fieldnames)):
+                raise DataError('Invalid published CSV header: ' + path.name)
+            for row in reader:
+                if len(rows) >= MAX_ROWS or None in row or None in row.values():
+                    raise DataError('Invalid or oversized published CSV: ' + path.name)
+                rows.append(row)
+    except (csv.Error, UnicodeError) as exc:
+        raise DataError('Cannot parse published CSV: ' + path.name) from exc
     return rows
 
 
@@ -235,7 +249,7 @@ def _filtered(row: dict) -> dict:
     """Display measurement columns, not machine-specific paths or private strings."""
     safe = {}
     for name, raw in row.items():
-        if not name or DISALLOWED_COLUMNS.search(name):
+        if not name or not PUBLIC_COLUMN.fullmatch(name) or DISALLOWED_COLUMNS.search(name):
             continue
         if raw is None:
             continue
@@ -246,7 +260,7 @@ def _filtered(row: dict) -> dict:
             number = float(value)
             if math.isfinite(number):
                 safe[name] = int(number) if number.is_integer() and abs(number) < 1e15 else number
-        elif re.fullmatch(r'[a-zA-Z0-9 _.\-+:]{1,120}', value):
+        elif re.fullmatch(r'[a-zA-Z0-9_][a-zA-Z0-9 _.\-+:]{0,119}', value):
             safe[name] = value
     return safe
 
@@ -332,6 +346,8 @@ def _generated_summary(result: dict, summary: dict, provenance: dict) -> dict:
         config = {}
     audit = provenance.get('audit', {}) if isinstance(provenance, dict) else {}
     timing = summary.get('timing', {}) if isinstance(summary, dict) else {}
+    metrics = summary.get('metrics')
+    metrics = metrics if isinstance(metrics, dict) else {}
     duration = result.get('elapsed_seconds')
     if not isinstance(duration, (int, float)) and isinstance(timing, dict):
         duration = timing.get('wall_seconds')
@@ -343,32 +359,191 @@ def _generated_summary(result: dict, summary: dict, provenance: dict) -> dict:
         'effect_order': config.get('effect_order') or [],
         'elapsed_seconds': duration if isinstance(duration, (int, float)) else None,
         'audit': {k: audit.get(k) for k in ('status', 'files_checked', 'images_regenerated') if k in audit},
-        'inference': (summary.get('metrics') or {}).get('model_inference', result.get('model_inference', 'NOT_RECORDED')),
-        'AP': (summary.get('metrics') or {}).get('AP', result.get('AP_metrics', 'NOT_EVALUATED')),
+        'inference': metrics.get('model_inference', result.get('model_inference', 'NOT_RECORDED')),
+        'AP': metrics.get('AP', result.get('AP_metrics', 'NOT_EVALUATED')),
     }
 
 
+def _snapshot_files(folder: Path, study: str, run_id: str) -> tuple[dict, dict]:
+    manifest = read_manifest(safe_child(folder, 'manifest.json', folder))
+    if (manifest.get('schema') != 2 or manifest.get('ExperimentID') != study or
+            manifest.get('RunID') != run_id or manifest.get('bundle') != 'snapshot.json'):
+        raise DataError('Published snapshot manifest identity mismatch.')
+    expected = manifest.get('files', {})
+    checksum = manifest.get('SHA256')
+    if (not isinstance(expected, dict) or not isinstance(checksum, str) or not HASH.fullmatch(checksum)
+            or expected.get('snapshot.json', checksum) != checksum):
+        raise DataError('Invalid published snapshot checksums.')
+    path = safe_child(folder, 'snapshot.json', folder)
+    bundle = read_published_snapshot(path, checksum)
+    if bundle.get('ExperimentID') != study or bundle.get('RunID') != run_id:
+        raise DataError('Published snapshot identity mismatch.')
+    files = bundle.get('files')
+    if not isinstance(files, dict):
+        raise DataError('Invalid published snapshot contents.')
+    return manifest, files
+
+
+def _class_rows(rows: list[dict]) -> list[dict]:
+    allowed = {'condition', 'category_name', 'category_id', 'gt_count', 'tiny_gt_count',
+               'images_with_GT', 'images_with_tiny_GT', 'contribution_to_macro_AP50_95_delta_pp'}
+    measures = ('AP50', 'AP50_95', 'AR50_95', 'Tiny_AP50', 'Tiny_AP50_95', 'Tiny_AR50_95')
+    for metric in measures:
+        allowed.update((f'CONTROL_{metric}_pct', f'TARGETED_{metric}_pct', f'delta_{metric}_pp',
+                        f'delta_{metric}_CI95_low_pp', f'delta_{metric}_CI95_high_pp'))
+    required_numbers = ('CONTROL_AP50_95_pct', 'TARGETED_AP50_95_pct', 'delta_AP50_95_pp',
+                        'CONTROL_Tiny_AP50_95_pct', 'TARGETED_Tiny_AP50_95_pct', 'delta_Tiny_AP50_95_pp')
+    keys = set()
+    cleaned = []
+    for row in rows:
+        condition, category, cid = (row.get(k) for k in ('condition', 'category_name', 'category_id'))
+        if (not isinstance(condition, str) or not isinstance(category, str) or
+                type(cid) is not int or cid < 1 or (condition, cid) in keys or
+                any(k not in row for k in required_numbers)):
+            raise DataError('Invalid per-class CSV fields or duplicate class rows.')
+        keys.add((condition, cid))
+        entry = {k: v for k, v in row.items() if k in allowed}
+        for name, value in entry.items():
+            if name in ('condition', 'category_name'):
+                continue
+            if value == 'NA' and name.endswith(('_pct', '_pp')):
+                continue
+            if (name.endswith('_pct') and (type(value) not in (int, float) or not 0 <= value <= 100) or
+                    name.endswith('_pp') and (type(value) not in (int, float) or not -100 <= value <= 100) or
+                    name.endswith(('_count', '_GT')) and (type(value) is not int or value < 0)):
+                raise DataError('Invalid per-class CSV metric or count: ' + name)
+        cleaned.append(entry)
+    return cleaned
+
+
+def _snapshot_assets(folder: Path, expected: dict) -> tuple[dict, dict]:
+    csv_names = [name for name in expected if name.lower().endswith('.csv')]
+    if len(csv_names) > MAX_CSV_FILES:
+        raise DataError('Too many published CSV files.')
+    tables, figures = {}, {}
+    for name in csv_names + [name for name in PUBLIC_FIGURES if name in expected]:
+        checksum = expected[name]
+        if not isinstance(checksum, str) or not HASH.fullmatch(checksum):
+            raise DataError('Invalid published asset checksum.')
+        path = safe_child(folder, name, folder)
+        if not path.is_file():
+            raise DataError('Missing published asset: ' + name)
+        if name in PUBLIC_FIGURES:
+            if path.stat().st_size > ASSET_LIMIT:
+                raise DataError('Published figure exceeds size limit: ' + name)
+            data = path.read_bytes()
+            if (hashlib.sha256(data).hexdigest() != checksum or
+                    not data.startswith(b'\x89PNG\r\n\x1a\n')):
+                raise DataError('Published figure checksum or format mismatch: ' + name)
+            figures[name] = data
+            continue
+        if path.stat().st_size > CSV_LIMIT:
+            raise DataError('Published CSV exceeds size limit: ' + name)
+        if not _csv_sha_matches(path, checksum):
+            raise DataError('Published CSV checksum mismatch: ' + name)
+        rows = [_filtered(row) for row in _csv_rows(path)]
+        tables[name] = _class_rows(rows) if name == CLASS_TABLE else [row for row in rows if row]
+    return tables, figures
+
+
+def _summary_tables(summary: dict) -> dict:
+    def fields(value, prefix='', depth=0):
+        for key, item in value.items():
+            if not PUBLIC_COLUMN.fullmatch(key) or DISALLOWED_COLUMNS.search(key):
+                continue
+            name = f'{prefix}.{key}' if prefix else key
+            if isinstance(item, dict) and depth < 3:
+                yield from fields(item, name, depth + 1)
+            elif isinstance(item, list) and len(item) <= 40:
+                for index, member in enumerate(item, 1):
+                    if type(member) in (str, int, float):
+                        yield f'{name}.{index}', member
+            elif type(item) in (str, int, float):
+                yield name, item
+
+    return {key: rows for key, value in summary.items()
+            if key != 'paired_conditions' and PUBLIC_COLUMN.fullmatch(key)
+            and isinstance(value, list) and 0 < len(value) <= MAX_ROWS
+            and all(isinstance(row, dict) for row in value)
+            and (rows := [clean for row in value if (clean := _filtered(dict(fields(row))))])}
+
+
+def _paired_results(summary: dict) -> dict:
+    source = summary.get('paired_conditions')
+    if source is None:
+        return {}
+    if not isinstance(source, list) or not source or not all(isinstance(row, dict) for row in source):
+        raise DataError('Invalid paired condition results.')
+    arms = source[0].get('arms')
+    if not isinstance(arms, dict) or len(arms) != 2 or 'CONTROL' not in arms:
+        raise DataError('Invalid paired training arms.')
+    control, targeted = 'CONTROL', next(arm for arm in arms if arm != 'CONTROL')
+    if not RUN_NAME.fullmatch(targeted):
+        raise DataError('Invalid paired training arm name.')
+    conditions = []
+    for row in source:
+        label = _filtered({'label': row.get('label'), 'condition': row.get('condition')})
+        saved_arms = row.get('arms')
+        saved_delta = row.get('delta')
+        if (len(label) != 2 or not isinstance(saved_arms, dict) or set(saved_arms) != {control, targeted}
+                or not all(isinstance(arm, dict) for arm in saved_arms.values())
+                or not isinstance(saved_delta, dict)
+                or not all(isinstance(saved_delta.get(metric), dict) for metric in PAIRED_METRICS)):
+            raise DataError('Invalid paired condition or arm.')
+        arms = {arm: {key: _float(saved_arms[arm].get(key), key) for key in PAIRED_METRICS}
+                for arm in (control, targeted)}
+        for arm, values in arms.items():
+            values['state'] = saved_arms[arm].get('state')
+            if (values['state'] not in ('PASS', 'FAIL', 'UNCERTAIN') or values['ms'] < 0 or
+                    not all(0 <= values[key] <= 100 for key in ('ap', 'tiny'))):
+                raise DataError('Invalid paired metric or Gap state.')
+        delta = {key: _float(saved_delta[key].get('value'), key) for key in PAIRED_METRICS}
+        if any(abs(arms[targeted][key] - arms[control][key] - delta[key]) > 1e-9 for key in delta):
+            raise DataError('Paired snapshot differences do not match arm metrics.')
+        conditions.append({**label, 'arms': arms, 'delta': delta})
+    if len({row['condition'] for row in conditions}) != len(conditions):
+        raise DataError('Duplicate paired conditions.')
+    closures = summary.get('confirmed_gap_closures')
+    confirmed = sum(row['arms'][control]['state'] == 'FAIL' and row['arms'][targeted]['state'] == 'PASS'
+                    for row in conditions)
+    if type(closures) is not int or closures != confirmed:
+        raise DataError('Invalid confirmed Gap closure count.')
+    return {'arm_names': (control, targeted), 'conditions': conditions, 'closures': closures}
+
+
 def load_snapshot(store, study: str, run_id: str) -> dict:
-    """Read a SHA-verified published snapshot, also from the local dashboard."""
-    view = _published_store(store).view(study, run_id)
-    summary = view.read('summary.json', {}) or {}
-    result = view.read('result.json', {}) or {}
-    provenance = view.read('provenance.json', {}) or {}
-    if not isinstance(result, dict) or not isinstance(summary, dict) or not isinstance(provenance, dict):
+    """Read verified public artifacts, including when the dashboard is in local mode."""
+    root = _published_store(store).root
+    folder = safe_child(safe_child(root, study, root), run_id, root)
+    manifest, files = _snapshot_files(folder, study, run_id)
+    summary = files.get('summary.json', {})
+    result = files.get('result.json', {})
+    provenance = files.get('provenance.json', {})
+    if not all(isinstance(value, dict) for value in (result, summary, provenance)):
         raise DataError('Invalid published metadata.')
-    metrics = {}
-    for source in (result, summary):
-        for key in METRICS:
-            if key in source and isinstance(source[key], (float, int)):
-                metrics[key] = source[key]
+    for value in (result, summary):
+        if value.get('ExperimentID', study) != study or value.get('RunID', run_id) != run_id:
+            raise DataError('Published summary identity mismatch.')
+    tables, figures = _snapshot_assets(folder, manifest.get('files', {}))
+    paired = _paired_results(summary)
+    metrics = {key: value[key] for value in (result, summary) for key in METRICS
+               if type(value.get(key)) in (float, int)}
     generated = _generated_summary(result, summary, provenance)
-    images = result.get('generated_images') or result.get('images_per_condition') or result.get('images')
-    if images is None:
-        images = (summary.get('dataset') or {}).get('images')
+    dataset = summary.get('dataset') if isinstance(summary.get('dataset'), dict) else {}
+    images_per_condition = summary.get('images_per_condition', result.get('images_per_condition',
+                                                                         dataset.get('images_per_condition')))
+    images = images_per_condition or result.get('generated_images') or result.get('images') or dataset.get('images')
+    epochs_per_arm = summary.get('epochs_per_strategy')
+    epochs = epochs_per_arm or result.get('trained_epochs') or summary.get('epochs')
     return {'RunID': run_id, 'ExperimentID': study, 'metrics': metrics,
-            'status': result.get('status', summary.get('status', 'UNKNOWN')),
-            'tables': {}, 'scope': result.get('scope', ''), 'images': images,
-            'epochs': result.get('trained_epochs'), 'timing': {}, 'gpu': '', 'started_at': '',
+            'status': result.get('status', summary.get('status', manifest.get('status', 'UNKNOWN'))),
+            'tables': tables, 'summary_tables': _summary_tables(summary), 'figures': figures, 'paired': paired,
+            'units': _filtered({key: summary.get(key) for key in ('ap_units', 'delta_ap_units', 'did_units')}),
+            'scope': result.get('scope') or summary.get('scope') or manifest.get('scope', ''),
+            'images': images, 'epochs': epochs, 'timing': {}, 'gpu': '', 'started_at': _time(manifest, folder),
+            'images_per_condition': images_per_condition, 'epochs_per_strategy': epochs_per_arm,
+            'training_images': summary.get('training_images'), 'cells': summary.get('cells'),
+            'image_evaluations': summary.get('image_evaluations'), 'seed': summary.get('seed'),
             'generation': generated, 'preview_root': None}
 
 
@@ -425,6 +600,90 @@ def local_preview_pairs(folder: Path, count: int = 3) -> list[tuple[bytes, bytes
     return pairs
 
 
+def _render_paired_results(st, pd, paired: dict) -> None:
+    import plotly.express as px
+
+    control, targeted = paired['arm_names']
+    rows = paired['conditions']
+    st.subheader('Paired development results')
+    st.metric('Confirmed Gap closures', paired['closures'])
+    motion = next((row for row in rows if row['condition'] == 'Motion_k21'), None)
+    if motion:
+        a, b = motion['arms'][control], motion['arms'][targeted]
+        st.caption(f"Motion: {a['ap']:.3f}% to {b['ap']:.3f}% ({motion['delta']['ap']:+.3f} pp) "
+                   f"| Tiny: {a['tiny']:.3f}% to {b['tiny']:.3f}% "
+                   f"| Gap: {a['state']} to {b['state']}")
+    tabs = st.tabs(['AP50:95', 'Tiny AP50:95', 'Cached latency'])
+    for tab, (key, title) in zip(tabs, PAIRED_METRICS.items()):
+        unit = 'ms' if key == 'ms' else '%'
+        frame = pd.DataFrame([{'Condition': row['label'], 'Training arm': arm, title: row['arms'][arm][key]}
+                              for row in rows for arm in (control, targeted)])
+        fig = px.bar(frame, x='Condition', y=title, color='Training arm', barmode='group',
+                     labels={title: f'{title} ({unit})'}, color_discrete_sequence=['#4463c7', '#087f8c'])
+        fig.update_layout(margin=dict(l=16, r=16, t=18, b=16), height=330, legend_title_text='')
+        fig.update_traces(hovertemplate=f'%{{x}}<br>%{{y:.3f}} {unit}<extra>%{{fullData.name}}</extra>')
+        tab.plotly_chart(fig, width='stretch', alt=f'{title} by condition and training arm')
+
+    table = []
+    for row in rows:
+        a, b = row['arms'][control], row['arms'][targeted]
+        values = {'Condition': row['condition'], 'Gap transition': f"{a['state']} to {b['state']}"}
+        for key, title in PAIRED_METRICS.items():
+            unit, diff_unit = ('ms', 'ms') if key == 'ms' else ('%', 'pp')
+            values[f'{control} {title} ({unit})'] = a[key]
+            values[f'{targeted} {title} ({unit})'] = b[key]
+            values[f'{title} change ({diff_unit})'] = row['delta'][key]
+        table.append(values)
+    st.dataframe(table, hide_index=True, width='stretch', alt='Paired metrics and Gap transitions',
+                 column_config={name: st.column_config.NumberColumn(format='%.3f')
+                                for name in table[0] if name not in ('Condition', 'Gap transition')})
+
+
+def _render_class_results(st, pd, rows: list[dict]) -> None:
+    st.subheader('Per-class results')
+    conditions = list(dict.fromkeys(row['condition'] for row in rows))
+    classes = list(dict.fromkeys(row['category_name'] for row in sorted(rows, key=lambda r: r['category_id'])))
+    motion = [row for row in rows if row['condition'] == 'Motion_k21']
+    gains = sorted((row for row in motion if type(row['delta_AP50_95_pp']) in (int, float)),
+                   key=lambda row: row['delta_AP50_95_pp'], reverse=True)
+    net = sum(row['delta_AP50_95_pp'] for row in gains)
+    if len(gains) >= 3 and net > 0:
+        leaders = ', '.join(f"{row['category_name']} {row['delta_AP50_95_pp']:+.3f} pp" for row in gains[:3])
+        share = 100 * sum(row['delta_AP50_95_pp'] for row in gains[:3]) / net
+        st.caption(f'Motion: {leaders}. Together they explain {share:.1f}% of the net gain in '
+                   'class-averaged AP50:95.')
+
+    left, middle, right = st.columns(3)
+    options = ['All conditions', *conditions]
+    condition = left.selectbox('Degradation condition', options,
+                               index=options.index('Motion_k21') if motion else 0)
+    selected = middle.multiselect('Classes', classes, placeholder='All classes')
+    sort_options = {'AP50:95 change (highest first)': 'delta_AP50_95_pp',
+                    'Tiny AP50:95 change (highest first)': 'delta_Tiny_AP50_95_pp',
+                    'Class ID': 'category_id'}
+    sort = sort_options[right.selectbox('Sort by', list(sort_options))]
+    frame = pd.DataFrame(rows)
+    display = frame if condition == 'All conditions' else frame[frame['condition'] == condition]
+    if selected:
+        display = display[display['category_name'].isin(selected)]
+    display = display.sort_values(sort, ascending=sort == 'category_id',
+                                  key=lambda column: pd.to_numeric(column, errors='coerce'))
+    columns = {'condition': 'Condition', 'category_name': 'Class',
+               'CONTROL_AP50_95_pct': 'Control AP50:95 (%)', 'TARGETED_AP50_95_pct': 'Targeted AP50:95 (%)',
+               'delta_AP50_95_pp': 'AP50:95 change (pp)', 'CONTROL_Tiny_AP50_95_pct': 'Control Tiny AP (%)',
+               'TARGETED_Tiny_AP50_95_pct': 'Targeted Tiny AP (%)', 'delta_Tiny_AP50_95_pp': 'Tiny AP change (pp)',
+               'gt_count': 'GT count', 'tiny_gt_count': 'Tiny GT count'}
+    if display.empty:
+        st.info('No class rows match the selected filters.')
+    else:
+        decimals = {key: st.column_config.NumberColumn(label, format='%.3f') for key, label in columns.items()
+                    if key.endswith(('_pct', '_pp'))}
+        st.dataframe(display, column_order=list(columns), column_config={**columns, **decimals},
+                     hide_index=True, width='stretch', alt='Per-class AP and Tiny AP comparisons')
+    st.download_button('Download all class results', frame.to_csv(index=False).encode('utf-8'),
+                       file_name=CLASS_TABLE, mime='text/csv')
+
+
 def render_discovered_study(store, study: str) -> None:
     """Shared local/cloud UI for all experiments discovered from result folders."""
     import pandas as pd
@@ -460,15 +719,33 @@ def render_discovered_study(store, study: str) -> None:
 
     gen = data.get('generation') or {}
     top = st.columns(4)
-    top[0].metric('Status', str(data.get('status') or 'UNKNOWN'))
-    top[1].metric('Images', str(data['images']) if data.get('images') is not None else '—')
+    status = str(data.get('status') or 'UNKNOWN')
+    matched = status == 'MATCHED_PILOT_COMPLETED_WITH_LIMITATIONS'
+    top[0].metric('Status', 'MATCHED PILOT' if matched else status)
+    images = data.get('images')
+    top[1].metric('Images', f'{images} per condition' if data.get('images_per_condition') else
+                  str(images) if images is not None else '—')
     if gen.get('valid_configurations') is not None:
         top[2].metric('Valid FM_P configs', str(gen['valid_configurations']))
         top[3].metric('Generation time', f"{gen['elapsed_seconds']:.2f} s" if gen.get('elapsed_seconds') is not None else '—')
     else:
-        top[2].metric('Epochs', str(data['epochs']) if data.get('epochs') is not None else '—')
+        epochs = data.get('epochs')
+        top[2].metric('Epochs', f'{epochs} per arm' if data.get('epochs_per_strategy') else
+                      str(epochs) if epochs is not None else '—')
         top[3].metric('Source', current['source'])
     st.caption(f"RunID: {selected} · source: {current['source']} · {data.get('scope', '')}")
+    if matched:
+        st.caption(status)
+    paired = data.get('paired') or {}
+    details = {'Total evaluations': data.get('image_evaluations'), 'Training images': data.get('training_images'),
+               'Evaluation cells': data.get('cells'), 'Training arms': len(paired['arm_names']) if paired else None,
+               'Seed': data.get('seed')}
+    details = {name: value for name, value in details.items() if type(value) is int}
+    if details:
+        for col, (name, value) in zip(st.columns(len(details)), details.items()):
+            col.metric(name, str(value))
+    if paired:
+        _render_paired_results(st, pd, paired)
     metrics = data.get('metrics') or {}
     if metrics:
         cols = st.columns(len(metrics))
@@ -513,6 +790,24 @@ def render_discovered_study(store, study: str) -> None:
         st.dataframe(pd.DataFrame([{'Stage': key.replace('_', ' '), 'Seconds': value}
                                    for key, value in duration.items()]), hide_index=True, width='stretch')
     tables = data.get('tables') or {}
+    class_rows = tables.get(CLASS_TABLE)
+    if class_rows:
+        _render_class_results(st, pd, class_rows)
+
+    summary_tables = data.get('summary_tables') or {}
+    if summary_tables:
+        label = st.selectbox('Saved result table', list(summary_tables),
+                             format_func=lambda name: name.replace('_', ' ').capitalize())
+        units = data['units']
+        if units:
+            st.caption('Saved units: ' + ', '.join(f"{k.replace('_', ' ')} = {v}" for k, v in units.items()))
+        st.dataframe(pd.DataFrame(summary_tables[label]), hide_index=True, width='stretch',
+                     alt='Measurements from the published snapshot')
+
+    for name, image in (data.get('figures') or {}).items():
+        st.image(image, caption=PUBLIC_FIGURES[name], alt=PUBLIC_FIGURES[name], width='stretch')
+
+    tables = {name: rows for name, rows in tables.items() if name != CLASS_TABLE and rows}
     area = tables.get('metrics_by_area.csv') or []
     if area:
         st.subheader('Accuracy by object size')
@@ -536,5 +831,5 @@ def render_discovered_study(store, study: str) -> None:
         st.dataframe(frame, hide_index=True, width='stretch')
         st.download_button('Download displayed table', frame.to_csv(index=False).encode('utf-8'),
                            file_name=choice, mime='text/csv')
-    elif not gen.get('configuration_id'):
+    elif not (gen.get('configuration_id') or class_rows or summary_tables or paired):
         st.info('This run has no CSV tables. Only saved summary metadata is displayed.')

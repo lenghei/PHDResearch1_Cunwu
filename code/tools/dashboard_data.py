@@ -32,6 +32,29 @@ def decode(path, limit):
         raise DataError('Cannot read result: ' + path.name) from exc
 
 
+def read_published_snapshot(path: Path, checksum: str) -> dict:
+    if not path.is_file():
+        raise DataError('Published snapshot is missing: ' + path.parent.name)
+    if path.stat().st_size > 2_000_000:
+        raise DataError('Published snapshot exceeds size limit: ' + path.parent.name)
+    payload = path.read_bytes()
+    if hashlib.sha256(payload).hexdigest() != checksum:
+        # Older snapshots were hashed before Git converted their line endings.
+        normalized = payload.replace(b'\r\n', b'\n')
+        if b'\r' in normalized:
+            raise DataError('Published snapshot checksum mismatch: ' + path.parent.name)
+        alternate = normalized if payload != normalized else payload.replace(b'\n', b'\r\n')
+        if hashlib.sha256(alternate).hexdigest() != checksum:
+            raise DataError('Published snapshot checksum mismatch: ' + path.parent.name)
+    try:
+        bundle = json.loads(payload)
+    except (ValueError, UnicodeError) as exc:
+        raise DataError('Cannot read published snapshot: ' + path.parent.name) from exc
+    if not isinstance(bundle, dict):
+        raise DataError('Invalid published snapshot: ' + path.parent.name)
+    return bundle
+
+
 class DashboardStore:
     def __init__(self, mode=None, public=None):
         self.mode = mode or os.environ.get('UAVGAP_DASHBOARD_MODE', 'cloud')
@@ -103,13 +126,7 @@ class DashboardStore:
         if self.mode == 'cloud':
             record = decode(self.child(folder, 'manifest.json'), 32_768)
             path = self.child(folder, record['bundle'])
-            if not path.is_file():
-                raise DataError('Published snapshot is missing: ' + folder.name)
-            if path.stat().st_size > 2_000_000:
-                raise DataError('Published snapshot exceeds size limit: ' + folder.name)
-            if hashlib.sha256(path.read_bytes()).hexdigest() != record['SHA256']:
-                raise DataError('Published snapshot checksum mismatch: ' + folder.name)
-            bundle = decode(path, 2_000_000)
+            bundle = read_published_snapshot(path, record['SHA256'])
             if bundle.get('RunID') != run_id or bundle.get('ExperimentID') != study:
                 raise DataError('Published snapshot identity mismatch: ' + folder.name)
             return RunView(self, None, bundle, f'reports/results/{study}/{run_id}')
