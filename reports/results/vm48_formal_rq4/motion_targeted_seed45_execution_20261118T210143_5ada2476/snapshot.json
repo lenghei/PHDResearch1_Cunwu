@@ -1,0 +1,301 @@
+{
+  "ExperimentID": "vm48_formal_rq4",
+  "RunID": "motion_targeted_seed45_execution_20261118T210143_5ada2476",
+  "status": "MATCHED_PILOT_COMPLETED_WITH_LIMITATIONS",
+  "mode": "MOTION_TARGETED_SEED45",
+  "scope": "DEVELOPMENT_ONLY_SINGLE_SEED",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "motion_targeted_seed45_execution_20261118T210143_5ada2476",
+      "status": "MATCHED_PILOT_COMPLETED_WITH_LIMITATIONS",
+      "mode": "MOTION_TARGETED_SEED45",
+      "scope": "DEVELOPMENT_ONLY_SINGLE_SEED",
+      "study": "Matched Motion-targeted augmentation pilot",
+      "detector": "YOLO26s",
+      "seed": 45,
+      "training_images": 6471,
+      "training_size": 960,
+      "epochs_per_strategy": 10,
+      "checkpoints": [
+        {
+          "strategy": "CONTROL",
+          "epoch": 10,
+          "checkpoint_SHA256": "a72f9ead7b917682765899ba0cefa048cf1ada0365d95aac013c8bd12742c506"
+        },
+        {
+          "strategy": "MOTION_TARGETED",
+          "epoch": 10,
+          "checkpoint_SHA256": "b37322d11a8d94e7eaacd586aabd198856fbce0bc1fddeffed3acb8f1cce5724"
+        }
+      ],
+      "targeted_policy": {
+        "probability": 0.25,
+        "training_kernels": [
+          5,
+          9,
+          13,
+          17,
+          25
+        ],
+        "evaluation_kernel": 21
+      },
+      "inference_size": 1280,
+      "images_per_condition": 548,
+      "cells": 8,
+      "image_evaluations": 4384,
+      "image_bootstrap_draws": 200,
+      "ap_units": "percent",
+      "delta_ap_units": "percentage points",
+      "paired_conditions": [
+        {
+          "condition": "Normal",
+          "label": "Normal",
+          "arms": {
+            "CONTROL": {
+              "ap": 23.812665971271894,
+              "tiny": 11.07079785190528,
+              "ms": 67.38872590953191,
+              "tiny_ci": [
+                10.196770668059262,
+                12.443240280869539
+              ],
+              "lat_ci": [
+                66.16436213202988,
+                68.78533098715175
+              ],
+              "state": "PASS"
+            },
+            "MOTION_TARGETED": {
+              "ap": 22.766171140406183,
+              "tiny": 10.484612770914172,
+              "ms": 65.34467883264462,
+              "tiny_ci": [
+                9.842741881585578,
+                11.860623133554517
+              ],
+              "lat_ci": [
+                64.39673958422088,
+                66.1670336638319
+              ],
+              "state": "UNCERTAIN"
+            }
+          },
+          "delta": {
+            "ap": {
+              "value": -1.04649483086571,
+              "ci": [
+                -1.4691944817318134,
+                -0.6442590043864435
+              ]
+            },
+            "tiny": {
+              "value": -0.5861850809911084,
+              "ci": [
+                -1.088469309517805,
+                0.024975261530326337
+              ]
+            },
+            "ms": {
+              "value": -2.0440470768872956,
+              "ci": [
+                -2.9517073515812378,
+                -1.4163753336119498
+              ]
+            }
+          }
+        },
+        {
+          "condition": "Motion_k21",
+          "label": "Motion",
+          "arms": {
+            "CONTROL": {
+              "ap": 2.3127340274309867,
+              "tiny": 0.10925641300016788,
+              "ms": 46.57516970505673,
+              "tiny_ci": [
+                0.06348188688046044,
+                0.14575491024990528
+              ],
+              "lat_ci": [
+                45.88106086141563,
+                47.174836969572205
+              ],
+              "state": "FAIL"
+            },
+            "MOTION_TARGETED": {
+              "ap": 6.563014723389466,
+              "tiny": 0.5806543067439515,
+              "ms": 74.03529981740948,
+              "tiny_ci": [
+                0.5061185567627511,
+                1.03818866624158
+              ],
+              "lat_ci": [
+                72.82461160100296,
+                75.18152594093142
+              ],
+              "state": "FAIL"
+            }
+          },
+          "delta": {
+            "ap": {
+              "value": 4.250280695958479,
+              "ci": [
+                4.024797902356223,
+                4.72875356779875
+              ]
+            },
+            "tiny": {
+              "value": 0.4713978937437836,
+              "ci": [
+                0.40906083206868327,
+                0.9473735053972776
+              ]
+            },
+            "ms": {
+              "value": 27.46013011235275,
+              "ci": [
+                26.501055101617187,
+                28.452149262133663
+              ]
+            }
+          }
+        },
+        {
+          "condition": "Haze_dense",
+          "label": "Haze",
+          "arms": {
+            "CONTROL": {
+              "ap": 13.645196152309392,
+              "tiny": 6.531115831574535,
+              "ms": 50.08597828360295,
+              "tiny_ci": [
+                5.814421442654469,
+                7.767963286465568
+              ],
+              "lat_ci": [
+                49.42634311099651,
+                50.69988905255688
+              ],
+              "state": "FAIL"
+            },
+            "MOTION_TARGETED": {
+              "ap": 11.96157978504924,
+              "tiny": 4.8530388015761705,
+              "ms": 71.70369817486991,
+              "tiny_ci": [
+                4.408715854264541,
+                5.592935192215523
+              ],
+              "lat_ci": [
+                70.80305424699137,
+                72.51122724253706
+              ],
+              "state": "FAIL"
+            }
+          },
+          "delta": {
+            "ap": {
+              "value": -1.6836163672601503,
+              "ci": [
+                -2.025425171134818,
+                -1.354840013118663
+              ]
+            },
+            "tiny": {
+              "value": -1.678077029998365,
+              "ci": [
+                -2.3824867978725655,
+                -1.1613377421136772
+              ]
+            },
+            "ms": {
+              "value": 21.617719891266965,
+              "ci": [
+                20.870695503588546,
+                22.366796887706393
+              ]
+            }
+          }
+        },
+        {
+          "condition": "Motion_Haze",
+          "label": "Motion + Haze",
+          "arms": {
+            "CONTROL": {
+              "ap": 0.5165669889457649,
+              "tiny": 0.023392449135023387,
+              "ms": 37.39223211500658,
+              "tiny_ci": [
+                0.0013404389317908368,
+                0.029730473047304737
+              ],
+              "lat_ci": [
+                37.04469156372709,
+                37.759903956559
+              ],
+              "state": "FAIL"
+            },
+            "MOTION_TARGETED": {
+              "ap": 1.2922650029071314,
+              "tiny": 0.164779894528057,
+              "ms": 49.285321533603486,
+              "tiny_ci": [
+                0.12073595185441624,
+                0.2138640346703493
+              ],
+              "lat_ci": [
+                48.035356900524086,
+                50.62962228855684
+              ],
+              "state": "FAIL"
+            }
+          },
+          "delta": {
+            "ap": {
+              "value": 0.7756980139613665,
+              "ci": [
+                0.6102494496374036,
+                1.0062942177987073
+              ]
+            },
+            "tiny": {
+              "value": 0.1413874453930336,
+              "ci": [
+                0.11554648653567437,
+                0.2066727372567701
+              ]
+            },
+            "ms": {
+              "value": 11.893089418596908,
+              "ci": [
+                10.825362231153923,
+                12.966494890993987
+              ]
+            }
+          }
+        }
+      ],
+      "states_by_strategy": {
+        "CONTROL": {
+          "PASS": 1,
+          "FAIL": 3
+        },
+        "MOTION_TARGETED": {
+          "UNCERTAIN": 1,
+          "FAIL": 3
+        }
+      },
+      "confirmed_gap_closures": 0,
+      "tiny_threshold_percent": 10,
+      "latency_upper_threshold_ms": 100,
+      "supervised_worker_seconds": 18410.16867849999,
+      "limitations": [
+        "One seed",
+        "Synthetic conditions on a development split",
+        "Formal 1280 training remains open"
+      ]
+    }
+  }
+}

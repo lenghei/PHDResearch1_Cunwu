@@ -1,0 +1,46 @@
+{
+  "ExperimentID": "vm47_gaussian_jpeg_factorial",
+  "RunID": "vm47_gaussian_jpeg_factorial_execution_20261117T190442_7166b669",
+  "status": "REAL_EIGHT_CELLS_COMPLETED_WITH_LIMITATIONS",
+  "mode": "FACTORIAL_INTERACTION",
+  "scope": "DEVELOPMENT_ONLY_SYNTHETIC_EXPLORATORY",
+  "schema": 2,
+  "started_at": "2026-11-17T19:04:42+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "0ce4c258ea6d4af8ebf601443005ba23950cfcf4d6fb88331f5d213a2fddb749",
+  "files": {
+    "snapshot.json": "0ce4c258ea6d4af8ebf601443005ba23950cfcf4d6fb88331f5d213a2fddb749"
+  },
+  "sources": [
+    {
+      "ExperimentID": "vm47_gaussian_jpeg_factorial",
+      "RunID": "vm47_gaussian_jpeg_factorial_execution_20261117T190442_7166b669",
+      "artifact": "final_acceptance.json",
+      "SHA256": "0de52a1f8abb6d9a273bd79b0b6086dcca4c942c56486eea6f19422a52fc3b11"
+    },
+    {
+      "ExperimentID": "vm47_gaussian_jpeg_factorial",
+      "RunID": "vm47_gaussian_jpeg_factorial_execution_20261117T190442_7166b669",
+      "artifact": "experiment_protocol.json",
+      "SHA256": "4d113d4bf2e09a8c6f7fa5e0afef405ca8657316687882fc808a18f86724cad9"
+    },
+    {
+      "ExperimentID": "vm47_gaussian_jpeg_factorial",
+      "RunID": "vm47_gaussian_jpeg_factorial_execution_20261117T190442_7166b669",
+      "artifact": "actual_metrics.csv",
+      "SHA256": "80496a9109222c4944dd4af34ee2a744b1469c91b57fa573b44d3ab1a6e8c05d"
+    },
+    {
+      "ExperimentID": "vm47_gaussian_jpeg_factorial",
+      "RunID": "vm47_gaussian_jpeg_factorial_execution_20261117T190442_7166b669",
+      "artifact": "Gaussian_JPEG_DID.csv",
+      "SHA256": "a34ebb77e969886004dac8335f9650541a7b1931207781d2ba0443179839ed1e"
+    },
+    {
+      "ExperimentID": "vm47_gaussian_jpeg_factorial",
+      "RunID": "vm47_gaussian_jpeg_factorial_execution_20261117T190442_7166b669",
+      "artifact": "False_PASS_validation.json",
+      "SHA256": "d972f84aeafe9e00cd6dd3578c498eac5b29ade8dd0d34433adcd3037549a524"
+    }
+  ]
+}

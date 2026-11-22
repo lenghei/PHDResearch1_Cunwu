@@ -1,0 +1,94 @@
+{
+  "ExperimentID": "vm43_external_pilot",
+  "RunID": "vm43_external_pilot_execution_20261116T222929_46c7e0ba",
+  "status": "REAL_FOUR_CELLS_COMPLETED",
+  "mode": "VM43_EXTERNAL_EXPLORATION",
+  "scope": "LIMITED_EXTERNAL_EXPLORATORY",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "vm43_external_pilot",
+      "RunID": "vm43_external_pilot_execution_20261116T222929_46c7e0ba",
+      "status": "REAL_FOUR_CELLS_COMPLETED",
+      "mode": "VM43_EXTERNAL_EXPLORATION",
+      "scope": "LIMITED_EXTERNAL_EXPLORATORY",
+      "study": "Seed 42 Gaussian policy and control on VisDrone test-dev",
+      "seeds": [
+        42
+      ],
+      "cells": 4,
+      "images_per_condition": 1610,
+      "inference_size": 1280,
+      "ap_units": "fraction",
+      "metrics": [
+        {
+          "strategy": "CONTROL",
+          "condition": "Normal",
+          "area": "all",
+          "ap50": 0.3435861601872261,
+          "ap50_95": 0.19929494339641107,
+          "ar50_95": 0.4540798956938235
+        },
+        {
+          "strategy": "CONTROL",
+          "condition": "Normal",
+          "area": "tiny",
+          "ap50": 0.1940286483433313,
+          "ap50_95": 0.0772803958953167,
+          "ar50_95": 0.28064163453452284
+        },
+        {
+          "strategy": "VARIABILITY_GUIDED",
+          "condition": "Normal",
+          "area": "all",
+          "ap50": 0.3360491620508603,
+          "ap50_95": 0.19466483601879395,
+          "ar50_95": 0.4544245316298643
+        },
+        {
+          "strategy": "VARIABILITY_GUIDED",
+          "condition": "Normal",
+          "area": "tiny",
+          "ap50": 0.18809626690120707,
+          "ap50_95": 0.07634234739976707,
+          "ar50_95": 0.2858749224473829
+        },
+        {
+          "strategy": "CONTROL",
+          "condition": "Gaussian_s15",
+          "area": "all",
+          "ap50": 0.2186754620667781,
+          "ap50_95": 0.12337912442984832,
+          "ar50_95": 0.3482600672698169
+        },
+        {
+          "strategy": "CONTROL",
+          "condition": "Gaussian_s15",
+          "area": "tiny",
+          "ap50": 0.1244514220882831,
+          "ap50_95": 0.050044545852419575,
+          "ar50_95": 0.20596892651545423
+        },
+        {
+          "strategy": "VARIABILITY_GUIDED",
+          "condition": "Gaussian_s15",
+          "area": "all",
+          "ap50": 0.3024280758247783,
+          "ap50_95": 0.17293283103327733,
+          "ar50_95": 0.42361031258493786
+        },
+        {
+          "strategy": "VARIABILITY_GUIDED",
+          "condition": "Gaussian_s15",
+          "area": "tiny",
+          "ap50": 0.16106549727669048,
+          "ap50_95": 0.06454014349719442,
+          "ar50_95": 0.26357509790077566
+        }
+      ],
+      "limitations": [
+        "Historical independence is unknown",
+        "External exploration only"
+      ]
+    }
+  }
+}

@@ -1,5 +1,18 @@
 # VM36 · Supervisor-aligned reproduction
 
+The 80 development cells and four separately accepted Normal cells form a
+21-condition by four-setting cohort. At Tiny AP50:95 ≥ 10% and the 100 ms
+cached-pipeline limit, 4 conditions are covered and 17 have a measured Gap.
+
+See the [public summary](../../reports/results/vm36_supervisor_reproduction).
+From the repository root, run the read-only summary replay:
+
+```bash
+python -B code/tools/replay_public_results.py vm36_supervisor_reproduction
+```
+
+## Local study workflow
+
 Preparation freezes a reviewable protocol and audits source evidence. A separate,
 bounded development worker measures admitted full-split conditions; preparation
 does not authorize that worker or complete the research questions.

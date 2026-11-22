@@ -1,0 +1,71 @@
+{
+  "ExperimentID": "vm48_formal_rq4",
+  "RunID": "motion_targeted_seed45_execution_20261118T210143_5ada2476",
+  "status": "MATCHED_PILOT_COMPLETED_WITH_LIMITATIONS",
+  "mode": "MOTION_TARGETED_SEED45",
+  "scope": "DEVELOPMENT_ONLY_SINGLE_SEED",
+  "schema": 2,
+  "started_at": "2026-11-18T21:01:43+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "8f4704ef0c59e7e2ee250adc44f86dc60c24d06fe1ea48421c4fb7676d27682e",
+  "files": {
+    "snapshot.json": "8f4704ef0c59e7e2ee250adc44f86dc60c24d06fe1ea48421c4fb7676d27682e",
+    "gap_tradeoffs.png": "5d2164122f99cebc6a2d1f80e0a6b163ad36bd620e63342171d434cb5db9925e"
+  },
+  "sources": [
+    {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "motion_targeted_seed45_execution_20261118T210143_5ada2476",
+      "artifact": "final_acceptance.json",
+      "SHA256": "4485a15f4893178fed2aed721971526c828a186f515641585083d2151ac7ede5"
+    },
+    {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "motion_targeted_seed45_execution_20261118T210143_5ada2476",
+      "artifact": "training_protocol.json",
+      "SHA256": "09cf6503db4dffca721ba879ad3f253376d2f9fbba93fdc004768903c378d40b"
+    },
+    {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "motion_targeted_seed45_execution_20261118T210143_5ada2476",
+      "artifact": "checkpoint_manifest.csv",
+      "SHA256": "c600f6d1d4cfa8594fe37879e6e8a1d4d9075439084c61fc14b1de3915234913"
+    },
+    {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "motion_targeted_seed45_execution_20261118T210143_5ada2476",
+      "artifact": "configuration_metrics.csv",
+      "SHA256": "82da281bfd76afb5a72486043a165f8670ce81fa5c9731c27b476647f5250747"
+    },
+    {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "motion_targeted_seed45_execution_20261118T210143_5ada2476",
+      "artifact": "paired_AP_comparisons.csv",
+      "SHA256": "7801ace53a63a5dd73da59ddd1c7129c4afa38e0698b6609a645984c434df065"
+    },
+    {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "motion_targeted_seed45_execution_20261118T210143_5ada2476",
+      "artifact": "tiny_gap_transitions.csv",
+      "SHA256": "7e5eb7bc5e81a82410e6b254ea064944604090fe09d061d16ff71d09625ebb49"
+    },
+    {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "motion_targeted_seed45_execution_20261118T210143_5ada2476",
+      "artifact": "resource_usage.json",
+      "SHA256": "a95d08cb192b73158d88eb697167770e133e79ed39eeea55a93048408961642c"
+    },
+    {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "motion_targeted_seed45_execution_20261118T210143_5ada2476",
+      "artifact": "CONTROL/training_acceptance.json",
+      "SHA256": "1152a176130acc046c45208184c824ed8072989d772a7e045b6887e5eac3c5df"
+    },
+    {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "motion_targeted_seed45_execution_20261118T210143_5ada2476",
+      "artifact": "MOTION_TARGETED/training_acceptance.json",
+      "SHA256": "5065662d0b2cd9b7d932709c596e3a1b210c5848b7e7967148a9f0d7aef1558f"
+    }
+  ]
+}

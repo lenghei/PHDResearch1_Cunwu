@@ -1,0 +1,89 @@
+{
+  "ExperimentID": "vm45_motion_haze_gap_learning",
+  "RunID": "vm45_motion_haze_gap_learning_execution_20261117T172830_0d9cb1ee",
+  "status": "REAL_EIGHT_CELLS_COMPLETED_WITH_LIMITATIONS",
+  "mode": "FACTORIAL_INTERACTION",
+  "scope": "DEVELOPMENT_ONLY_SYNTHETIC_EXPLORATORY",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "vm45_motion_haze_gap_learning",
+      "RunID": "vm45_motion_haze_gap_learning_execution_20261117T172830_0d9cb1ee",
+      "status": "REAL_EIGHT_CELLS_COMPLETED_WITH_LIMITATIONS",
+      "mode": "FACTORIAL_INTERACTION",
+      "scope": "DEVELOPMENT_ONLY_SYNTHETIC_EXPLORATORY",
+      "study": "Motion \u00d7 Haze",
+      "conditions": [
+        "Normal",
+        "Motion",
+        "Haze",
+        "Joint"
+      ],
+      "setup": "Motion k21, dense haze beta 1.5, and their combination",
+      "images_per_condition": 548,
+      "inference_size": 1280,
+      "cells": 8,
+      "image_bootstrap_draws": 200,
+      "ap_units": "percent",
+      "did_units": "percentage points",
+      "detectors": [
+        {
+          "id": "ck05_Infer1280",
+          "checkpoint_SHA256": "96c84ece325eccf07edefd231f088f758ba5fa6a75a4b577e8db32a94bfeeb8b"
+        },
+        {
+          "id": "ck01_Infer1280",
+          "checkpoint_SHA256": "1b3861902e01416f199f2242cb43618f7680848cabf5f5df9546f2b404f0c488"
+        }
+      ],
+      "factorial": [
+        {
+          "det": "ck05_Infer1280",
+          "label": "YOLOv8s (ck05)",
+          "ap": [
+            34.918359417747176,
+            3.9880334982091967,
+            25.577334286778804,
+            1.5279128362769692
+          ],
+          "did": 6.880904469036148,
+          "ci": [
+            6.226353700075532,
+            7.548925918197287
+          ]
+        },
+        {
+          "det": "ck01_Infer1280",
+          "label": "YOLO26s (ck01)",
+          "ap": [
+            35.34609797486685,
+            4.235263206106102,
+            25.504446285642583,
+            1.6913680680984806
+          ],
+          "did": 7.2977565512166445,
+          "ci": [
+            6.573135541023715,
+            7.926318985468747
+          ]
+        }
+      ],
+      "rule_safety": {
+        "oof_false": 10,
+        "oof_fail": 76,
+        "oof_tp": 6,
+        "oof_pred_pass": 16,
+        "unseen_false": 4,
+        "unseen_fail": 4,
+        "unseen_tp": 1,
+        "unseen_pred_pass": 5,
+        "unseen_uncertain": 1,
+        "unknown_policy": "ABSTAIN"
+      },
+      "limitations": [
+        "Pointwise image intervals",
+        "One historical checkpoint per detector family",
+        "Synthetic development conditions"
+      ]
+    }
+  }
+}

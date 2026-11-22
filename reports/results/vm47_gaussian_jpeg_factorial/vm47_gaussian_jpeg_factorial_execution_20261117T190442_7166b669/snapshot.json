@@ -1,0 +1,82 @@
+{
+  "ExperimentID": "vm47_gaussian_jpeg_factorial",
+  "RunID": "vm47_gaussian_jpeg_factorial_execution_20261117T190442_7166b669",
+  "status": "REAL_EIGHT_CELLS_COMPLETED_WITH_LIMITATIONS",
+  "mode": "FACTORIAL_INTERACTION",
+  "scope": "DEVELOPMENT_ONLY_SYNTHETIC_EXPLORATORY",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "vm47_gaussian_jpeg_factorial",
+      "RunID": "vm47_gaussian_jpeg_factorial_execution_20261117T190442_7166b669",
+      "status": "REAL_EIGHT_CELLS_COMPLETED_WITH_LIMITATIONS",
+      "mode": "FACTORIAL_INTERACTION",
+      "scope": "DEVELOPMENT_ONLY_SYNTHETIC_EXPLORATORY",
+      "study": "Gaussian \u00d7 JPEG",
+      "conditions": [
+        "Normal",
+        "Gaussian",
+        "JPEG",
+        "Joint"
+      ],
+      "setup": "Gaussian sigma 15, added JPEG Q25, and their combination",
+      "images_per_condition": 548,
+      "inference_size": 1280,
+      "cells": 8,
+      "image_bootstrap_draws": 200,
+      "ap_units": "percent",
+      "did_units": "percentage points",
+      "detectors": [
+        {
+          "id": "ck05_Infer1280",
+          "checkpoint_SHA256": "96c84ece325eccf07edefd231f088f758ba5fa6a75a4b577e8db32a94bfeeb8b"
+        },
+        {
+          "id": "ck01_Infer1280",
+          "checkpoint_SHA256": "1b3861902e01416f199f2242cb43618f7680848cabf5f5df9546f2b404f0c488"
+        }
+      ],
+      "factorial": [
+        {
+          "det": "ck05_Infer1280",
+          "label": "YOLOv8s (ck05)",
+          "ap": [
+            34.918359417747176,
+            28.03548906065845,
+            28.038864788259342,
+            23.942917876103028
+          ],
+          "did": 2.786923444932415,
+          "ci": [
+            2.426814941963229,
+            3.3027388379449953
+          ]
+        },
+        {
+          "det": "ck01_Infer1280",
+          "label": "YOLO26s (ck01)",
+          "ap": [
+            35.34609797486685,
+            27.306689384330333,
+            28.455428510050336,
+            24.31713695492517
+          ],
+          "did": 3.90111703541135,
+          "ci": [
+            3.554304971958347,
+            4.446259966820224
+          ]
+        }
+      ],
+      "rule_safety": {
+        "unknown_policy": "ABSTAIN",
+        "vm47_false": 1,
+        "vm47_fail": 1
+      },
+      "limitations": [
+        "Pointwise image intervals",
+        "One historical checkpoint per detector family",
+        "Synthetic development conditions"
+      ]
+    }
+  }
+}

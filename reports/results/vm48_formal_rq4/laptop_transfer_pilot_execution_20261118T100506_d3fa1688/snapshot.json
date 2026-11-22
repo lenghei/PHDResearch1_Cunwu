@@ -1,0 +1,53 @@
+{
+  "ExperimentID": "vm48_formal_rq4",
+  "RunID": "laptop_transfer_pilot_execution_20261118T100506_d3fa1688",
+  "status": "PARTIAL_WITH_LIMITATIONS",
+  "mode": "GAUSSIAN_TRANSFER",
+  "scope": "DEVELOPMENT_ONLY",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "laptop_transfer_pilot_execution_20261118T100506_d3fa1688",
+      "status": "PARTIAL_WITH_LIMITATIONS",
+      "mode": "GAUSSIAN_TRANSFER",
+      "scope": "DEVELOPMENT_ONLY",
+      "study": "Cross-degradation transfer of Gaussian-guided training",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "images_per_condition": 548,
+      "cells": 24,
+      "image_evaluations": 13152,
+      "inference_size": 1280,
+      "mean_differences_pp": [
+        {
+          "condition": "Normal",
+          "all": -0.5736956464094362,
+          "tiny": 0.16009516027560658
+        },
+        {
+          "condition": "Motion_k21",
+          "all": 0.21757800890145929,
+          "tiny": 0.08316671464819275
+        },
+        {
+          "condition": "Haze_dense",
+          "all": -0.3331909843365714,
+          "tiny": -0.559792861454699
+        },
+        {
+          "condition": "Motion_Haze",
+          "all": 0.01725924519973104,
+          "tiny": -0.012426650695804387
+        }
+      ],
+      "latency_eligible_for_gap_claim": false,
+      "limitations": [
+        "Per-model warmup differed from the per-cell timing protocol",
+        "Motion Tiny contrasts remain uncertain"
+      ]
+    }
+  }
+}

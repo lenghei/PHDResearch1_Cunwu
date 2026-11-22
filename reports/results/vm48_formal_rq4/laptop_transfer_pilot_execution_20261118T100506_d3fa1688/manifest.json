@@ -1,0 +1,28 @@
+{
+  "ExperimentID": "vm48_formal_rq4",
+  "RunID": "laptop_transfer_pilot_execution_20261118T100506_d3fa1688",
+  "status": "PARTIAL_WITH_LIMITATIONS",
+  "mode": "GAUSSIAN_TRANSFER",
+  "scope": "DEVELOPMENT_ONLY",
+  "schema": 2,
+  "started_at": "2026-11-18T10:05:06+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "3a28b8fc2fdc014493aa86db3302e04a00455ddcf3ba3e4dd59371977ecad2c7",
+  "files": {
+    "snapshot.json": "3a28b8fc2fdc014493aa86db3302e04a00455ddcf3ba3e4dd59371977ecad2c7"
+  },
+  "sources": [
+    {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "laptop_transfer_pilot_execution_20261118T100506_d3fa1688",
+      "artifact": "final_acceptance.json",
+      "SHA256": "56fdc7acab78036cf0de526bb29a776cf599d219dc858a888c788bf018b26713"
+    },
+    {
+      "ExperimentID": "vm48_formal_rq4",
+      "RunID": "laptop_transfer_pilot_execution_20261118T100506_d3fa1688",
+      "artifact": "paired_strategy_comparisons.csv",
+      "SHA256": "d2e1b58c431ff9ca121526bd83d3f6a499ebfc3b0e7e5e7259b67c8d1a9896d4"
+    }
+  ]
+}

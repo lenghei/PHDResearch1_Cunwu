@@ -1,0 +1,43 @@
+{
+  "ExperimentID": "vm44_tiny_error_variability_decision",
+  "RunID": "vm44_tiny_error_variability_decision_analysis_20261117T031628_9ebff202",
+  "status": "VM44_COMPLETE_WITH_LIMITATIONS",
+  "mode": "VM44_TINY_AND_SELECTOR",
+  "scope": "LOCAL_LOOKUP_AND_EXTERNAL_EXPLORATORY_DIAGNOSTIC",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "vm44_tiny_error_variability_decision",
+      "RunID": "vm44_tiny_error_variability_decision_analysis_20261117T031628_9ebff202",
+      "status": "VM44_COMPLETE_WITH_LIMITATIONS",
+      "mode": "VM44_TINY_AND_SELECTOR",
+      "scope": "LOCAL_LOOKUP_AND_EXTERNAL_EXPLORATORY_DIAGNOSTIC",
+      "study": "Tiny errors and measured-evidence selection",
+      "tiny_recall_diagnostic": [
+        {
+          "strategy": "CONTROL",
+          "TP": 2577,
+          "GT": 26996,
+          "recall": 0.09545858645725293
+        },
+        {
+          "strategy": "VARIABILITY_GUIDED",
+          "TP": 4798,
+          "GT": 26996,
+          "recall": 0.17773003407912283
+        }
+      ],
+      "diagnostic_score": 0.25,
+      "diagnostic_iou": 0.5,
+      "lookup": {
+        "measured_conditions": 21,
+        "selected": 4,
+        "abstained": 17,
+        "unknown_condition": "ABSTAIN"
+      },
+      "limitations": [
+        "Exact lookup uses measured development conditions",
+        "External Tiny recall is a fixed-threshold diagnostic"
+      ]
+    }
+  }
+}

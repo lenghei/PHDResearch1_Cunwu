@@ -1,0 +1,34 @@
+{
+  "ExperimentID": "vm43_external_pilot",
+  "RunID": "vm43_external_pilot_execution_20261116T222929_46c7e0ba",
+  "status": "REAL_FOUR_CELLS_COMPLETED",
+  "mode": "VM43_EXTERNAL_EXPLORATION",
+  "scope": "LIMITED_EXTERNAL_EXPLORATORY",
+  "schema": 2,
+  "started_at": "2026-11-16T22:29:29+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "8ae94e823f6b6ffac0547e13c0f906b81f6201a00c80089b958bd8ba3101207f",
+  "files": {
+    "snapshot.json": "8ae94e823f6b6ffac0547e13c0f906b81f6201a00c80089b958bd8ba3101207f"
+  },
+  "sources": [
+    {
+      "ExperimentID": "vm43_external_pilot",
+      "RunID": "vm43_external_pilot_execution_20261116T222929_46c7e0ba",
+      "artifact": "final_acceptance.json",
+      "SHA256": "c69c7e69636cd4ac0e7a8cb70f9387f6e90bd2bfde44a03301d43e28b567d6b7"
+    },
+    {
+      "ExperimentID": "vm43_external_pilot",
+      "RunID": "vm43_external_pilot_execution_20261116T222929_46c7e0ba",
+      "artifact": "scientific_acceptance.json",
+      "SHA256": "0432bcc45d9e7170d5e32cfc7a0a0aefb525f3fc28a3f038a169eee3ddceac95"
+    },
+    {
+      "ExperimentID": "vm43_external_pilot",
+      "RunID": "vm43_external_pilot_execution_20261116T222929_46c7e0ba",
+      "artifact": "configuration_metrics.csv",
+      "SHA256": "ea3d9a19758928638503e6b19e7c99c31111d62b39068f6e4b1b20a6adfea20a"
+    }
+  ]
+}

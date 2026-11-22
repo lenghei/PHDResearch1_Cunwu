@@ -1,0 +1,40 @@
+{
+  "ExperimentID": "vm36_supervisor_reproduction",
+  "RunID": "vm36_supervisor_reproduction_full20_results_20261110T161658_46e4aed4",
+  "status": "VALIDATED",
+  "mode": "VM36_MEASURED_GAP",
+  "scope": "DEVELOPMENT_ONLY",
+  "schema": 2,
+  "started_at": "2026-11-10T16:16:58+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "569d5fd6e7d92b4d2cf82de5fc3af19e1149e2968aa6dacefa982f60639acfbd",
+  "files": {
+    "snapshot.json": "569d5fd6e7d92b4d2cf82de5fc3af19e1149e2968aa6dacefa982f60639acfbd"
+  },
+  "sources": [
+    {
+      "ExperimentID": "vm36_supervisor_reproduction",
+      "RunID": "vm36_supervisor_reproduction_full20_results_20261110T161658_46e4aed4",
+      "artifact": "summary.json",
+      "SHA256": "9b1c6395393a21d3ed2a46741fce072dc3dd9569be3f6ac6d3b8919e1bb8bf44"
+    },
+    {
+      "ExperimentID": "vm36_supervisor_reproduction",
+      "RunID": "vm36_supervisor_reproduction_full20_results_20261110T161658_46e4aed4",
+      "artifact": "MEASURED_DESIGN.json",
+      "SHA256": "c8b9b28e7919f9376e6e4c5fd9ceefb9791adfc42127ace6bdf71abcad704b87"
+    },
+    {
+      "ExperimentID": "vm44_tiny_error_variability_decision",
+      "RunID": "vm44_tiny_error_variability_decision_analysis_20261117T031628_9ebff202",
+      "artifact": "FM_P_to_FM_D_decision_rules.json",
+      "SHA256": "509a9d232f953dec12a6323a58d9564b7d5cc33d8b889291b90f22ffdb7cd45d"
+    },
+    {
+      "ExperimentID": "vm45_motion_haze_gap_learning",
+      "RunID": "vm45_motion_haze_gap_learning_continuation_20261117T162637_94bd321b",
+      "artifact": "Gap_and_controller_status.json",
+      "SHA256": "cb4ea78a41d83d9d50565a91fcf20902ffe7d99a04913427c0e991d040b6bda7"
+    }
+  ]
+}

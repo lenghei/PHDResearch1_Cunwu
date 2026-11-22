@@ -1,0 +1,52 @@
+{
+  "ExperimentID": "vm45_motion_haze_gap_learning",
+  "RunID": "vm45_motion_haze_gap_learning_execution_20261117T172830_0d9cb1ee",
+  "status": "REAL_EIGHT_CELLS_COMPLETED_WITH_LIMITATIONS",
+  "mode": "FACTORIAL_INTERACTION",
+  "scope": "DEVELOPMENT_ONLY_SYNTHETIC_EXPLORATORY",
+  "schema": 2,
+  "started_at": "2026-11-17T17:28:30+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "3b9dc2a6cf8eb12f7a2a4c0aa364299d8ef2e2944b16fd23dff58e471439cd5f",
+  "files": {
+    "snapshot.json": "3b9dc2a6cf8eb12f7a2a4c0aa364299d8ef2e2944b16fd23dff58e471439cd5f"
+  },
+  "sources": [
+    {
+      "ExperimentID": "vm45_motion_haze_gap_learning",
+      "RunID": "vm45_motion_haze_gap_learning_execution_20261117T172830_0d9cb1ee",
+      "artifact": "final_acceptance.json",
+      "SHA256": "921f5b6be54cd3b2e5049dc950948f70b0dbba3da3230d839e19f7edf8d5d502"
+    },
+    {
+      "ExperimentID": "vm45_motion_haze_gap_learning",
+      "RunID": "vm45_motion_haze_gap_learning_execution_20261117T172830_0d9cb1ee",
+      "artifact": "experiment_protocol.json",
+      "SHA256": "52101ece0b3b9cf60a24d0dbdcbb41557bc6b7ae786c03bb05ecda5575e862b4"
+    },
+    {
+      "ExperimentID": "vm45_motion_haze_gap_learning",
+      "RunID": "vm45_motion_haze_gap_learning_execution_20261117T172830_0d9cb1ee",
+      "artifact": "matched_evaluation_metrics.csv",
+      "SHA256": "d47b8692686e42066e53eef3d7bd583e405723ddeca1623321a5ed53de3cfdc2"
+    },
+    {
+      "ExperimentID": "vm45_motion_haze_gap_learning",
+      "RunID": "vm45_motion_haze_gap_learning_execution_20261117T172830_0d9cb1ee",
+      "artifact": "factorial_interactions.csv",
+      "SHA256": "83a6d9aa75d3fc78a97187cf2b92cc43c10490caaf09ba98ae2a925588b07ff0"
+    },
+    {
+      "ExperimentID": "vm45_motion_haze_gap_learning",
+      "RunID": "vm45_motion_haze_gap_learning_continuation_20261117T162637_94bd321b",
+      "artifact": "false_PASS_risk.csv",
+      "SHA256": "e607595607d82f79421c369c772ee890ed1b7683e44703dddc75d775f9f2534b"
+    },
+    {
+      "ExperimentID": "vm45_motion_haze_gap_learning",
+      "RunID": "vm45_motion_haze_gap_learning_execution_20261117T172830_0d9cb1ee",
+      "artifact": "frozen_rule_new_condition_results.csv",
+      "SHA256": "2f86e6e8484ee81d7513019218072859990094664a93bcc4cd37a494197583fd"
+    }
+  ]
+}

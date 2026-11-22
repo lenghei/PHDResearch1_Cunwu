@@ -1,0 +1,177 @@
+{
+  "ExperimentID": "vm39_multi_seed_confirmation",
+  "RunID": "vm39_multi_seed_confirmation_confirmation_20261115T095834_9623ace0",
+  "status": "PASS",
+  "mode": "VM39_GAUSSIAN_REPEAT",
+  "scope": "DEVELOPMENT_ONLY",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "vm39_multi_seed_confirmation",
+      "RunID": "vm39_multi_seed_confirmation_confirmation_20261115T095834_9623ace0",
+      "status": "PASS",
+      "mode": "VM39_GAUSSIAN_REPEAT",
+      "scope": "DEVELOPMENT_ONLY",
+      "study": "Matched Gaussian augmentation pilots",
+      "detector": "YOLO26s",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "training_size": 960,
+      "epochs": 10,
+      "inference_size": 1280,
+      "images_per_condition": 548,
+      "differences_pp": [
+        {
+          "seed": 42,
+          "condition": "Normal",
+          "size": "all",
+          "delta": -0.6254822831426985
+        },
+        {
+          "seed": 42,
+          "condition": "Normal",
+          "size": "tiny",
+          "delta": 0.1938975975125743
+        },
+        {
+          "seed": 42,
+          "condition": "Gaussian_s15",
+          "size": "all",
+          "delta": 5.113948994458738
+        },
+        {
+          "seed": 42,
+          "condition": "Gaussian_s15",
+          "size": "tiny",
+          "delta": 2.541070836437876
+        },
+        {
+          "seed": 42,
+          "condition": "JPEG_Q25",
+          "size": "all",
+          "delta": 0.20106336673658376
+        },
+        {
+          "seed": 42,
+          "condition": "JPEG_Q25",
+          "size": "tiny",
+          "delta": 0.14823711127865824
+        },
+        {
+          "seed": 42,
+          "condition": "JPEG_Q75",
+          "size": "all",
+          "delta": -0.6447064044254986
+        },
+        {
+          "seed": 42,
+          "condition": "JPEG_Q75",
+          "size": "tiny",
+          "delta": 0.2770649457819836
+        },
+        {
+          "seed": 43,
+          "condition": "Normal",
+          "size": "all",
+          "delta": -0.49696796107520314
+        },
+        {
+          "seed": 43,
+          "condition": "Normal",
+          "size": "tiny",
+          "delta": -0.19325576357531027
+        },
+        {
+          "seed": 43,
+          "condition": "Gaussian_s15",
+          "size": "all",
+          "delta": 5.52612826123114
+        },
+        {
+          "seed": 43,
+          "condition": "Gaussian_s15",
+          "size": "tiny",
+          "delta": 2.42862126588441
+        },
+        {
+          "seed": 43,
+          "condition": "JPEG_Q25",
+          "size": "all",
+          "delta": 0.5461623779283045
+        },
+        {
+          "seed": 43,
+          "condition": "JPEG_Q25",
+          "size": "tiny",
+          "delta": 0.7226831916196188
+        },
+        {
+          "seed": 43,
+          "condition": "JPEG_Q75",
+          "size": "all",
+          "delta": -0.4828070861416336
+        },
+        {
+          "seed": 43,
+          "condition": "JPEG_Q75",
+          "size": "tiny",
+          "delta": -0.18852583917649213
+        },
+        {
+          "seed": 44,
+          "condition": "Normal",
+          "size": "all",
+          "delta": -0.5986366950104056
+        },
+        {
+          "seed": 44,
+          "condition": "Normal",
+          "size": "tiny",
+          "delta": 0.4796436468895564
+        },
+        {
+          "seed": 44,
+          "condition": "Gaussian_s15",
+          "size": "all",
+          "delta": 5.105193918716505
+        },
+        {
+          "seed": 44,
+          "condition": "Gaussian_s15",
+          "size": "tiny",
+          "delta": 2.5471340094033206
+        },
+        {
+          "seed": 44,
+          "condition": "JPEG_Q25",
+          "size": "all",
+          "delta": 0.5389556998915701
+        },
+        {
+          "seed": 44,
+          "condition": "JPEG_Q25",
+          "size": "tiny",
+          "delta": 0.32937687174241503
+        },
+        {
+          "seed": 44,
+          "condition": "JPEG_Q75",
+          "size": "all",
+          "delta": -0.6043624083886705
+        },
+        {
+          "seed": 44,
+          "condition": "JPEG_Q75",
+          "size": "tiny",
+          "delta": 0.4494807537753154
+        }
+      ],
+      "limitations": [
+        "Exploratory policy",
+        "Image intervals do not measure variation across training seeds"
+      ]
+    }
+  }
+}

@@ -1,0 +1,7 @@
+vm36_supervisor_reproduction/**/*.json -text
+vm39_multi_seed_confirmation/**/*.json -text
+vm43_external_pilot/**/*.json -text
+vm44_tiny_error_variability_decision/**/*.json -text
+vm45_motion_haze_gap_learning/**/*.json -text
+vm47_gaussian_jpeg_factorial/**/*.json -text
+vm48_formal_rq4/**/*.json -text

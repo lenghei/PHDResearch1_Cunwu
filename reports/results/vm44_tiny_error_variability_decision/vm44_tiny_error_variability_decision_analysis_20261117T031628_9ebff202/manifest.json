@@ -1,0 +1,28 @@
+{
+  "ExperimentID": "vm44_tiny_error_variability_decision",
+  "RunID": "vm44_tiny_error_variability_decision_analysis_20261117T031628_9ebff202",
+  "status": "VM44_COMPLETE_WITH_LIMITATIONS",
+  "mode": "VM44_TINY_AND_SELECTOR",
+  "scope": "LOCAL_LOOKUP_AND_EXTERNAL_EXPLORATORY_DIAGNOSTIC",
+  "schema": 2,
+  "started_at": "2026-11-17T03:16:28+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "98e49a14c1dd9a25ae73991346c6c85a032222f4a47dc387a1e51f9fb22b5da1",
+  "files": {
+    "snapshot.json": "98e49a14c1dd9a25ae73991346c6c85a032222f4a47dc387a1e51f9fb22b5da1"
+  },
+  "sources": [
+    {
+      "ExperimentID": "vm44_tiny_error_variability_decision",
+      "RunID": "vm44_tiny_error_variability_decision_analysis_20261117T031628_9ebff202",
+      "artifact": "final_acceptance.json",
+      "SHA256": "a2c5fbb20749a2c9da822288e518a153d75ad31e0200ebb523b2257a7951c28a"
+    },
+    {
+      "ExperimentID": "vm44_tiny_error_variability_decision",
+      "RunID": "vm44_tiny_error_variability_decision_analysis_20261117T031628_9ebff202",
+      "artifact": "FM_P_to_FM_D_decision_rules.json",
+      "SHA256": "509a9d232f953dec12a6323a58d9564b7d5cc33d8b889291b90f22ffdb7cd45d"
+    }
+  ]
+}
