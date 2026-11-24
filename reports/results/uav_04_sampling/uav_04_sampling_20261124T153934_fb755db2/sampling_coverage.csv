@@ -1,0 +1,4 @@
+cohort,sample_n,leaves,leaf_denominator,binary_states,binary_denominator,full_space_binary_denominator,cooccurrences,cooccurrence_denominator,rolling_configurations,scope
+FIRST500_UNIFORM_SAFE,100,24,24,1113,1115,1163,237,239,0,LOGICAL_COVERAGE_ONLY
+FULL_SPACE_PAIRWISE_PROPOSAL,80,25,25,1163,1163,1163,263,263,40,LOGICAL_COVERAGE_ONLY
+FULL_SPACE_UNIFORM_PROPOSAL,100,25,25,1162,1163,1163,262,263,42,LOGICAL_COVERAGE_ONLY

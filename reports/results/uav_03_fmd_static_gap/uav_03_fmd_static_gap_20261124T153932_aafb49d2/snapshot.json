@@ -1,0 +1,32 @@
+{
+  "ExperimentID": "uav_03_fmd_static_gap",
+  "RunID": "uav_03_fmd_static_gap_20261124T153932_aafb49d2",
+  "status": "PARTIAL",
+  "scope": "LOGICAL_COUNTS_AND_STATIC_PROXY",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_03_fmd_static_gap",
+      "RunID": "uav_03_fmd_static_gap_20261124T153932_aafb49d2",
+      "status": "PARTIAL",
+      "scope": "LOGICAL_COUNTS_AND_STATIC_PROXY",
+      "cpu_wall_seconds": 2.144742399919778,
+      "supervisor_acceptance": "SUPERVISOR_ACCEPTANCE_PENDING",
+      "logical_counts": [
+        {
+          "legal": 635904,
+          "training_variants": 844,
+          "leaves": 34,
+          "constraints": 4
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_03_fmd_static_gap",
+      "RunID": "uav_03_fmd_static_gap_20261124T153932_aafb49d2",
+      "status": "PARTIAL",
+      "scope": "LOGICAL_COUNTS_AND_STATIC_PROXY",
+      "cpu_wall_seconds": 2.144742399919778,
+      "supervisor_acceptance": "SUPERVISOR_ACCEPTANCE_PENDING"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "ExperimentID": "uav_05_evaluation",
+  "RunID": "uav_05_evaluation_20261124T153937_5f1368ab",
+  "status": "BLOCKED",
+  "scope": "FORMAL_DATASET_BLOCKED",
+  "schema": 2,
+  "started_at": "2026-11-24T15:39:37.207607+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "6f3430f7e990a65a5c6bca9a5d54f858f891f5266b9171a3fc851ab463260aa7",
+  "files": {
+    "snapshot.json": "6f3430f7e990a65a5c6bca9a5d54f858f891f5266b9171a3fc851ab463260aa7"
+  },
+  "sources": [
+    {
+      "RunID": "uav_05_evaluation_20261124T153937_5f1368ab",
+      "artifact": "run.json",
+      "SHA256": "114db5382c499321c8f03030b9dbf2744a1a7e343f458f80d65750e39d320882"
+    },
+    {
+      "RunID": "uav_05_evaluation_20261124T153937_5f1368ab",
+      "artifact": "test_dev_admission.json",
+      "SHA256": "d3a4e98140d1b0a34f8cf4834646d9dfac4e2b7f5074e467c570714320091e5c"
+    },
+    {
+      "RunID": "uav_05_evaluation_20261124T153937_5f1368ab",
+      "artifact": "historical_pair_eligibility.csv",
+      "SHA256": "cbbe527d77521db7213654796716fa8508fb08b19fa6f16f52ad1e9111219abe"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "ExperimentID": "uav_05_evaluation",
+  "RunID": "uav_05_evaluation_20261124T153937_5f1368ab",
+  "status": "BLOCKED",
+  "scope": "FORMAL_DATASET_BLOCKED",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_05_evaluation",
+      "RunID": "uav_05_evaluation_20261124T153937_5f1368ab",
+      "status": "BLOCKED",
+      "scope": "FORMAL_DATASET_BLOCKED",
+      "cpu_wall_seconds": 9.154733500210568,
+      "supervisor_acceptance": "SUPERVISOR_ACCEPTANCE_PENDING",
+      "admission": [
+        {
+          "status": "DATASET_BLOCKED",
+          "train": 6471,
+          "val": 548,
+          "test_dev": 1610,
+          "planned_pairs": 500,
+          "formal_measured_pairs": 0,
+          "image_evaluations": 0,
+          "GPU_seconds": 0,
+          "exploratory_VM43_cells": 4
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_05_evaluation",
+      "RunID": "uav_05_evaluation_20261124T153937_5f1368ab",
+      "status": "BLOCKED",
+      "scope": "FORMAL_DATASET_BLOCKED",
+      "cpu_wall_seconds": 9.154733500210568,
+      "supervisor_acceptance": "SUPERVISOR_ACCEPTANCE_PENDING"
+    }
+  }
+}

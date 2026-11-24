@@ -1,0 +1,30 @@
+{
+  "ExperimentID": "uav_02_fmp",
+  "RunID": "uav_02_fmp_20261124T153924_1245ff9f",
+  "status": "PARTIAL",
+  "scope": "CPU_LOGICAL_AND_PIXEL_VALIDATION",
+  "schema": 2,
+  "started_at": "2026-11-24T15:39:24.906430+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "b3312762e41262e9a79fc348fafc33f5d0072bdfcfe8a486f58a11d399226878",
+  "files": {
+    "snapshot.json": "b3312762e41262e9a79fc348fafc33f5d0072bdfcfe8a486f58a11d399226878"
+  },
+  "sources": [
+    {
+      "RunID": "uav_02_fmp_20261124T153924_1245ff9f",
+      "artifact": "run.json",
+      "SHA256": "340d3d0ba52ea829773f4a2ace0b9cc18f42c82cf2445adc2dd209e854a8d381"
+    },
+    {
+      "RunID": "uav_02_fmp_20261124T153924_1245ff9f",
+      "artifact": "sampling_population.json",
+      "SHA256": "a7ba8a0c9f51d9ecd057e86c7ee78562ffa3145976feb97e3f045e0b20eb4baa"
+    },
+    {
+      "RunID": "uav_02_fmp_20261124T153924_1245ff9f",
+      "artifact": "generator_tests.json",
+      "SHA256": "8920a013a095e3154677137f0cacefc412ea743a03adb12247c2b79f7c1b9ee3"
+    }
+  ]
+}

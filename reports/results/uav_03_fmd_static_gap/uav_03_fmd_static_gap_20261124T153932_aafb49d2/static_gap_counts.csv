@@ -1,0 +1,4 @@
+policy,covered,gap,population,scope,covered_leaves
+exact_identity,1,46367,46368,BASELINE_TRAINING_STATIC_PROXY,Normal
+conservative,3,46365,46368,BASELINE_TRAINING_STATIC_PROXY,Normal|Overexposed_mild|Underexposed_mild
+supervisor_proxy,18,46350,46368,BASELINE_TRAINING_STATIC_PROXY,Defocus_r3|Downscale_x1_5|Downscale_x2|Normal|Overexposed_mild|Underexposed_mild

@@ -1,0 +1,34 @@
+{
+  "ExperimentID": "uav_01_baseline",
+  "RunID": "uav_01_baseline_20261124T154238_4a518050",
+  "status": "TECHNICAL_PASS",
+  "scope": "BASELINE_DEVELOPMENT_VALIDATION",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_01_baseline",
+      "RunID": "uav_01_baseline_20261124T154238_4a518050",
+      "status": "TECHNICAL_PASS",
+      "scope": "BASELINE_DEVELOPMENT_VALIDATION",
+      "cpu_wall_seconds": 25.452919299947098,
+      "supervisor_acceptance": "SUPERVISOR_ACCEPTANCE_PENDING",
+      "training_images": 6471,
+      "images": 548,
+      "epochs": 100,
+      "training_wall_seconds": 26979.132338299998,
+      "evaluation_wall_seconds": 240.61731200000213,
+      "AP50": 0.5041689748827122,
+      "AP50_95": 0.29624432837203357,
+      "AR50_95": 0.5317225023268554
+    },
+    "result.json": {
+      "ExperimentID": "uav_01_baseline",
+      "RunID": "uav_01_baseline_20261124T154238_4a518050",
+      "status": "TECHNICAL_PASS",
+      "scope": "BASELINE_DEVELOPMENT_VALIDATION",
+      "cpu_wall_seconds": 25.452919299947098,
+      "supervisor_acceptance": "SUPERVISOR_ACCEPTANCE_PENDING",
+      "images": 548,
+      "trained_epochs": 100
+    }
+  }
+}

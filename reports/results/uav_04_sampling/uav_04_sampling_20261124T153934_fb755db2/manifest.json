@@ -1,0 +1,26 @@
+{
+  "ExperimentID": "uav_04_sampling",
+  "RunID": "uav_04_sampling_20261124T153934_fb755db2",
+  "status": "TECHNICAL_PASS",
+  "scope": "FROZEN_DESIGN_ONLY",
+  "schema": 2,
+  "started_at": "2026-11-24T15:39:34.301069+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "00b519b683eaf02f839ad02f444868d9842054a345fa9fa2c602403046458565",
+  "files": {
+    "sampling_coverage.csv": "47d449316a803349144520b730cca6556a85634a3cae954516d736d16219d305",
+    "snapshot.json": "00b519b683eaf02f839ad02f444868d9842054a345fa9fa2c602403046458565"
+  },
+  "sources": [
+    {
+      "RunID": "uav_04_sampling_20261124T153934_fb755db2",
+      "artifact": "run.json",
+      "SHA256": "54929e9237f458115bf8905f1ac615431cbd95dda87e013c91e6be5cb3ff04aa"
+    },
+    {
+      "RunID": "uav_04_sampling_20261124T153934_fb755db2",
+      "artifact": "sampling_coverage.csv",
+      "SHA256": "47d449316a803349144520b730cca6556a85634a3cae954516d736d16219d305"
+    }
+  ]
+}

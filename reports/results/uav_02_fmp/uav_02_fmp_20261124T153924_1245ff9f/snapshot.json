@@ -1,0 +1,40 @@
+{
+  "ExperimentID": "uav_02_fmp",
+  "RunID": "uav_02_fmp_20261124T153924_1245ff9f",
+  "status": "PARTIAL",
+  "scope": "CPU_LOGICAL_AND_PIXEL_VALIDATION",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_02_fmp",
+      "RunID": "uav_02_fmp_20261124T153924_1245ff9f",
+      "status": "PARTIAL",
+      "scope": "CPU_LOGICAL_AND_PIXEL_VALIDATION",
+      "cpu_wall_seconds": 7.199921199819073,
+      "supervisor_acceptance": "SUPERVISOR_ACCEPTANCE_PENDING",
+      "population": [
+        {
+          "legal": 46368,
+          "geometry_safe_population": 26496,
+          "excluded_rolling_shutter": 19872,
+          "UVL_SHA256": "e6eadd633d1c14e0d6bc425f5e54421d592d766c65a6e5f20c61bc34dd76fb5c",
+          "binding_UVL_SHA256": "2033bb61456d29cb82e9d3e15c8491715db330c28cd9f1a0a1895d148ba48dec"
+        }
+      ],
+      "generator": [
+        {
+          "deterministic_leaves": 25,
+          "rolling_shutter": "BLOCKED_GT_IGNORE_AND_AREA_MAPPING",
+          "historical_rendered_images": 548
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_02_fmp",
+      "RunID": "uav_02_fmp_20261124T153924_1245ff9f",
+      "status": "PARTIAL",
+      "scope": "CPU_LOGICAL_AND_PIXEL_VALIDATION",
+      "cpu_wall_seconds": 7.199921199819073,
+      "supervisor_acceptance": "SUPERVISOR_ACCEPTANCE_PENDING"
+    }
+  }
+}

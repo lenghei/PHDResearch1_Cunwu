@@ -1,0 +1,32 @@
+{
+  "ExperimentID": "uav_03_fmd_static_gap",
+  "RunID": "uav_03_fmd_static_gap_20261124T153932_aafb49d2",
+  "status": "PARTIAL",
+  "scope": "LOGICAL_COUNTS_AND_STATIC_PROXY",
+  "schema": 2,
+  "started_at": "2026-11-24T15:39:32.128681+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "070a0683527f52f0d8cb2efaa4f329c9888b01b1b5e4fd9050986fb7aba7721c",
+  "files": {
+    "static_gap_counts.csv": "7b40aaaa3653a478f2ad26d20db0cfe330d3abf62ca8b8657d4488728a0a514a",
+    "development_detector_profiles.csv": "1d26c43ccf7030344dbf275995a1eccf2d688ccc2e04daf5f8dd527e4afb875b",
+    "snapshot.json": "070a0683527f52f0d8cb2efaa4f329c9888b01b1b5e4fd9050986fb7aba7721c"
+  },
+  "sources": [
+    {
+      "RunID": "uav_03_fmd_static_gap_20261124T153932_aafb49d2",
+      "artifact": "run.json",
+      "SHA256": "29e869b343282d74fbfa8eddb6449cfde8b028a9fa1203fc863df605f30ea589"
+    },
+    {
+      "RunID": "uav_03_fmd_static_gap_20261124T153932_aafb49d2",
+      "artifact": "static_gap_counts.csv",
+      "SHA256": "7b40aaaa3653a478f2ad26d20db0cfe330d3abf62ca8b8657d4488728a0a514a"
+    },
+    {
+      "RunID": "uav_03_fmd_static_gap_20261124T153932_aafb49d2",
+      "artifact": "measured_attributes.csv",
+      "SHA256": "e500288fbb2fa2a1a044550f44e0f5012a770d89ee5c978f4ac83abbcd2b1275"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "ExperimentID": "uav_06_gap_analysis",
+  "RunID": "uav_06_gap_analysis_20261124T154345_06836c19",
+  "status": "BLOCKED",
+  "scope": "FORMAL_GAP_UNKNOWN",
+  "schema": 2,
+  "started_at": "2026-11-24T15:43:45.957611+00:00",
+  "bundle": "snapshot.json",
+  "SHA256": "d8ffc6640103d7d4978143a4088bd4247c1746c8353cdc9d9876ee5798790dd5",
+  "files": {
+    "threshold_sensitivity.csv": "9254747ccb1507f9ad946c57cd47e7daf939cf28560d3f7afddc184fbc375ebe",
+    "snapshot.json": "d8ffc6640103d7d4978143a4088bd4247c1746c8353cdc9d9876ee5798790dd5"
+  },
+  "sources": [
+    {
+      "RunID": "uav_06_gap_analysis_20261124T154345_06836c19",
+      "artifact": "run.json",
+      "SHA256": "808918277c0b0f3047a81a954956bbf6181fb9f3f3ea6e337e6eb87f409fda0f"
+    },
+    {
+      "RunID": "uav_06_gap_analysis_20261124T154345_06836c19",
+      "artifact": "threshold_sensitivity.csv",
+      "SHA256": "9254747ccb1507f9ad946c57cd47e7daf939cf28560d3f7afddc184fbc375ebe"
+    }
+  ]
+}

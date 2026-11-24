@@ -1,0 +1,2 @@
+﻿images,network_seconds,coco_seconds,evaluation_pipeline_seconds,evaluation_wall_seconds,train_stage_wall_seconds,meaning
+548,22.00801579990366,152.0647339999996,239.61791899999662,240.61731200000213,26979.132338299998,"measured training/evaluation wall clocks, not GPU-only kernel time"

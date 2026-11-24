@@ -1,0 +1,33 @@
+{
+  "ExperimentID": "uav_06_gap_analysis",
+  "RunID": "uav_06_gap_analysis_20261124T154345_06836c19",
+  "status": "BLOCKED",
+  "scope": "FORMAL_GAP_UNKNOWN",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_06_gap_analysis",
+      "RunID": "uav_06_gap_analysis_20261124T154345_06836c19",
+      "status": "BLOCKED",
+      "scope": "FORMAL_GAP_UNKNOWN",
+      "cpu_wall_seconds": 0.026764400070533156,
+      "supervisor_acceptance": "SUPERVISOR_ACCEPTANCE_PENDING",
+      "empirical_status": [
+        {
+          "formal_measured_pairs": 0,
+          "planned_pairs": 500,
+          "unknown_P": 100,
+          "tiny_AP50_95_tau": 0.1,
+          "cached_latency_limit_ms": 100
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_06_gap_analysis",
+      "RunID": "uav_06_gap_analysis_20261124T154345_06836c19",
+      "status": "BLOCKED",
+      "scope": "FORMAL_GAP_UNKNOWN",
+      "cpu_wall_seconds": 0.026764400070533156,
+      "supervisor_acceptance": "SUPERVISOR_ACCEPTANCE_PENDING"
+    }
+  }
+}
