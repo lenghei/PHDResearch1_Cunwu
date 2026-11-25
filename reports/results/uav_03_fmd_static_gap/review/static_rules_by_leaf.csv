@@ -1,0 +1,26 @@
+leaf,family,support,reference_transform,rule_explanation,exact_identity,conservative,supervisor_proxy
+Defocus_r3,defocus,UNKNOWN,Albumentations.Blur/MedianBlur,Runtime source permits a weak kernel proxy; no training-run activation log verified.,False,False,True
+Defocus_r6,defocus,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+Downscale_x1_5,altitude,WEAK_PROXY,RandomPerspective.scale / Mosaic,Changes target geometry and labels during training; no fixed-grid down/up sampling equivalent.,False,False,True
+Downscale_x2,altitude,WEAK_PROXY,RandomPerspective.scale / Mosaic,Changes target geometry and labels during training; no fixed-grid down/up sampling equivalent.,False,False,True
+Gauss_s15,gaussian,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+Gauss_s30,gaussian,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+Gauss_s5,gaussian,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+Haze_dense,atmosphere,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+Haze_light,atmosphere,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+JPEG_q25,compression,UNSUPPORTED,Albumentations.ImageCompression,Disabled in the inspected default source.,False,False,False
+JPEG_q50,compression,UNSUPPORTED,Albumentations.ImageCompression,Disabled in the inspected default source.,False,False,False
+JPEG_q75,compression,UNSUPPORTED,Albumentations.ImageCompression,Disabled in the inspected default source.,False,False,False
+LowLight,illumination,UNSUPPORTED,RandomHSV.value,The strong additive offsets or low-light gain are not reproduced.,False,False,False
+Motion_k15,motion,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+Motion_k21,motion,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+Motion_k7,motion,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+Normal,illumination,EXACT,identity recipe,Identity of the degradation generator; does not assert a clean training-pixel frequency.,True,True,True
+Overexposed_mild,illumination,WEAK_PROXY,RandomHSV.value,Multiplicative brightness range matches the gain only; the additive offset is absent.,False,True,True
+Overexposed_strong,illumination,UNSUPPORTED,RandomHSV.value,The strong additive offsets or low-light gain are not reproduced.,False,False,False
+Rain,atmosphere,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+RollingShutter,rolling,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+Shot_high,shot,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+Shot_low,shot,UNSUPPORTED,,No matching transform in the inspected baseline training pipeline.,False,False,False
+Underexposed_mild,illumination,WEAK_PROXY,RandomHSV.value,Multiplicative brightness range matches the gain only; the additive offset is absent.,False,True,True
+Underexposed_strong,illumination,UNSUPPORTED,RandomHSV.value,The strong additive offsets or low-light gain are not reproduced.,False,False,False

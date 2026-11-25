@@ -10,9 +10,9 @@ import unittest
 from pathlib import Path
 
 PUBLIC = Path(__file__).resolve().parents[2]
-EXPORT_PATH = PUBLIC / 'experiments/cv261102/export.py'
-VERIFY_PATH = PUBLIC / 'experiments/cv261102/verify.py'
-RUN_PATH = PUBLIC / 'experiments/cv261102/run.py'
+EXPORT_PATH = PUBLIC / 'experiments/experiments_test/cv261102/export.py'
+VERIFY_PATH = PUBLIC / 'experiments/experiments_test/cv261102/verify.py'
+RUN_PATH = PUBLIC / 'experiments/experiments_test/cv261102/run.py'
 
 
 def module(name, path):

@@ -1,12 +1,11 @@
-# Week 1 · Baseline
+# Week 1 · YOLOv8s baseline
 
-Verify the CV261102 YOLOv8s, Train640/Infer1280, 100-epoch VisDrone val baseline. Reuse its raw prediction/GT evidence and compare the historical source hashes.
-
-From the Git root, set `$plan` to the local original research plan PDF.
+Replay the saved predictions and GT for 548 VisDrone validation images. Run from the outer `uavgap` directory:
 
 ```powershell
-& ../.venv/Scripts/python.exe -B code/tools/uav_week01_06.py --week 1 --plan $plan
+& ./.venv/Scripts/python.exe -B main/experiments/uav_01_baseline/run.py
 ```
 
-Use `--baseline-source-zip` with the archived CV261102 naming patch to recover the exact historical evaluator.
-[Verified summary](../../reports/results/uav_01_baseline/uav_01_baseline_20261124T154238_4a518050/snapshot.json).
+Use `--archive` for a relocated run. The `evaluate` command runs the same checkpoint on GPU and compares its scores with the saved CSV. The archived 100-epoch settings are available through `preflight` and `train`.
+
+[Metrics and timing](../../reports/results/uav_01_baseline/) · [Weights and selection](../../reports/results/uav_01_baseline/models/).

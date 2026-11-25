@@ -511,6 +511,113 @@ def _paired_results(summary: dict) -> dict:
     return {'arm_names': (control, targeted), 'conditions': conditions, 'closures': closures}
 
 
+def _fmd_static_summary(result: dict, model: dict | None = None,
+                        gap: dict | None = None, rules: dict | None = None,
+                        audit: dict | None = None, feature_rows: list[dict] | None = None) -> dict:
+    """Normalize recorded CV261116 evidence; never infer GPU/AP measurements."""
+    if result.get('mode') != 'FM_D_STATIC_GAP':
+        raise DataError('This is not an FM_D static-gap record.')
+    model = model or {}
+    gap = gap or {}
+    rules = rules or {}
+    audit = audit or {}
+    flama = (model.get('FlamaPy') or (result.get('FM_D') or {}).get('FlamaPy') or {})
+    independent = model.get('independent') or (result.get('FM_D') or {}).get('independent') or {}
+    proxy = gap.get('proxy') or {}
+    strict = gap.get('strict_identity') or {}
+
+    count = flama.get('valid_count', result.get('FM_D_valid_count'))
+    training = independent.get('independent_training_variants',
+                               result.get('FM_D_training_variants', flama.get('training_variants')))
+    total = proxy.get('FM_P_configurations', result.get('FM_P_configurations', result.get('FM_P_total')))
+    covered = proxy.get('proxy_covered', result.get('proxy_covered'))
+    missing = proxy.get('proxy_gap', result.get('proxy_gap'))
+    identity = strict.get('covered', result.get('strict_identity_covered'))
+    for key, value in [('FM_D configurations', count), ('Training variants', training),
+                       ('FM_P configurations', total), ('Proxy covered', covered)]:
+        if type(value) is not int or value < 0:
+            raise DataError('Invalid FM_D static summary: ' + key)
+    if (count < training or total < 1 or covered > total or
+            (missing is not None and (type(missing) is not int or missing != total - covered))):
+        raise DataError('FM_D static counts are inconsistent.')
+    if identity is not None and (type(identity) is not int or not 0 <= identity <= total):
+        raise DataError('Invalid strict-identity count.')
+    if feature_rows:
+        for row in feature_rows:
+            if ('feature' not in row or 'present_total' not in row or 'covered_when_present' not in row):
+                raise DataError('Incomplete per-feature coverage table.')
+            if not (0 <= int(row['covered_when_present']) <= int(row['present_total']) <= total):
+                raise DataError('Invalid per-feature coverage counts.')
+    return {
+        'valid_configurations': count,
+        'training_variants': training,
+        'fm_p_total': total,
+        'proxy_covered': covered,
+        'proxy_gap': total - covered,
+        'strict_covered': identity,
+        'leaves': flama.get('leaf_count', independent.get('leaf_features')),
+        'constraints': flama.get('constraint_count', independent.get('constraints')),
+        'dead_features': flama.get('dead_feature_count'),
+        'satisfiable': flama.get('satisfiable'),
+        'count_method': flama.get('count_backend', 'EXACT_METHOD_NOT_INCLUDED_IN_PUBLIC_SUMMARY'),
+        'count_limitation': flama.get('count_limitation', ''),
+        'model_validation': result.get('model_validation', flama.get('status', 'NOT_RECORDED')),
+        'coverage_status': proxy.get('coverage_status', 'PROVISIONAL_ASSUMPTIONS_NOT_EXACT_PIXEL_EQUIVALENCE'),
+        'coverage_rules': rules.get('rules') or [],
+        'per_feature': feature_rows or [],
+        'source_audit_status': audit.get('status', result.get('training_source_audit_status', 'NOT_RECORDED')),
+        'training_args': audit.get('actual_training_args', 'NOT_RECORDED'),
+        'source_version': (audit.get('installed_source') or {}).get('ultralytics_version'),
+        'gpu_status': result.get('gpu_measurements', 'NOT_COLLECTED'),
+        'ap_status': result.get('AP_metrics', 'NOT_EVALUATED'),
+        'elapsed_seconds': result.get('elapsed_seconds'),
+        'published_summary_only': not bool(model or gap),
+    }
+
+
+def _local_verified_file(folder: Path, result: dict, name: str) -> Path:
+    """Read only declared, SHA-verified evidence in the same private run."""
+    expected = (result.get('files_SHA256') or {}).get(name)
+    if not isinstance(expected, str) or not HASH.fullmatch(expected):
+        raise DataError('Missing evidence checksum: ' + name)
+    path = folder / name
+    if (path.is_symlink() or not path.is_file() or
+            not path.resolve().is_relative_to(folder.resolve()) or _sha(path) != expected):
+        raise DataError('Evidence checksum mismatch: ' + name)
+    return path
+
+
+def _local_fmd_static(folder: Path, result: dict) -> dict:
+    model = decode(_local_verified_file(folder, result, 'model_count.json'), 256_000)
+    gap = decode(_local_verified_file(folder, result, 'static_gap.json'), 1_000_000)
+    rules = decode(_local_verified_file(folder, result, 'coverage_rules.json'), 256_000)
+    audit = decode(_local_verified_file(folder, result, 'training_source_audit.json'), 256_000)
+    csv_path = _local_verified_file(folder, result, 'coverage_by_feature.csv')
+    features = _csv_rows(csv_path)
+    source_run = folder / 'run.json'
+    if source_run.is_file():
+        record = decode(_local_verified_file(folder, result, 'run.json'), 65_536)
+        if (record.get('RunID') != folder.name or record.get('ExperimentID') != 'cv261116'
+                or record.get('status') != result.get('status')):
+            raise DataError('FM_D run status or identity mismatch.')
+    if not all(isinstance(x, dict) for x in (model, gap, rules, audit)):
+        raise DataError('Invalid FM_D evidence structure.')
+    value = _fmd_static_summary(result, model, gap, rules, audit, features)
+    if result.get('FM_D', {}).get('FlamaPy', {}).get('valid_count') != value['valid_configurations']:
+        raise DataError('FM_D result and model count disagree.')
+    if result.get('proxy_covered') != value['proxy_covered']:
+        raise DataError('FM_D result and coverage count disagree.')
+    return value
+
+
+def _fmd_gpu_summary(result: dict) -> dict:
+    """Represent GPU records only when actual measurements are present."""
+    measured = result.get('gpu_measurements') if isinstance(result.get('gpu_measurements'), dict) else result
+    return {key: measured.get(key) for key in ('sample_images', 'source_image_count',
+            'mean_ms_per_image', 'latency_ms_per_image_mean', 'peak_pytorch_allocated_bytes',
+            'checkpoint_parameters', 'parameters', 'GFLOPs_estimate') if measured.get(key) is not None}
+
+
 def load_snapshot(store, study: str, run_id: str) -> dict:
     """Read verified public artifacts, including when the dashboard is in local mode."""
     root = _published_store(store).root
@@ -530,6 +637,8 @@ def load_snapshot(store, study: str, run_id: str) -> dict:
                if type(value.get(key)) in (float, int)}
     generated = _generated_summary(result, summary, provenance)
     dataset = summary.get('dataset') if isinstance(summary.get('dataset'), dict) else {}
+    static = (_fmd_static_summary(result) if result.get('mode') == 'FM_D_STATIC_GAP' else None)
+    gpu_pilot = (_fmd_gpu_summary(result) if result.get('mode') == 'FM_D_GPU_PILOT' else None)
     images_per_condition = summary.get('images_per_condition', result.get('images_per_condition',
                                                                          dataset.get('images_per_condition')))
     images = images_per_condition or result.get('generated_images') or result.get('images') or dataset.get('images')
@@ -544,7 +653,7 @@ def load_snapshot(store, study: str, run_id: str) -> dict:
             'images_per_condition': images_per_condition, 'epochs_per_strategy': epochs_per_arm,
             'training_images': summary.get('training_images'), 'cells': summary.get('cells'),
             'image_evaluations': summary.get('image_evaluations'), 'seed': summary.get('seed'),
-            'generation': generated, 'preview_root': None}
+            'generation': generated, 'static_gap': static, 'gpu_pilot': gpu_pilot, 'preview_root': None}
 
 
 def load_local_run(store, study: str, run_id: str) -> dict:
@@ -579,11 +688,14 @@ def load_local_run(store, study: str, run_id: str) -> dict:
         'effect_order': selection.get('effect_order', [])},
         'metrics': {'model_inference': result.get('model_inference'), 'AP': result.get('AP_metrics')}}
     generation = _generated_summary(result, summary, {})
+    static = (_local_fmd_static(folder, result) if result.get('mode') == 'FM_D_STATIC_GAP' else None)
+    gpu_pilot = (_fmd_gpu_summary(result) if result.get('mode') == 'FM_D_GPU_PILOT' else None)
     return {'RunID': run_id, 'ExperimentID': study, 'status': result['status'],
             'scope': result.get('scope', ''), 'images': result.get('generated_images', result.get('images')),
             'epochs': result.get('trained_epochs'), 'metrics': {}, 'timing': {}, 'tables': {},
             'gpu': '', 'started_at': selection.get('started_at_UTC', ''),
-            'generation': generation, 'preview_root': folder}
+            'generation': generation, 'static_gap': static, 'gpu_pilot': gpu_pilot,
+            'preview_root': folder}
 
 
 def local_preview_pairs(folder: Path, count: int = 3) -> list[tuple[bytes, bytes]]:
@@ -684,6 +796,103 @@ def _render_class_results(st, pd, rows: list[dict]) -> None:
                        file_name=CLASS_TABLE, mime='text/csv')
 
 
+def _render_fmd_static(st, pd, data: dict, details: dict) -> None:
+    """Read-only dashboard for audited FM_D structure and provisional coverage."""
+    count = details['valid_configurations']
+    training = details['training_variants']
+    total = details['fm_p_total']
+    covered = details['proxy_covered']
+    strict = details['strict_covered']
+
+    st.subheader('FM_D · detector configuration space')
+    a, b, c, d = st.columns(4)
+    a.metric('Valid FM_D configurations', f'{count:,}')
+    b.metric('Training variants', f'{training:,}')
+    c.metric('Leaf features', details['leaves'] if details['leaves'] is not None else 'Not published')
+    d.metric('Cross-tree constraints', details['constraints'] if details['constraints'] is not None else 'Not published')
+    st.caption('Count method: ' + str(details['count_method']))
+    if details['count_limitation']:
+        st.caption(details['count_limitation'])
+    st.caption('Model validation: ' + str(details['model_validation']) +
+               ' · Satisfiable: ' + str(details['satisfiable']) +
+               ' · Dead features: ' + str(details['dead_features']))
+
+    st.subheader('FM_P · static coverage proxy')
+    x, y, z, w = st.columns(4)
+    x.metric('FM_P configurations', f'{total:,}')
+    y.metric('Proxy covered', f'{covered:,}')
+    z.metric('Proxy uncovered', f'{details["proxy_gap"]:,}')
+    w.metric('Proxy coverage', f'{100 * covered / total:.4f}%')
+    st.progress(covered / total)
+    if strict is not None:
+        st.caption(f'Strict identity-only coverage: {strict:,}/{total:,}. '
+                   'This is a separate conservative criterion, not detector accuracy.')
+    st.warning('Provisional training-augmentation proxy, not pixel-exact equivalence and '
+               'not a measured object-detection gap.')
+
+    rules = details.get('coverage_rules') or []
+    if rules:
+        st.subheader('Coverage assumptions by degradation family')
+        table = pd.DataFrame([{
+            'Family': r.get('feature_family', ''),
+            'Assessment': r.get('default_status', ''),
+            'Reason': r.get('rationale', ''),
+            'Evidence required': r.get('evidence_needed', ''),
+        } for r in rules])
+        st.dataframe(table, hide_index=True, width='stretch')
+    else:
+        st.caption('Detailed coverage rules are local-only or not published for this run.')
+
+    features = details.get('per_feature') or []
+    if features:
+        st.subheader('Coverage by degradation feature')
+        table = pd.DataFrame([{
+            'Feature': row['feature'],
+            'Present in configurations': int(row['present_total']),
+            'Proxy covered when present': int(row['covered_when_present']),
+        } for row in features])
+        table = table.sort_values(['Proxy covered when present', 'Feature'], ascending=[False, True])
+        st.bar_chart(table.set_index('Feature')[['Proxy covered when present']])
+        st.dataframe(table, hide_index=True, width='stretch')
+    else:
+        st.caption('The per-feature coverage table is available in the local run evidence.')
+
+    st.subheader('Scientific evidence and remaining measurements')
+    a, b, c = st.columns(3)
+    a.metric('Training source audit', str(details['source_audit_status']))
+    b.metric('GPU profiling', 'NOT_COLLECTED' if isinstance(details['gpu_status'], str)
+             else 'RECORDED')
+    c.metric('Detection AP', str(details['ap_status']))
+    st.caption('Actual training arguments: ' + str(details['training_args']))
+    if details['source_version']:
+        st.caption('Inspected Ultralytics version: ' + str(details['source_version']))
+    if details['elapsed_seconds'] is not None:
+        st.caption(f'Saved static analysis time: {details["elapsed_seconds"]:.3f} s')
+    if details['published_summary_only']:
+        st.info('This is a verified public summary. Detailed local coverage tables and source '
+                'audit evidence remain outside GitHub.')
+    st.caption('PARTIAL means model/coverage analysis is saved, while training-source '
+               'verification and real detector measurements remain incomplete.')
+
+
+def _render_fmd_gpu(st, details: dict) -> None:
+    st.subheader('FM_D · saved GPU profiling evidence')
+    labels = {'sample_images': 'Images', 'source_image_count': 'Source images',
+              'mean_ms_per_image': 'Mean latency (ms/image)',
+              'latency_ms_per_image_mean': 'Mean latency (ms/image)',
+              'peak_pytorch_allocated_bytes': 'Peak allocated memory (bytes)',
+              'checkpoint_parameters': 'Model parameters', 'parameters': 'Model parameters',
+              'GFLOPs_estimate': 'GFLOPs (estimated)'}
+    fields = [(labels.get(k, k), v) for k, v in details.items() if v is not None]
+    if not fields:
+        st.warning('No real GPU profiling data saved for this run.')
+        return
+    cols = st.columns(3)
+    for i, (label, value) in enumerate(fields):
+        cols[i % len(cols)].metric(label, value)
+    st.info('GPU inference profiling only. No detection AP is inferred from latency or GFLOPs.')
+
+
 def render_discovered_study(store, study: str) -> None:
     """Shared local/cloud UI for all experiments discovered from result folders."""
     import pandas as pd
@@ -715,6 +924,17 @@ def render_discovered_study(store, study: str) -> None:
                     'timing': {}, 'tables': {}, 'gpu': '', 'started_at': current['started_at']}
     except (DataError, OSError, UnicodeError, ValueError, KeyError) as exc:
         st.error('Result could not be verified: ' + str(exc))
+        return
+
+    static = data.get('static_gap')
+    gpu_pilot = data.get('gpu_pilot')
+    if static is not None or gpu_pilot is not None:
+        st.caption(f"RunID: {selected} · source: {current['source']} · {data.get('scope', '')}")
+        st.metric('Run status', str(data.get('status') or 'UNKNOWN'))
+        if static is not None:
+            _render_fmd_static(st, pd, data, static)
+        if gpu_pilot is not None:
+            _render_fmd_gpu(st, gpu_pilot)
         return
 
     gen = data.get('generation') or {}

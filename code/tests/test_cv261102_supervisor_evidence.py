@@ -4,7 +4,7 @@ import csv, importlib.util, json, sys, tempfile, unittest, hashlib
 from pathlib import Path
 
 PUBLIC=Path(__file__).resolve().parents[2]
-SCRIPTS=PUBLIC/'experiments/cv261102'
+SCRIPTS=PUBLIC/'experiments/experiments_test/cv261102'
 sys.path.insert(0,str(SCRIPTS))
 
 def load_module(name):

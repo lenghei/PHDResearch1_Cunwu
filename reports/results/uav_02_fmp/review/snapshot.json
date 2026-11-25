@@ -1,0 +1,42 @@
+{
+  "ExperimentID": "uav_02_fmp",
+  "RunID": "review",
+  "status": "GENERATOR_TECHNICAL_PASS",
+  "scope": "SYNTHETIC_CATALOG_AND_ONE_REAL_VAL_SET",
+  "mode": "VERIFIED_REVIEW",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_02_fmp",
+      "RunID": "review",
+      "status": "GENERATOR_TECHNICAL_PASS",
+      "scope": "SYNTHETIC_CATALOG_AND_ONE_REAL_VAL_SET",
+      "mode": "VERIFIED_REVIEW",
+      "images": 548,
+      "verified_evidence": [
+        {
+          "scope": "Annotated synthetic fixture",
+          "legal_candidates": 46368,
+          "passed": 46368,
+          "failed": 0,
+          "rolling_passed": 19872,
+          "renders": 92736
+        },
+        {
+          "scope": "Real VisDrone val sample P",
+          "p_id": "p_8f7e990050372f44",
+          "images": 548,
+          "verified_pngs": 548,
+          "gt_targets": 38593
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_02_fmp",
+      "RunID": "review",
+      "status": "GENERATOR_TECHNICAL_PASS",
+      "scope": "SYNTHETIC_CATALOG_AND_ONE_REAL_VAL_SET",
+      "mode": "VERIFIED_REVIEW",
+      "images": 548
+    }
+  }
+}

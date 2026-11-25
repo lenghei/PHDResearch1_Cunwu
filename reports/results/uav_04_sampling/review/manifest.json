@@ -1,0 +1,46 @@
+{
+  "ExperimentID": "uav_04_sampling",
+  "RunID": "review",
+  "status": "FROZEN_DESIGN_VERIFIED",
+  "scope": "PLANNED_NOT_MEASURED",
+  "mode": "VERIFIED_REVIEW",
+  "schema": 2,
+  "bundle": "snapshot.json",
+  "SHA256": "a0b6d1738e1c69b6407468f56c0f5a4e14a573ba3f01de73e9d892e4bbebe374",
+  "started_at": "2026-11-25T09:05:45.244394+00:00",
+  "files": {
+    "d_configurations.csv": "ba45753fc2124dc97883b996ace73ef2cd7b39b715306cf4425b4e8215ad04b1",
+    "first500_pairs_PLAN_ONLY.csv": "9a0cfee9c77aed1d6b034a8654d419b851b9290e2be2083f922d2eefc161891f",
+    "p_configurations.csv": "7ced96631ee572b4f19e062c36c386c3702e2f8213d98e8bdbbc2a71f3112060",
+    "sampling_coverage.csv": "47d449316a803349144520b730cca6556a85634a3cae954516d736d16219d305",
+    "sampling_reproduction.json": "cac459f009f9049c01fdf3b4ccd62c1ab2eb2ab0e24a79978fdab850eaf4c963",
+    "snapshot.json": "a0b6d1738e1c69b6407468f56c0f5a4e14a573ba3f01de73e9d892e4bbebe374"
+  },
+  "sources": [
+    {
+      "RunID": "uav_04_sampling_20261124T153934_fb755db2",
+      "artifact": "p_configurations.csv",
+      "SHA256": "7ced96631ee572b4f19e062c36c386c3702e2f8213d98e8bdbbc2a71f3112060"
+    },
+    {
+      "RunID": "uav_04_sampling_20261124T153934_fb755db2",
+      "artifact": "d_configurations.csv",
+      "SHA256": "ba45753fc2124dc97883b996ace73ef2cd7b39b715306cf4425b4e8215ad04b1"
+    },
+    {
+      "RunID": "uav_04_sampling_20261124T153934_fb755db2",
+      "artifact": "sampling_coverage.csv",
+      "SHA256": "47d449316a803349144520b730cca6556a85634a3cae954516d736d16219d305"
+    },
+    {
+      "RunID": "uav_04_sampling_20261124T153934_fb755db2",
+      "artifact": "first500_pairs_PLAN_ONLY.csv",
+      "SHA256": "9a0cfee9c77aed1d6b034a8654d419b851b9290e2be2083f922d2eefc161891f"
+    },
+    {
+      "RunID": "reproduce_20261125T082934_133ccf01",
+      "artifact": "reproduction.json",
+      "SHA256": "b6e300c82c71b7c4b2780a465e28299e46ad2cae76fb3ee787f54ad1d4276801"
+    }
+  ]
+}

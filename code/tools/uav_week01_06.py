@@ -20,7 +20,7 @@ import zipfile
 sys.dont_write_bytecode = True
 PUBLIC = Path(__file__).resolve().parents[2]
 ROOT = PUBLIC.parent
-EXPS = PUBLIC / "experiments"
+EXPS = PUBLIC / "experiments/experiments_test"
 RUNS = ROOT / "datasets/local_runs"
 BASE = RUNS / "cv261102/cv261102_full_20261031T000013_d0be8587"
 AUDIT = RUNS / "cv261207/cv261207_audit_20261104T193649_d1b63492"
@@ -268,7 +268,7 @@ def baseline(out):
 From the Git root, set `$run` to the local CV261102 directory and run:
 
 ```powershell
-& ../.venv/Scripts/python.exe -B experiments/cv261102/validate_run.py --run $run
+& ../.venv/Scripts/python.exe -B experiments/experiments_test/cv261102/validate_run.py --run $run
 ```
 
 This replays saved predictions on CPU. The weekly audit instead verifies the
@@ -592,10 +592,11 @@ def design():
     return manifest
 
 
-def week4(out):
+def week4(out, regenerated=None):
     model = get_fmp()
     prior = module("uav_sampling", EXPS / "cv261123/sampling.py")
-    manifest = design()
+    manifest = design() if regenerated is None else load(regenerated)
+    manifest_path = AUDIT / "selection_manifest.json" if regenerated is None else regenerated
     population = prior.enumerate_configs(model)
     safe = [x for x in population if "RollingShutter" not in x]
     p, d, pairs = {}, {}, []
@@ -615,8 +616,9 @@ def week4(out):
             "Wrong frozen design cardinality")
     require(list(p.values()) == random.Random(manifest["seed"]).sample(safe, 100),
             "The frozen sample does not reproduce from its seed and enumeration order")
-    for detector in d.values():
-        source(MODELS / "yolov8s_cft640/best.pt", detector["checkpoint_sha256"])
+    if regenerated is None:
+        for detector in d.values():
+            source(MODELS / "yolov8s_cft640/best.pt", detector["checkpoint_sha256"])
     table(out / "first500_pairs_PLAN_ONLY.csv", pairs)
     table(out / "p_configurations.csv", [{"p_id": key, "selected_leaves": "|".join(value)} for key, value in p.items()])
     table(out / "d_configurations.csv", [{**x, "leaves": "|".join(x["leaves"])} for x in d.values()])
@@ -642,7 +644,7 @@ def week4(out):
                          "scope": "LOGICAL_COVERAGE_ONLY"})
     table(out / "sampling_coverage.csv", coverage)
     save(out / "research_sampling_design.json", {"v1_seed": manifest["seed"], "render_seed": manifest["render_seed"],
-        "cohorts": coverage, "first500_source_SHA256": digest(AUDIT / "selection_manifest.json"),
+        "cohorts": coverage, "first500_source_SHA256": digest(manifest_path),
         "frozen_protocol_source": source(EXPS / "cv261207/evaluation.py"),
         "safe_population": len(safe), "pairwise_target": "60-100 P", "uniform_target": "about 100 P",
         "checkpoint_candidate_target": "8-12 candidate checkpoints; infer settings form separate D configurations",

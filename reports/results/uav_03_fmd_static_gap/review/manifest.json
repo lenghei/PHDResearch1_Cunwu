@@ -1,0 +1,70 @@
+{
+  "ExperimentID": "uav_03_fmd_static_gap",
+  "RunID": "review",
+  "status": "TECHNICAL_PASS",
+  "scope": "STATIC_COVERAGE_AND_DEVELOPMENT_GPU_PROFILE",
+  "mode": "VERIFIED_REVIEW",
+  "schema": 2,
+  "bundle": "snapshot.json",
+  "SHA256": "127cc6cca2abf1019799264a9c5bc5f3ef2a0b9e3eed8c873681d65fb5f65d70",
+  "started_at": "2026-11-25T09:05:45.238383+00:00",
+  "files": {
+    "frozen_detector_attributes.csv": "4eb4d480a82c94dda7aa899fcf8808dc4d23417bdcd4beb63f4d67ea67f241fc",
+    "model_and_policies.json": "46c07addc9cf52da3b872304e7508f55475b729dc9feaf2979c4bf8a5e6070db",
+    "snapshot.json": "127cc6cca2abf1019799264a9c5bc5f3ef2a0b9e3eed8c873681d65fb5f65d70",
+    "static_rules_by_leaf.csv": "5f64b72c89e8004839c2067e6d5ad471a257c4c5835592b86c726efc5e812ae5",
+    "latency_memory.csv": "39ce3fcecf1274c01b446f5197931ea6ab1d67d57b5f8deb7d7bfaaba9aa8778"
+  },
+  "sources": [
+    {
+      "RunID": "uav_week01_06_20261125",
+      "artifact": "five_detector_attributes.json",
+      "SHA256": "d4a100cd54586a051e92c0f6af4b64c9550f4ffaca5620b56222bec19ee64fac"
+    },
+    {
+      "RunID": "cv261207_audit_20261104T193649_d1b63492",
+      "artifact": "static_gap.json",
+      "SHA256": "b5cbacc3b975618851f05db97dbfa7166db273c509ebbf6298388267054e8833"
+    },
+    {
+      "RunID": "uav_03_fmd_static_gap_20261124T153932_aafb49d2",
+      "artifact": "flamapy_verification.json",
+      "SHA256": "0262c948f0a1b94afd59d1ee6b46045cba3cb9c7c9b5f8755c87a2940107bc6b"
+    },
+    {
+      "RunID": "uav05-9fe57f16643041aaa41f00ef4e396080",
+      "artifact": "verified_summary.json",
+      "SHA256": "5a25c9957a6d46130fbad2ffb96eb0cb0fd3e01ef9cd7175cdb562a68041df7b"
+    },
+    {
+      "RunID": "uav05-9fe57f16643041aaa41f00ef4e396080",
+      "artifact": "reproduced.json",
+      "SHA256": "5d274b6290d3470ed63726b6610bf1fdaecd17817ae718cb40e34dbac70be675"
+    },
+    {
+      "RunID": "reproduce_20261125T093730_d4311975",
+      "artifact": "measurements.json",
+      "SHA256": "747940902c659f120db7aeb1401beeb1e3944c8d799a8a4c12701ba75beab685"
+    },
+    {
+      "RunID": "reproduce_20261125T093730_d4311975",
+      "artifact": "supervisor.json",
+      "SHA256": "ddcdb9cf2472b32421bb84ab64fe0e4eed75459db139be6a35b0d3ba03db9a09"
+    },
+    {
+      "RunID": "reproduce_20261125T093730_d4311975",
+      "artifact": "sample.json",
+      "SHA256": "e1ec69976fef304482258495828f751917641debf2dd791ae1ab4c9a9e74ddc6"
+    },
+    {
+      "RunID": "reproduce_20261125T094042_dfadfc7e",
+      "artifact": "sahi_tta.json",
+      "SHA256": "051804984155aed26b02c4410f5e58ccc20c91c25eb8371fcf3261e4c2d16a9f"
+    },
+    {
+      "RunID": "reproduce_20261125T094042_dfadfc7e",
+      "artifact": "sahi_uvl.json",
+      "SHA256": "54bc31fdb078f3f9867984be6e971819bdf7d0af0670975d866ae65423da736d"
+    }
+  ]
+}

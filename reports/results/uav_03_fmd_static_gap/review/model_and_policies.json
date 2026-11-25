@@ -1,0 +1,108 @@
+{
+  "fmd_logic": {
+    "Boolean_projection_identical": true,
+    "UVL_SHA256": "4022d674822b97dbbe3712646b9a0f970af95d175ae358e63582029bc107571a",
+    "constraints": 4,
+    "count_method": "EXACT_FACTORIZATION_TRANSFER_AFTER_STRICT_BOOLEAN_PROJECTION_EQUALITY",
+    "dead_features": [],
+    "leaves": 34,
+    "legacy_guard_modified": false,
+    "method_limitation": "SAT checks genuinely executed; no new independent BDD/#SAT count is claimed.",
+    "proof_terms": {
+      "inference_cases_per_postprocessor": 576,
+      "training_leaf_yolo": 64,
+      "training_per_regular_architecture": 260,
+      "weighted_postprocessing_cases": 1104
+    },
+    "satisfiable": true,
+    "status": "VALIDATED",
+    "training_variants": 844,
+    "valid_count": 635904
+  },
+  "static_policy_counts": {
+    "exact_identity": 1,
+    "conservative": 3,
+    "supervisor_proxy": 18
+  },
+  "fmp_population": 46368,
+  "ultralytics_plan": "8.4.33",
+  "shared_detector_settings": {
+    "family": "YOLOv8s",
+    "train_resolution": 640,
+    "train_epochs_logged": 100,
+    "train_seed": 42,
+    "train_batch": 4,
+    "inference": {
+      "batch": 1,
+      "warmup_calls": 3,
+      "input": "RGB BCHW square LetterBox; /255",
+      "conf": 0.001,
+      "nms_iou": 0.7,
+      "max_det": 3000,
+      "max_nms": 30000,
+      "multi_label": true,
+      "class_aware": true,
+      "nms_deadline": null,
+      "head": "dense",
+      "TF32": false,
+      "strategy": "FullFrame",
+      "SAHI": false,
+      "TTA": false
+    }
+  },
+  "historical_training_ultralytics": "8.4.61",
+  "historical_albumentations_activation": "UNKNOWN",
+  "separate_legacy_gpu_pilot": {
+    "scope": "INFERENCE_LATENCY_PILOT_ORIGINAL_VISDRONE_VAL_NO_AP",
+    "imgsz": 1280,
+    "precision": "FP32",
+    "source_image_count": 16,
+    "latency_ms_per_image_mean": 15.085190625,
+    "CUDA_event_ms_mean": 15.054878,
+    "peak_pytorch_allocated_bytes": 131460096,
+    "peak_pytorch_reserved_bytes": 230686720
+  },
+  "sahi_tta": {
+    "sahi": "0.11.36",
+    "ultralytics": "8.4.61",
+    "scope": "ONE_YOLOV8S_CPU_FIXTURE_NO_AP",
+    "results": [
+      {
+        "method": "off",
+        "effective_augment": false,
+        "inference_augment_calls": 0,
+        "merged_boxes": 200
+      },
+      {
+        "method": "config_path",
+        "effective_augment": false,
+        "inference_augment_calls": 0,
+        "merged_boxes": 200
+      },
+      {
+        "method": "model_overrides",
+        "effective_augment": true,
+        "inference_augment_calls": 4,
+        "merged_boxes": 334
+      }
+    ],
+    "original_configurations": 635904,
+    "added_settings": [
+      [
+        "FP32",
+        "Geometric_Default",
+        "HSV_Default",
+        "Infer640",
+        "NMS",
+        "SAHI_Slicing",
+        "Small",
+        "TTA",
+        "Train640",
+        "VisDrone_FT",
+        "YOLOv8"
+      ]
+    ],
+    "revised_configurations": 635905,
+    "revised_sha256": "470cccdcd7088a3b9aab62c5dedf617d17dd12cafe51363be462a7ab9602f7ff"
+  }
+}

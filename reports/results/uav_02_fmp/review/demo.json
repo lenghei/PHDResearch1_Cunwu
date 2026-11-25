@@ -1,0 +1,24 @@
+{
+  "configuration_id": "p_8f7e990050372f44",
+  "leaves": [
+    "Defocus_r3",
+    "Gauss_s30",
+    "Haze_light",
+    "JPEG_q50",
+    "Motion_k21",
+    "Overexposed_strong",
+    "RollingShutter",
+    "Shot_low"
+  ],
+  "selection_seed": 20261109,
+  "selection_mode": "seeded_uniform",
+  "render_seed": 20261207,
+  "population": 46368,
+  "annotation_counts": {
+    "source": 127,
+    "rendered": 127
+  },
+  "pixel_sha256": "85a30da73a027023876eed17f9271538d60ba02143addf2627a1adcbccb10622",
+  "preview_sha256": "0e0bfcefe2a1e7d9242dbeb8b0f31342e2aab4a7e6a30265a355ca8c0e8febb8",
+  "repeated_pixel_identity": true
+}

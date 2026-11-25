@@ -1,0 +1,33 @@
+{
+  "ExperimentID": "uav_04_sampling",
+  "RunID": "review",
+  "status": "FROZEN_DESIGN_VERIFIED",
+  "scope": "PLANNED_NOT_MEASURED",
+  "mode": "VERIFIED_REVIEW",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_04_sampling",
+      "RunID": "review",
+      "status": "FROZEN_DESIGN_VERIFIED",
+      "scope": "PLANNED_NOT_MEASURED",
+      "mode": "VERIFIED_REVIEW",
+      "verified_evidence": [
+        {
+          "P": 100,
+          "D": 5,
+          "planned_pairs": 500,
+          "formal_measured_pairs": 0,
+          "seed": 20261104,
+          "sampling_population": 26496
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_04_sampling",
+      "RunID": "review",
+      "status": "FROZEN_DESIGN_VERIFIED",
+      "scope": "PLANNED_NOT_MEASURED",
+      "mode": "VERIFIED_REVIEW"
+    }
+  }
+}

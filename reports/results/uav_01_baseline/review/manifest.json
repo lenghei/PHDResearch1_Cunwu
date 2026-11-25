@@ -1,0 +1,60 @@
+{
+  "ExperimentID": "uav_01_baseline",
+  "RunID": "review",
+  "status": "CPU_REPLAY_VERIFIED",
+  "scope": "DEVELOPMENT_VALIDATION",
+  "mode": "VERIFIED_REVIEW",
+  "schema": 2,
+  "bundle": "snapshot.json",
+  "SHA256": "e207a1b538b1633bbe7f2f6679fafa57e69f215e9b61af0cb5ecaa36f4bd3847",
+  "started_at": "2026-11-25T09:05:45.231798+00:00",
+  "files": {
+    "checkpoint_selection.json": "1bcb40c1fced9bc3d27e1884710a62ff7794f2064c251f15dd69c567ceeaafcf",
+    "metrics_by_area.csv": "0187d72f235fcfa4d65f35666c6063aa40050ab1fde4bf8cd6c27b88a6780589",
+    "metrics_by_class.csv": "f40d87d5333e646719ccbb8ad4c634b8ac5c944f9f82335f53f0d7677bd6274e",
+    "replay.json": "8f44c443564ce43848b5449eb0dc770b8c779d37dad35da0f3a317603ae44d4a",
+    "snapshot.json": "e207a1b538b1633bbe7f2f6679fafa57e69f215e9b61af0cb5ecaa36f4bd3847"
+  },
+  "sources": [
+    {
+      "RunID": "cv261102_full_20261031T000013_d0be8587",
+      "artifact": "manifest.json",
+      "SHA256": "9844ceabe1f8c94f09f9a0ef67b38a79910e1ee13fbcae3f695edef6ccf02654"
+    },
+    {
+      "RunID": "uav_week01_04_delivery_20261125",
+      "artifact": "week1_replay.json",
+      "SHA256": "09ea617a8561829d978d03a8ecf4ab2918845e404a65cf1a5196657f1546c946"
+    },
+    {
+      "RunID": "uav_01_baseline_20261124T154238_4a518050",
+      "artifact": "ignore_and_gt_replay.json",
+      "SHA256": "376358e016b2a4882a815575eed675ab4787893a9321db1086c6dac4bf0c20e7"
+    },
+    {
+      "RunID": "csv",
+      "artifact": "metrics_by_area.csv",
+      "SHA256": "0187d72f235fcfa4d65f35666c6063aa40050ab1fde4bf8cd6c27b88a6780589"
+    },
+    {
+      "RunID": "csv",
+      "artifact": "metrics_by_class.csv",
+      "SHA256": "f40d87d5333e646719ccbb8ad4c634b8ac5c944f9f82335f53f0d7677bd6274e"
+    },
+    {
+      "RunID": "cv261102_full_20261031T000013_d0be8587",
+      "artifact": "coco_regeneration.json",
+      "SHA256": "ea07c4d3868e75d676d4e8ef8abf87bf9f0de9cc5dff77e7548d6a05ca8ecd1d"
+    },
+    {
+      "RunID": "cv261102_full_20261031T000013_d0be8587",
+      "artifact": "training/yolov8s/results.csv",
+      "SHA256": "c3b0b416d4a058629d629a37ab97ca967c595eaff569843cec53309741dd9544"
+    },
+    {
+      "RunID": "cv261102_full_20261031T000013_d0be8587",
+      "artifact": "training/yolov8s/weights/best.pt",
+      "SHA256": "e564c819603bf36ac6d93e3acb0359e7d5a75503ce78458209e9a28113280667"
+    }
+  ]
+}

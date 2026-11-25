@@ -1,0 +1,26 @@
+feature,family,original_parameters,generator_parameters,source_code,interpretation,augmentation_scope,geometry
+Normal,illumination,"{""gain"": 1.0, ""bias"": 0.0}","{""gain"": 1.0, ""bias"": 0}",generator.py:leaf_Normal,Affine intensity and clipping; synthetic exposure proxy.,SYNTHETIC,ORIGINAL_CANVAS
+Overexposed_mild,illumination,"{""gain"": 1.15, ""bias"": 30.0}","{""gain"": 1.15, ""bias"": 30}",generator.py:leaf_Overexposed_mild,Affine intensity and clipping; synthetic exposure proxy.,SYNTHETIC,ORIGINAL_CANVAS
+Overexposed_strong,illumination,"{""gain"": 1.3, ""bias"": 80.0}","{""gain"": 1.3, ""bias"": 80}",generator.py:leaf_Overexposed_strong,Affine intensity and clipping; synthetic exposure proxy.,SYNTHETIC,ORIGINAL_CANVAS
+Underexposed_mild,illumination,"{""gain"": 0.9, ""bias"": -20.0}","{""gain"": 0.9, ""bias"": -20}",generator.py:leaf_Underexposed_mild,Affine intensity and clipping; synthetic exposure proxy.,SYNTHETIC,ORIGINAL_CANVAS
+Underexposed_strong,illumination,"{""gain"": 0.8, ""bias"": -50.0}","{""gain"": 0.8, ""bias"": -50}",generator.py:leaf_Underexposed_strong,Affine intensity and clipping; synthetic exposure proxy.,SYNTHETIC,ORIGINAL_CANVAS
+LowLight,illumination,"{""gain"": 0.4, ""bias"": -20.0}","{""gain"": 0.4, ""bias"": -20}",generator.py:leaf_LowLight,Affine intensity and clipping; synthetic exposure proxy.,SYNTHETIC,ORIGINAL_CANVAS
+Motion_k7,motion,"{""kernel"": 7.0}","{""kernel"": 7, ""angle_min"": 0, ""angle_max"": 180}",generator.py:leaf_Motion_k7,Normalized linear-kernel blur; orientation not calibrated.,SYNTHETIC,ORIGINAL_CANVAS
+Motion_k15,motion,"{""kernel"": 15.0}","{""kernel"": 15, ""angle_min"": 0, ""angle_max"": 180}",generator.py:leaf_Motion_k15,Normalized linear-kernel blur; orientation not calibrated.,SYNTHETIC,ORIGINAL_CANVAS
+Motion_k21,motion,"{""kernel"": 21.0}","{""kernel"": 21, ""angle_min"": 0, ""angle_max"": 180}",generator.py:leaf_Motion_k21,Normalized linear-kernel blur; orientation not calibrated.,SYNTHETIC,ORIGINAL_CANVAS
+Defocus_r3,defocus,"{""radius"": 3.0}","{""radius"": 3}",generator.py:leaf_Defocus_r3,Normalized disk convolution; no camera calibration.,SYNTHETIC,ORIGINAL_CANVAS
+Defocus_r6,defocus,"{""radius"": 6.0}","{""radius"": 6}",generator.py:leaf_Defocus_r6,Normalized disk convolution; no camera calibration.,SYNTHETIC,ORIGINAL_CANVAS
+Gauss_s5,gaussian,"{""sigma"": 5.5}","{""sigma"": 5.5}",generator.py:leaf_Gauss_s5,Independent additive Gaussian samples in pixel units.,SYNTHETIC,ORIGINAL_CANVAS
+Gauss_s15,gaussian,"{""sigma"": 15.0}","{""sigma"": 15}",generator.py:leaf_Gauss_s15,Independent additive Gaussian samples in pixel units.,SYNTHETIC,ORIGINAL_CANVAS
+Gauss_s30,gaussian,"{""sigma"": 30.0}","{""sigma"": 30}",generator.py:leaf_Gauss_s30,Independent additive Gaussian samples in pixel units.,SYNTHETIC,ORIGINAL_CANVAS
+Shot_low,shot,"{""photons"": 100.0}","{""photons"": 100}",generator.py:leaf_Shot_low,"Intensity-proportional Poisson approximation, not a sensor measurement.",SYNTHETIC,ORIGINAL_CANVAS
+Shot_high,shot,"{""photons"": 20.0}","{""photons"": 20}",generator.py:leaf_Shot_high,"Intensity-proportional Poisson approximation, not a sensor measurement.",SYNTHETIC,ORIGINAL_CANVAS
+JPEG_q75,compression,"{""quality"": 75.0}","{""quality"": 75}",generator.py:leaf_JPEG_q75,One additional JPEG encode/decode.,SYNTHETIC,ORIGINAL_CANVAS
+JPEG_q50,compression,"{""quality"": 50.0}","{""quality"": 50}",generator.py:leaf_JPEG_q50,One additional JPEG encode/decode.,SYNTHETIC,ORIGINAL_CANVAS
+JPEG_q25,compression,"{""quality"": 25.0}","{""quality"": 25}",generator.py:leaf_JPEG_q25,One additional JPEG encode/decode.,SYNTHETIC,ORIGINAL_CANVAS
+Haze_light,atmosphere,"{""beta"": 0.5}","{""beta"": 0.5, ""airlight"": 220}",generator.py:leaf_Haze_light,Constant-depth haze or overlaid rain; no scene/weather calibration.,SYNTHETIC,ORIGINAL_CANVAS
+Haze_dense,atmosphere,"{""beta"": 1.5}","{""beta"": 1.5, ""airlight"": 220}",generator.py:leaf_Haze_dense,Constant-depth haze or overlaid rain; no scene/weather calibration.,SYNTHETIC,ORIGINAL_CANVAS
+Rain,atmosphere,"{""streaks"": 200.0}","{""streaks"": 200, ""stroke_length"": 14, ""opacity"": 0.25}",generator.py:leaf_Rain,Constant-depth haze or overlaid rain; no scene/weather calibration.,SYNTHETIC,ORIGINAL_CANVAS
+Downscale_x1_5,altitude,"{""factor"": 1.5}","{""factor"": 1.5}",generator.py:leaf_Downscale_x1_5,"Image resampling and restoration of canvas, not a change of camera pose.",SYNTHETIC,ORIGINAL_CANVAS
+Downscale_x2,altitude,"{""factor"": 2.0}","{""factor"": 2.0}",generator.py:leaf_Downscale_x2,"Image resampling and restoration of canvas, not a change of camera pose.",SYNTHETIC,ORIGINAL_CANVAS
+RollingShutter,rolling,{},"{""max_shift_fraction"": 0.008, ""waves"": 2}",generator.py:leaf_RollingShutter,Sinusoidal row shift with derived boxes and ignore masks.,SYNTHETIC,DERIVED_GT_AND_IGNORE

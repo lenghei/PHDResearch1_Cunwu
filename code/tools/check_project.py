@@ -17,7 +17,7 @@ from main.config import load_config, sha256, save
 
 def main(argv=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', type=Path, default=REPOSITORY / 'experiments/vm1_flamapy_yolo26s_validation/config.local.yaml')
+    parser.add_argument('--config', type=Path, default=REPOSITORY / 'experiments/experiments_test/vm1_flamapy_yolo26s_validation/config.local.yaml')
     parser.add_argument('--run-dir', type=Path)
     parser.add_argument('--flamapy-python', '--uvl-python', dest='flamapy_python', type=Path)
     parser.add_argument('--require-flamapy', '--require-uvl', dest='require_uvl', action='store_true')
@@ -64,7 +64,7 @@ def main(argv=None):
             candidate = LOCAL_ROOT / ('.venv_flamapy/Scripts/python.exe' if os.name == 'nt' else '.venv_flamapy/bin/python')
             flamapy_python = candidate if candidate.is_file() else None
         if flamapy_python is not None:
-            execute('uvl', [str(flamapy_python.resolve()), '-B', 'experiments/vm1_flamapy_yolo26s_validation/run.py', '--uvl-only',
+            execute('uvl', [str(flamapy_python.resolve()), '-B', 'experiments/experiments_test/vm1_flamapy_yolo26s_validation/run.py', '--uvl-only',
                             '--output', str(output / 'uvl.json')])
             report['uvl'] = json.loads((output / 'uvl.json').read_text(encoding='utf-8'))
         elif args.require_uvl:

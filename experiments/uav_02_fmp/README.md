@@ -1,12 +1,11 @@
-# Week 2 · Degradation feature model
+# Week 2 · Image degradation
 
-Validate the original FM_P logic and render one deterministic sample using the versioned bindings. RollingShutter remains outside the geometry-safe population.
+FM_P defines 25 degradation features and five constraints. `render_bindings.json` supplies additional rendering parameters. All 46,368 legal combinations passed the synthetic image test.
 
-From the Git root, set `$plan` to the local original research plan PDF.
+Run from the outer `uavgap` directory:
 
 ```powershell
-& ../.venv/Scripts/python.exe -B code/tools/uav_week01_06.py --week 2 --plan $plan
+& ./.venv/Scripts/python.exe -B main/experiments/uav_02_fmp/run.py --config-id p_7d560e75a98f5496 --image-index 0
 ```
 
-Open `random_render.png` in the local run for the paired preview.
-[Verified summary](../../reports/results/uav_02_fmp/uav_02_fmp_20261124T153924_1245ff9f/snapshot.json).
+Use `generate --config-id <id>` to render the 548-image set, or `audit-space` to replay the full configuration test. [Results and configuration CSV](../../reports/results/uav_02_fmp/).

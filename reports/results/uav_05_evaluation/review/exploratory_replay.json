@@ -1,0 +1,46 @@
+{
+  "pair_id": "p_fd12aeed13eb2a34__d_a8a5e5b0da3bba4e",
+  "scope": "EXPLORATORY_FIRST_PAIR_ONLY",
+  "images_each": 1610,
+  "formal_pair_credit": 0,
+  "repeat_verified": true,
+  "bootstrap_resamples": 200,
+  "cached_pipeline_mean_ms": [
+    36.362338819836054,
+    35.0693905572783
+  ],
+  "cached_pipeline_ci95_ms": [
+    [
+      35.902604273316506,
+      36.80137480000288
+    ],
+    [
+      34.67465150665336,
+      35.50986519553019
+    ]
+  ],
+  "mapped_prediction_count": 13771,
+  "checkpoint_sha256": "e564c819603bf36ac6d93e3acb0359e7d5a75503ce78458209e9a28113280667",
+  "ci95": {
+    "all_map50": [
+      0.0,
+      3.877492058228275e-05
+    ],
+    "all_map50_95": [
+      0.0,
+      3.877492058228275e-06
+    ],
+    "tiny_map50": [
+      0.0,
+      0.0
+    ],
+    "tiny_map50_95": [
+      0.0,
+      0.0
+    ]
+  },
+  "prediction_archive_sha256": "86f4ec03a015c08680b5fa47319b637966a3eb193a8e7a806631b853b470b139",
+  "repeat_archive_sha256": "c1c1ad13ceb6fa5cd9cc7b2b7c7f9a5fc13e3be046696f57c1579f3e2ea71f17",
+  "prediction_content_sha256": "4f4f8111bb0099d1ed34f220adbf5b2d7917a829beb362564f496fb359a7698e",
+  "ground_truth_sha256": "b63cead2eefc4fb9c676b8bf83a6b10c0acb0764b089072c00cdd2717a0a9ed4"
+}

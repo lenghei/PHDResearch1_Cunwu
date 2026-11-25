@@ -1,0 +1,11 @@
+{
+  "source_run": "cv261102_full_20261031T000013_d0be8587",
+  "checkpoint_sha256": "e564c819603bf36ac6d93e3acb0359e7d5a75503ce78458209e9a28113280667",
+  "logged_epochs": 100,
+  "best_logged_epoch": 76,
+  "selection_metric": "Ultralytics validation box mAP50-95 fitness",
+  "internal_selection_fitness": 0.22795,
+  "final_epoch_fitness": 0.22201,
+  "exported_checkpoint_epoch_field": -1,
+  "training_results_sha256": "c3b0b416d4a058629d629a37ab97ca967c595eaff569843cec53309741dd9544"
+}

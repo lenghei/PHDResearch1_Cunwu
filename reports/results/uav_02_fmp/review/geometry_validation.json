@@ -1,0 +1,14 @@
+{
+  "images": 548,
+  "original_retained_targets": 38593,
+  "warped_targets": 38593,
+  "clipped_out_targets": 0,
+  "images_with_verified_ignore_union": 351,
+  "logical_configurations": 46368,
+  "geometry_supported_configurations": 46368,
+  "unsupported_geometry_configurations": 0,
+  "source_archive_sha256": "abeea063037e5d20398837deb11084e652402a34ddf4f207bdf541a6f2a35ef9",
+  "derived_gt_sha256": "50a2c8b809c8a4fc9e994bea53daceaaee85e6c8db0428583b725941abc5ee4e",
+  "seed": 20261207,
+  "elapsed_seconds": 43.384196899831295
+}

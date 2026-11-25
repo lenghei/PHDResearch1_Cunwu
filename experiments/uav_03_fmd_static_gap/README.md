@@ -1,12 +1,13 @@
-# Week 3 · Detector model and static coverage
+# Week 3 · Detector settings and static coverage
 
-Validate FM_D and report measured attributes and static coverage policies separately. Checkpoint support and resource feasibility are configuration-specific.
-
-From the Git root, set `$plan` to the local original research plan PDF.
+Run from the outer `uavgap` directory:
 
 ```powershell
-& ../.venv/Scripts/python.exe -B code/tools/uav_week01_06.py --week 3 --plan $plan
+& ./.venv/Scripts/python.exe -B main/experiments/uav_03_fmd_static_gap/run.py
+& ./.venv/Scripts/python.exe -B main/experiments/uav_03_fmd_static_gap/measure_gpu.py
+& ./.venv_flamapy/Scripts/python.exe -B main/experiments/uav_03_fmd_static_gap/check_sahi_uvl.py
 ```
 
-See `flamapy_command.txt` for the direct model count command.
-[Verified summary](../../reports/results/uav_03_fmd_static_gap/uav_03_fmd_static_gap_20261124T153932_aafb49d2/snapshot.json).
+The first command replays the original FM_D and static coverage on CPU. The second profiles the five settings on a shared development sample with the existing thermal supervisor. The third verifies the one-setting SAHI/TTA variant. `check_sahi_tta.py` tests the library path on CPU with SAHI 0.11.36 in a separate dependency folder.
+
+[Measured results](../../reports/results/uav_03_fmd_static_gap/).

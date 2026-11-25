@@ -1,9 +1,11 @@
-# Small experiments
+# Supporting experiments
 
-Keep exploratory tests and engineering pilots here.
-Promote consolidated studies to `experiments/vmN_name/` using the next main number.
+| Series | Studies |
+| --- | --- |
+| CV261102–CV261207 | Baseline, UVL models, sampling and evaluation support |
+| VM1–VM03 | Initial validation, replay and smoke tests |
+| VM36–VM40 | Development measurements and matched training pilots |
+| VM41–VM47 | Coverage, external pilot, error analysis and interaction studies |
 
-- `vm03_gpu_pilot/`: historical YOLOv8s reproduction and metric-regression reference.
-
-Historical IDs and saved runs remain unchanged. Full outputs and previews stay
-under the corresponding experiment in the external local run store.
+The [weekly index](../) lists the experiments in the formal research plan.
+Saved proofs and sealed portable bundles retain their recorded paths and identities.

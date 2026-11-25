@@ -73,7 +73,14 @@ def _validated_records(gt: dict, predictions: list[dict]) -> tuple[dict, list[di
         annotation_ids.add(ann["id"])
         if ann["image_id"] not in image_ids or ann["category_id"] not in category_ids:
             raise ValueError("GT annotation references an unknown image/category.")
-        ann["area"] = _bbox_area(ann)
+        evaluated_area = _bbox_area(ann)
+        if source["info"].get("area_reference") == "rolling_shutter_source_bbox_pixels_v1":
+            source_area = _bbox_area({"bbox": ann.get("source_bbox")})
+            if ann.get("area") != source_area:
+                raise ValueError("Rolling-shutter original box and declared area differ.")
+            ann["area"] = source_area
+        else:
+            ann["area"] = evaluated_area
         ann.setdefault("iscrowd", 0)
         if ann.get("ignore", 0) and not ann["iscrowd"]:
             raise ValueError("COCOeval does not honor bbox ignore=1 without iscrowd. Apply the dataset's ignore policy before evaluation.")

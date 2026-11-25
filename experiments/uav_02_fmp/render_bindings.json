@@ -1,0 +1,9 @@
+{
+  "Motion_k7": {"angle_min": 0, "angle_max": 180},
+  "Motion_k15": {"angle_min": 0, "angle_max": 180},
+  "Motion_k21": {"angle_min": 0, "angle_max": 180},
+  "Haze_light": {"airlight": 220},
+  "Haze_dense": {"airlight": 220},
+  "Rain": {"stroke_length": 14, "opacity": 0.25},
+  "RollingShutter": {"max_shift_fraction": 0.008, "waves": 2}
+}

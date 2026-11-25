@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "RunID": "cv261102_full_20261031T000013_d0be8587",
+  "images": 548,
+  "epochs": 100,
+  "AP50": 0.5041689748827122,
+  "AP50_95": 0.29624432837203357,
+  "coco_recomputed": true,
+  "file_hashes": "PASS",
+  "interpretation": "Development validation, not independent test-dev",
+  "command": "python -B experiments/experiments_test/cv261102/validate_run.py --run <CV261102 archive>",
+  "AR50_95": 0.5317225023268554,
+  "original_ground_truth_sha256": "5565c64733b39682f050569bdcba25929db050dec3cfd3df34fdebc2764963d3",
+  "coco_prediction_sha256": "6d183d664bf78968c76bb0e0cdf198ab7e732cf2e06b5c2b5a7011471f85c1ff",
+  "full_validation_native10": true
+}

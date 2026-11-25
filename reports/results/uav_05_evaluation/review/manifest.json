@@ -1,0 +1,54 @@
+{
+  "ExperimentID": "uav_05_evaluation",
+  "RunID": "review",
+  "status": "EXPLORATORY_REPLAY_VERIFIED",
+  "scope": "EXPLORATORY_FIRST_PAIR_ONLY",
+  "mode": "VERIFIED_REVIEW",
+  "schema": 2,
+  "bundle": "snapshot.json",
+  "SHA256": "3fc458a436b7270e8e6e7e6a8a516b3338ba0dfd4c4a4369955be8626780578e",
+  "started_at": "2026-11-25T09:05:45.246393+00:00",
+  "files": {
+    "exploratory_per_area.csv": "e5e18007f393304220fd45ab4f4925bac100beefb5343ffc123f0f51f446026d",
+    "exploratory_per_class.csv": "73b42b1a88db94251a778b000e3c3c3b6f5b5d1988c87c88b9c4ed6967f28650",
+    "exploratory_replay.json": "96f646c5823f33926050ab6af45394a990153456b80fa2364d82d1bf772e281e",
+    "snapshot.json": "3fc458a436b7270e8e6e7e6a8a516b3338ba0dfd4c4a4369955be8626780578e"
+  },
+  "sources": [
+    {
+      "RunID": "uav05-9fe57f16643041aaa41f00ef4e396080",
+      "artifact": "verified_summary.json",
+      "SHA256": "5a25c9957a6d46130fbad2ffb96eb0cb0fd3e01ef9cd7175cdb562a68041df7b"
+    },
+    {
+      "RunID": "uav05-9fe57f16643041aaa41f00ef4e396080",
+      "artifact": "reproduced.json",
+      "SHA256": "5d274b6290d3470ed63726b6610bf1fdaecd17817ae718cb40e34dbac70be675"
+    },
+    {
+      "RunID": "uav05-9fe57f16643041aaa41f00ef4e396080",
+      "artifact": "result.json",
+      "SHA256": "ed60bf3b8c79794aa693ffab9394468c288b0246b15bc396027fc4e0a9d9ed58"
+    },
+    {
+      "RunID": "uav05-9fe57f16643041aaa41f00ef4e396080",
+      "artifact": "metrics.json",
+      "SHA256": "b7ba4fc8363ba5d7e4d6f511d7e683a9166f7c5c022a1faa141867678e0d2d75"
+    },
+    {
+      "RunID": "uav05-9fe57f16643041aaa41f00ef4e396080",
+      "artifact": "predictions.jsonl.gz",
+      "SHA256": "86f4ec03a015c08680b5fa47319b637966a3eb193a8e7a806631b853b470b139"
+    },
+    {
+      "RunID": "uav05-9fe57f16643041aaa41f00ef4e396080",
+      "artifact": "ground_truth.json",
+      "SHA256": "b63cead2eefc4fb9c676b8bf83a6b10c0acb0764b089072c00cdd2717a0a9ed4"
+    },
+    {
+      "RunID": "uav05-9fe57f16643041aaa41f00ef4e396080",
+      "artifact": "bootstrap.json",
+      "SHA256": "b82b5d5f80c9ccbd06f97c6c4259b42dca585b31acec284819bfae1e67fc5e93"
+    }
+  ]
+}

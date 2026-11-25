@@ -6,3 +6,5 @@ vm45_motion_haze_gap_learning/**/*.json -text
 vm47_gaussian_jpeg_factorial/**/*.json -text
 vm48_formal_rq4/**/*.json -text
 vm48_formal_rq4/**/per_class_all_conditions.csv text eol=lf
+uav_*/review/** -text
+uav_02_fmp/configuration_validation.csv -text

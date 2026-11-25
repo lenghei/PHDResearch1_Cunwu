@@ -19,7 +19,7 @@ class V2Tests(unittest.TestCase):
     def test_vm2_browser_default_and_no_open(self):
         import runpy
         import sys
-        entry = Path(__file__).resolve().parents[2] / 'experiments/vm2_degradation_gap_analysis/run.py'
+        entry = Path(__file__).resolve().parents[2] / 'experiments/experiments_test/vm2_degradation_gap_analysis/run.py'
         with tempfile.TemporaryDirectory() as folder:
             run = Path(folder)
             for options in [[], ['--no-open']]:
@@ -146,7 +146,7 @@ class V2Tests(unittest.TestCase):
             self.assertTrue((run / 'paired_comparison.csv').is_file())
 
     def test_entry_routing_without_forward(self):
-        path = Path(__file__).resolve().parents[2] / 'experiments/vm1_flamapy_yolo26s_validation/run.py'
+        path = Path(__file__).resolve().parents[2] / 'experiments/experiments_test/vm1_flamapy_yolo26s_validation/run.py'
         spec = importlib.util.spec_from_file_location('v2_entry_test', path)
         entry = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(entry)

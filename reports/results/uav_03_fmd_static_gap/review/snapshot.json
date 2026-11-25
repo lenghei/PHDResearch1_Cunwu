@@ -1,0 +1,67 @@
+{
+  "ExperimentID": "uav_03_fmd_static_gap",
+  "RunID": "review",
+  "status": "TECHNICAL_PASS",
+  "scope": "STATIC_COVERAGE_AND_DEVELOPMENT_GPU_PROFILE",
+  "mode": "VERIFIED_REVIEW",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_03_fmd_static_gap",
+      "RunID": "review",
+      "status": "TECHNICAL_PASS",
+      "scope": "STATIC_COVERAGE_AND_DEVELOPMENT_GPU_PROFILE",
+      "mode": "VERIFIED_REVIEW",
+      "verified_evidence": [
+        {
+          "coverage_policy": "exact_identity",
+          "covered_P": 1,
+          "population": 46368,
+          "legal_D": 635904
+        },
+        {
+          "coverage_policy": "conservative",
+          "covered_P": 3,
+          "population": 46368,
+          "legal_D": 635904
+        },
+        {
+          "coverage_policy": "supervisor_proxy",
+          "covered_P": 18,
+          "population": 46368,
+          "legal_D": 635904
+        }
+      ],
+      "gpu_profile": [
+        {
+          "detector_settings": 5,
+          "images_per_setting": 32,
+          "repeats": 2,
+          "measured_calls": 320,
+          "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+          "max_temperature_C": 63
+        }
+      ],
+      "slicing_and_TTA": [
+        {
+          "adapter_method": "off",
+          "TTA_calls": 0
+        },
+        {
+          "adapter_method": "config_path",
+          "TTA_calls": 0
+        },
+        {
+          "adapter_method": "model_overrides",
+          "TTA_calls": 4
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_03_fmd_static_gap",
+      "RunID": "review",
+      "status": "TECHNICAL_PASS",
+      "scope": "STATIC_COVERAGE_AND_DEVELOPMENT_GPU_PROFILE",
+      "mode": "VERIFIED_REVIEW"
+    }
+  }
+}

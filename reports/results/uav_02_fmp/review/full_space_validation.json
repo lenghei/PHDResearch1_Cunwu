@@ -1,0 +1,113 @@
+{
+  "source_run": "fmp_full_space_20261125084251",
+  "status": "PASS",
+  "scope": "EXHAUSTIVE_SINGLE_ANNOTATED_SYNTHETIC_FIXTURE",
+  "sat_catalog": {
+    "configurations": 46368,
+    "leaf_catalog_sha256": "d8585cd4e2bc92e071e3459f199274c31302d2450c3ea96bcc78e15339b77ccf",
+    "uvl_sha256": "e6eadd633d1c14e0d6bc425f5e54421d592d766c65a6e5f20c61bc34dd76fb5c"
+  },
+  "catalog_match": true,
+  "checked": 46368,
+  "passed": 46368,
+  "failed": 0,
+  "rolling_passed": 19872,
+  "nonrolling_passed": 26496,
+  "pixel_render_calls": 92736,
+  "fixture_shape": [
+    67,
+    131,
+    3
+  ],
+  "fixture_seed": 42,
+  "render_seed": 20261207,
+  "fixture_sha256": "290ddaeefbaefe56757100673ab626a679ebba1f5a8a2d31e7dd1ab75fcc3b0b",
+  "annotation_fixture": {
+    "id": 1,
+    "stem": "fmp_space_fixture_v1",
+    "file_name": "fixture.png",
+    "width": 131,
+    "height": 67,
+    "objects": [
+      {
+        "class_id": 0,
+        "bbox": [
+          0,
+          3,
+          3,
+          22
+        ]
+      },
+      {
+        "class_id": 3,
+        "bbox": [
+          121,
+          10,
+          10,
+          37
+        ]
+      },
+      {
+        "class_id": 9,
+        "bbox": [
+          43,
+          18,
+          15,
+          17
+        ]
+      },
+      {
+        "class_id": 1,
+        "bbox": [
+          68,
+          40,
+          21,
+          25
+        ]
+      },
+      {
+        "class_id": 2,
+        "bbox": [
+          21,
+          9,
+          5,
+          5
+        ]
+      }
+    ],
+    "ignore_regions": [
+      [
+        19,
+        2,
+        6,
+        37
+      ],
+      [
+        25,
+        15,
+        9,
+        7
+      ]
+    ],
+    "other_regions": [
+      [
+        100,
+        49,
+        31,
+        18
+      ]
+    ]
+  },
+  "configuration_csv_sha256": "3b69e773338d4a760bcb5fb97272048c7b218ef83836cb1dd810fa8209f2ced7",
+  "source_sha256": {
+    "audit_space.py": "c199494d8fdbef53282c69e3812dbefd01169c6860ed5782f0f739d7e7f69850",
+    "sat_catalog.py": "bd7324c23c8862eb1b353d38d169ffacb78b241182bd9ab6648d801b11b1eeeb",
+    "fm_p.uvl": "e6eadd633d1c14e0d6bc425f5e54421d592d766c65a6e5f20c61bc34dd76fb5c",
+    "render_bindings.json": "3f5488659208a61c0889576ef6981023547d7e1fc7e3a4507558213f86bf24e0",
+    "geometry.py": "75ef06915b89a7679c0d7e44ffe2d73c52f6c4025e7f4d53086acb5caf9acd42",
+    "generator.py": "0e4451df339f3ffe48df9858d6b454fcb03ed4dac2c51b21dfe6ee7514d6e555"
+  },
+  "opencv": "4.11.0",
+  "numpy": "2.4.6",
+  "seconds": 162.86659030010924
+}

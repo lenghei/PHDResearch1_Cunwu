@@ -1,0 +1,46 @@
+{
+  "ExperimentID": "uav_02_fmp",
+  "RunID": "review",
+  "status": "GENERATOR_TECHNICAL_PASS",
+  "scope": "SYNTHETIC_CATALOG_AND_ONE_REAL_VAL_SET",
+  "mode": "VERIFIED_REVIEW",
+  "schema": 2,
+  "bundle": "snapshot.json",
+  "SHA256": "4e6243eb008b4375a6274813e2923cbfcb7dcd493ebbd4689c031d7f1b31c4ac",
+  "started_at": "2026-11-25T09:05:45.235318+00:00",
+  "files": {
+    "demo.json": "a9feb32af621a50837fe87c7964afefbbb931676e36b5d6c54b8a625996b0979",
+    "feature_parameters.csv": "08e4d096a027dc5de1a6a1ee5b5e792ee540c5c2c1ced5dc8de3e2d4575ec020",
+    "full_space_validation.json": "2e7c92b6f15fc79a8cea2baa29bda9f13ddde3b28fc232f3af1e84ff0f1f8733",
+    "generated_set.json": "4aa33aee98945ba626d1d54353fe33b11ba636095f576a0b635662a38e19c03c",
+    "geometry_validation.json": "84337bc64f9d1a528af645e124048f31a79a8c905dab7e789c5ec4b5d3521185",
+    "snapshot.json": "4e6243eb008b4375a6274813e2923cbfcb7dcd493ebbd4689c031d7f1b31c4ac"
+  },
+  "sources": [
+    {
+      "RunID": "uav_02_fmp_20261124T153924_1245ff9f",
+      "artifact": "feature_parameters.csv",
+      "SHA256": "64f65f7fc443757058e8ab9387fcf3d3272a7509fbb54189b42ec4cb1981d8f7"
+    },
+    {
+      "RunID": "uav_week01_06_20261125",
+      "artifact": "rolling_geometry.json",
+      "SHA256": "f3a0b7f452f868c8a499c9330f5cc2e529bcc20b4df836d583c920e46442392e"
+    },
+    {
+      "RunID": "week2_demo",
+      "artifact": "demo_receipt.json",
+      "SHA256": "bfc3e646a77d6807a689a105aee7b1d0e79f7016ca7cdd5d0908a14d08e08414"
+    },
+    {
+      "RunID": "reproduce_20261125T082824_61beb538",
+      "artifact": "p_8f7e990050372f44/set_receipt.json",
+      "SHA256": "4778eeac367290d623f6e046f275f3314cf54a9a0d6cee785d47453ff223e215"
+    },
+    {
+      "RunID": "fmp_full_space_20261125084251",
+      "artifact": "space_validation.json",
+      "SHA256": "fd8ac54a7f9fc2c8b20365bdf6592d2163f80131759dd0610ecf4eff61ef43b1"
+    }
+  ]
+}

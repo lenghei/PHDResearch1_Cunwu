@@ -1,50 +1,19 @@
 # UAV-GAP
 
-## Research Problem
+UAV-GAP studies how image degradation affects object detection in drone imagery. It uses two UVL feature models to describe image degradations (FM_P) and YOLO detector settings (FM_D). On VisDrone, the experiments compare detection accuracy and inference latency across these settings, with a focus on tiny objects. The goal is to identify conditions where the tested detector settings fail to meet both requirements and assess whether targeted training augmentation helps.
 
-Which UAV image degradations leave no measured detector setting that meets both tiny-object accuracy and latency requirements? Testing every degradation and detector combination is costly, and a training augmentation's presence alone cannot establish performance.
+Online dashboard: [**https://uavgap.streamlit.app**](https://uavgap.streamlit.app) · [Results and downloads](reports/results/) · [Experiment code](experiments/)
 
-## Approach
-
-FM_P describes degradations in UVL. FM_D describes detector, inference and training choices. FlamaPy checks logical validity. The experiments compare fixed settings on paired VisDrone images. Static training coverage is a mapping assumption. The empirical Gap requires evidence at a fixed Tiny AP50:95 threshold of 10% and a cached-pipeline latency limit of 100 ms.
-
-## Main Contributions
-
-- Two verified feature models: 46,368 legal degradation settings and 635,904 legal detector settings.
-- A measured Gap assessment and a detector lookup that can abstain when the evidence is insufficient.
-- Paired factorial comparisons and matched augmentation pilots with reported benefits, costs and limits.
-
-## Key Results
-
-| Study | Measured result |
+| Experiment | Result |
 | --- | --- |
-| [VM36 local Gap](reports/results/vm36_supervisor_reproduction) | Of 21 purposefully selected conditions, 4 were covered and 17 had a Gap across the 4 measured detector settings. |
-| [VM45 Motion × Haze](reports/results/vm45_motion_haze_gap_learning) | Overall AP50:95 interaction contrasts of +6.881 and +7.298 pp for YOLOv8s and YOLO26s. |
-| [VM47 Gaussian × JPEG](reports/results/vm47_gaussian_jpeg_factorial) | Overall AP50:95 interaction contrasts of +2.787 and +3.901 pp for the same checkpoints. |
-| [VM48 Motion-targeted pilot](reports/results/vm48_formal_rq4/motion_targeted_seed45_execution_20261118T210143_5ada2476) | Motion overall AP50:95 +4.250 pp. Motion Tiny AP rose from 0.109% to 0.581% (+0.471 pp, 95% paired-image interval +0.409 to +0.947 pp). **Zero confirmed Gap closures.** Normal AP −1.046 pp and Haze AP −1.684 pp. [10-class results](reports/results/vm48_formal_rq4/motion_targeted_seed45_execution_20261118T210143_5ada2476/per_class_all_conditions.csv). |
+| [YOLOv8s baseline](reports/results/uav_01_baseline/) | VisDrone val, 548 images. AP50 **50.42%**, AP50:95 **29.62%**. |
+| [Image degradation](reports/results/uav_02_fmp/) | **46,368** legal configurations tested with a synthetic fixture. A selected configuration was rendered on all 548 val images. [Full CSV](reports/results/uav_02_fmp/configuration_validation.csv) |
+| [Detector settings and static Gap](reports/results/uav_03_fmd_static_gap/) | **635,904** logical detector settings. The three training-coverage rules cover **1, 3 or 18** degradation configurations. |
+| [Configuration sampling](reports/results/uav_04_sampling/) | Frozen design of **100 degradation settings × 5 detector settings**. |
+| [Detector evaluation](reports/results/uav_05_evaluation/) | One exploratory test-dev pair and its repeat, each on **1,610 images**. |
+| [Empirical Gap](reports/results/uav_06_gap_analysis/) | Formal evaluation **0/500 pairs**. Development results are reported separately. |
+| [Targeted augmentation](reports/results/vm48_formal_rq4/) | The Motion pilot gained **4.250 pp** AP50:95 under motion blur, with **zero confirmed Gap closures**. |
 
-## Experiments
+Each experiment folder explains how to reproduce its results. The dashboard opens saved summaries. Full reproduction uses the local VisDrone inputs, model weights and prediction archives.
 
-- [VM36](experiments/vm36_supervisor_reproduction) · Dual feature models and development measurements
-- [VM39](experiments/vm39_multi_seed_confirmation) · Gaussian augmentation across three seeds
-- [VM43](experiments/vm43_external_pilot) · Limited external exploration
-- [VM44](experiments/vm44_tiny_error_variability_decision) · Tiny-object diagnostics and measured selection
-- [VM45](experiments/vm45_motion_haze_gap_learning) · Motion × Haze and rule safety
-- [VM47](experiments/vm47_gaussian_jpeg_factorial) · Gaussian × JPEG
-- [VM48](experiments/vm48_formal_rq4) · Gaussian transfer and Motion-targeted training
-
-Earlier workflows: [VM1 validation](experiments/vm1_flamapy_yolo26s_validation) and [VM2 analysis](experiments/vm2_degradation_gap_analysis). Progress: [weekly notes](reports/notes).
-
-## Reproduction
-
-From the repository root, use Python 3.10 or later to verify all eight public snapshots and replay the summary calculations:
-
-```bash
-python -B code/tools/replay_public_results.py
-```
-
-Each snapshot under [reports/results](reports/results) has a manifest with RunIDs and SHA256 digests. Raw AP regeneration requires access to the original archived predictions and evaluation inputs. Shared code and dependencies are in [code](code). See the [dashboard setup](code/tools/README.md) or the [online dashboard](https://uavgap.streamlit.app/).
-
-## Limitations
-
-The main evidence uses purposeful conditions on the VisDrone development split. VM43 is limited external exploration with unknown historical independence. The Motion pilot uses one training seed. Its intervals reflect image variability. The full-space empirical Gap and the formal 1280-pixel, 100-epoch training study remain open. On new development conditions, the VM45 tree passed all four actual failures, so unknown conditions still trigger abstention.
+[Supporting experiments](experiments/experiments_test/) · [Progress notes](reports/notes/)

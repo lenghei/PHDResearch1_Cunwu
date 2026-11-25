@@ -1,0 +1,43 @@
+{
+  "ExperimentID": "uav_01_baseline",
+  "RunID": "review",
+  "status": "CPU_REPLAY_VERIFIED",
+  "scope": "DEVELOPMENT_VALIDATION",
+  "mode": "VERIFIED_REVIEW",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_01_baseline",
+      "RunID": "review",
+      "status": "CPU_REPLAY_VERIFIED",
+      "scope": "DEVELOPMENT_VALIDATION",
+      "mode": "VERIFIED_REVIEW",
+      "images": 548,
+      "epochs": 100,
+      "AP50": 0.5041689748827122,
+      "AP50_95": 0.29624432837203357,
+      "AR50_95": 0.5317225023268554,
+      "verified_evidence": [
+        {
+          "source_run": "cv261102_full_20261031T000013_d0be8587",
+          "train_images": 6471,
+          "best_epoch": 76,
+          "validation_images": 548,
+          "precision": "FP32",
+          "inference_size": 1280
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_01_baseline",
+      "RunID": "review",
+      "status": "CPU_REPLAY_VERIFIED",
+      "scope": "DEVELOPMENT_VALIDATION",
+      "mode": "VERIFIED_REVIEW",
+      "images": 548,
+      "epochs": 100,
+      "AP50": 0.5041689748827122,
+      "AP50_95": 0.29624432837203357,
+      "AR50_95": 0.5317225023268554
+    }
+  }
+}

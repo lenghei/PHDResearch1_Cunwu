@@ -1,0 +1,12 @@
+{
+  "source_run": "reproduce_20261125T082934_133ccf01",
+  "p": 100,
+  "d": 5,
+  "pairs": 500,
+  "seed": 20261104,
+  "safe_population": 26496,
+  "historical_manifest_match": true,
+  "published_tables_match": true,
+  "regenerated_manifest_sha256": "b59d3b19f2a1260c1464576631e6161bf22b858c5ea66e7df82b0ea7acd42b35",
+  "measured_pairs": 0
+}

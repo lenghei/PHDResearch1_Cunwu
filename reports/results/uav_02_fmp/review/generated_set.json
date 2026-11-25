@@ -1,0 +1,33 @@
+{
+  "configuration_id": "p_8f7e990050372f44",
+  "leaves": [
+    "Defocus_r3",
+    "Gauss_s30",
+    "Haze_light",
+    "JPEG_q50",
+    "Motion_k21",
+    "Overexposed_strong",
+    "RollingShutter",
+    "Shot_low"
+  ],
+  "render_seed": 20261207,
+  "source_archive_sha256": "abeea063037e5d20398837deb11084e652402a34ddf4f207bdf541a6f2a35ef9",
+  "generator_sha256": "0e4451df339f3ffe48df9858d6b454fcb03ed4dac2c51b21dfe6ee7514d6e555",
+  "uvl_sha256": "e6eadd633d1c14e0d6bc425f5e54421d592d766c65a6e5f20c61bc34dd76fb5c",
+  "bindings_sha256": "3f5488659208a61c0889576ef6981023547d7e1fc7e3a4507558213f86bf24e0",
+  "geometry_sha256": "75ef06915b89a7679c0d7e44ffe2d73c52f6c4025e7f4d53086acb5caf9acd42",
+  "set_renderer_sha256": "0face9557f7b3f1dce7e7d362feb44a19d4bbf0b4c723a13b36d895a4ef78ff0",
+  "opencv": "4.11.0",
+  "numpy": "2.4.6",
+  "status": "RENDER_VERIFIED_DEVELOPMENT_VAL",
+  "images": 548,
+  "source_targets": 38593,
+  "output_targets": 38593,
+  "area_reference": "rolling_shutter_source_bbox_pixels_v1",
+  "members_sha256": "0aed42f73d866e1eaa731db1e2360c78f3aa255e05614bb748cdd2831a92dba7",
+  "ground_truth_sha256": "1c31d69ac7626c420522d53d8c4372890756f10e7082c05893e6d300d1dfaa73",
+  "seconds": 179.73271110001951,
+  "source_run": "reproduce_20261125T082824_61beb538",
+  "written_png_hashes_verified": 548,
+  "image_bytes": 1041909158
+}

@@ -1,0 +1,30 @@
+{
+  "RunID": "cv261102_full_20261031T000013_d0be8587",
+  "code_SHA256": {
+    "code/main/__init__.py": "f13c882683dec82411f820315124aed3236e8b53d2f3f795db6e5690db8800a8",
+    "code/main/admission.py": "9d4ddd81e775e82554ac5800d640620e69247fde37841932a3bb3652488aa1f8",
+    "code/main/bridge.py": "58c7b6526817a45191a767b3c6c70800c603a9bd1abdae5e53c737a40bf76260",
+    "code/main/config.py": "f3317ecb6b3de3543c432ce44a28143ca9186ed555fea0eacacf85fb663a1b1d",
+    "code/main/dataset.py": "3816ad4940abd084d0ccb68ef309c1bd50e2a969bbd27384cb5ba695dcd2eab5",
+    "code/main/degradation.py": "502ce3e60eb6b12337be8057ba5966a07cfe7b6178c99e897ef9174cff7367d7",
+    "code/main/evaluation.py": "04ab039bdd1c932893c067c320dd09f1799facb08ba4e182a323a24990cbeb4f",
+    "code/main/gap_analysis.py": "1edc6b4e24331cfdc6c9072dd1362929ac54b2508eeaafd2ed86f9f15d88b157",
+    "code/main/labels.py": "41025bef2a595ecbda05f5891a6cb7a73ebb0ca87226e6054814f2be79d34aeb",
+    "code/main/pipeline.py": "919eaa57fedcc170281249f9a9869f6dac8907793605c048fa5fc507338a6a2f",
+    "code/main/predictor.py": "331b23435e217bd304ba8c65a5b5cfa462a700041a15c988a7199267a01e48b6",
+    "code/main/run_report.py": "d280e6f5d29b1308b5a005e1cd6ac6d0b2d4a61bcaa00731490e5a779743b081",
+    "code/main/statistics.py": "d65a8dd08ae974c30deb7a6a6a0ad7725ccb78a5313070e4f9d2a8ab78607c4e",
+    "code/main/uvl.py": "9b36b07facbe84016625814fbbbc334a707908ffa113f5bf8b1c74c5daab573b",
+    "code/main/visualization.py": "f1b0f60e5045a1fc86d175a7c42c6200e143c804210daf0f4bca33e4c7995e6e",
+    "experiments/cv261102/prepare_data.py": "6807b584e9105d3acf6072c57ce68eee053d0febacbf41936e5302aaee2eccc9",
+    "experiments/cv261102/run.py": "e9c5eeddbc577794053bf028cba49655c7ac8b2493fc5c16625f585535c407ba",
+    "experiments/cv261102/validate_run.py": "5a45e5eb763ae0e178de241c2ceddd0b8c5fb7c5deaa6592260cce324c7abb8a",
+    "experiments/cv261102/tests/test_cv261102.py": "f9314daa6923f50eadf741ff7e86c8e63f2a4ad382ee3c19507f3bdd0b51d284"
+  },
+  "torch": "2.6.0+cu124",
+  "ultralytics": "8.4.61",
+  "cuda": "12.4",
+  "initial_weights_SHA256": "1f47a78bf100391c2a140b7ac73a1caae18c32779be7d310658112f7ac9aa78a",
+  "train_zip_SHA256": "86a77eba93137bfc16e4993860de9245b0675c0dba0d3ab98fb458699e256f84",
+  "val_zip_SHA256": "abeea063037e5d20398837deb11084e652402a34ddf4f207bdf541a6f2a35ef9"
+}

@@ -1,0 +1,42 @@
+{
+  "ExperimentID": "uav_05_evaluation",
+  "RunID": "review",
+  "status": "EXPLORATORY_REPLAY_VERIFIED",
+  "scope": "EXPLORATORY_FIRST_PAIR_ONLY",
+  "mode": "VERIFIED_REVIEW",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_05_evaluation",
+      "RunID": "review",
+      "status": "EXPLORATORY_REPLAY_VERIFIED",
+      "scope": "EXPLORATORY_FIRST_PAIR_ONLY",
+      "mode": "VERIFIED_REVIEW",
+      "images": 1610,
+      "AP50": 1.259834187431549e-05,
+      "AP50_95": 1.259834187431549e-06,
+      "AR50_95": 2.0735115393207864e-06,
+      "verified_evidence": [
+        {
+          "pair_id": "p_fd12aeed13eb2a34__d_a8a5e5b0da3bba4e",
+          "exploratory_unique_pairs": 1,
+          "same_pair_repeats": 1,
+          "images_per_run": 1610,
+          "formal_pair_credit": 0,
+          "first_cached_mean_ms": 36.362338819836054,
+          "repeat_cached_mean_ms": 35.0693905572783
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_05_evaluation",
+      "RunID": "review",
+      "status": "EXPLORATORY_REPLAY_VERIFIED",
+      "scope": "EXPLORATORY_FIRST_PAIR_ONLY",
+      "mode": "VERIFIED_REVIEW",
+      "images": 1610,
+      "AP50": 1.259834187431549e-05,
+      "AP50_95": 1.259834187431549e-06,
+      "AR50_95": 2.0735115393207864e-06
+    }
+  }
+}
