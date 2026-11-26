@@ -38,7 +38,19 @@
           "repeats": 2,
           "measured_calls": 320,
           "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
-          "max_temperature_C": 63
+          "max_temperature_C": 63,
+          "profile": "32-image pilot"
+        },
+        {
+          "profile": "Full validation",
+          "RunID": "reproduce_20261125T122911_30a8b769",
+          "detector_settings": 5,
+          "images_per_setting": 548,
+          "repeats": 3,
+          "measured_calls": 8220,
+          "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+          "max_temperature_C": 72,
+          "supervised_wall_seconds": 345.97970900009386
         }
       ],
       "slicing_and_TTA": [
@@ -53,6 +65,18 @@
         {
           "adapter_method": "model_overrides",
           "TTA_calls": 4
+        }
+      ],
+      "images_per_condition": 548,
+      "image_evaluations": 8220,
+      "cells": 5,
+      "checkpoint_selection": [
+        {
+          "healthy_local_checkpoints": 6,
+          "cpu_operation_profiles": 12,
+          "historical_clean_rows": 8,
+          "historical_gpu_rows": 12,
+          "status": "PARTIAL_8_TO_12_TARGET"
         }
       ]
     },

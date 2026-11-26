@@ -173,8 +173,10 @@ def run_checks(package,data_root,out,regression=None):
         return {'FP32_NCHW':[640,1280],'accepted_preprocessing_tensor_equal':True,'original_coordinate_roundtrip':True,'GPU':False}
     check('resolution_and_coordinate_CPU_contract',inference_contract)
     def gap():
-        from gap48 import state,p_state,paired_gap,bootstrap_gap_draws
+        from gap48 import state,p_state,paired_gap,bootstrap_gap_draws,ablation_gap
         assert state([.11,.12],[40,50])=='PASS' and state([.09,.11],[40,50])=='UNCERTAIN' and state([.08,.09],[40,50])=='FAIL'
+        assert state([.11,.12],[99,101])=='UNCERTAIN' and state([.11,.12],[101,110])=='FAIL'
+        assert state([.10,.11],[99,100])=='PASS' and state([.08,.09],[99,101])=='FAIL'
         assert p_state(['FAIL','UNCERTAIN'])=='UNCERTAIN' and p_state(['FAIL','FAIL'])=='GAP'
         r=paired_gap(['GAP','UNCERTAIN','COVERED'],['COVERED','UNCERTAIN','COVERED']);assert r['known_Gap_count_reduction']==1 and r['three_state_reduction_bounds']==[0,2]
         cells={}
@@ -184,6 +186,16 @@ def run_checks(package,data_root,out,regression=None):
                     for resolution in (640,1280):
                         for p in ('SYNTHETIC_P0','SYNTHETIC_P1'):cells[(arch,seed,strategy,resolution,p)]={'tiny_draws':[tiny]*200,'latency_draws':[50.]*200}
         result=bootstrap_gap_draws(cells,['SYNTHETIC_P0','SYNTHETIC_P1'],[42,43,44]);assert all(r['CI95_count']==[2.,2.] for r in result)
+        control={(p,r):'FAIL' for p in ('P0','P1') for r in (640,1280)}
+        target={**control, ('P0',1280):'PASS', ('P1',1280):'UNCERTAIN'}
+        result=ablation_gap(control,target,['P0','P1'],[640,1280])
+        assert result['confirmed_closure_P_ids']==['P0'] and result['three_state_reduction_bounds']==[1,2]
+        try:
+            ablation_gap(control,{('P0',640):'FAIL'},['P0','P1'],[640,1280])
+        except ValueError:
+            pass
+        else:
+            raise AssertionError('Incomplete ablation was accepted.')
         return {'three_state_counting':'PASS','paired_indices_and_complete_D_sets':'PASS','population_estimation':'NOT_ALLOWED','scope':'Synthetic software tests; not measured Gap reduction'}
     check('paired_evaluation_and_Gap_counting',gap)
     def safety():

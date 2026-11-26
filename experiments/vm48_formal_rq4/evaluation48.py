@@ -4,7 +4,7 @@ from datetime import datetime,timezone,timedelta
 from pathlib import Path
 import numpy as np
 from common48 import *
-from gap48 import state,p_state,paired_gap,bootstrap_gap_draws
+from gap48 import state,p_state,paired_gap,bootstrap_gap_draws,ablation_gap
 
 
 def sized_predictor(parent,resolution):
@@ -147,16 +147,25 @@ def evaluate_worker(package,data_root,parent):
             folder=control_parent/'evaluation'/r['cell_id']
             for name,key in [('metrics.json','metrics_SHA256'),('bootstrap.json','bootstrap_SHA256'),('timing.json','timing_SHA256')]:
                 if sha(folder/name)!=r[key]:raise ValueError('Ablation reference evidence changed.')
-            control[('YOLOv8s',42,'CONTROL',r['resolution'],r['P_id'])]={'metrics':load(folder/'metrics.json'),'draws':load(folder/'bootstrap.json')['draws']}
-        if len(control)!=42:raise ValueError('Complete42-cell seed42 control evaluation is required.')
+            metrics, boot, timing = (load(folder/name) for name in ('metrics.json', 'bootstrap.json', 'timing.json'))
+            tiny = next(i['ci95'] for i in boot['intervals'] if i['size']=='tiny' and i['metric']=='map50_95')
+            key = ('YOLOv8s',42,'CONTROL',r['resolution'],r['P_id'])
+            if key in control:raise ValueError('Duplicate CONTROL cell.')
+            control[key] = {'metrics':metrics, 'draws':boot['draws'], 'state':state(tiny,timing['latency_CI95'])}
+        contexts = [case['id'] for case in spec['contexts']]
+        control_states = {(p,res):v['state'] for (_,_,_,res,p),v in control.items()}
         import evaluate as previous
         normal_id=next(c['id'] for c in spec['contexts'] if c['p']['leaves']==['Normal'])
-        contrasts={}
+        contrasts, gaps = {}, {}
         for strategy in sorted({r['strategy'] for r in rows}):
-            selected={**control,**{k:v for k,v in values.items() if k[2]==strategy}}
+            treatment = {k:v for k,v in values.items() if k[2]==strategy}
+            selected = {**control, **treatment}
             renamed={(a,s,('ALL_FIVE' if arm==strategy else arm),r,('Normal' if p==normal_id else p)):v for (a,s,arm,r,p),v in selected.items()}
             contrasts[strategy]=previous.paired_contrasts(renamed)
+            target_states = {(p,res):v['state'] for (_,_,_,res,p),v in treatment.items()}
+            gaps[strategy] = ablation_gap(control_states, target_states, contexts, spec['resolutions'])
         save(out/'matched_ablation_contrasts.json',{'seed':42,'three_seed_replication':False,'reference_control':str(control_parent),'comparisons':contrasts})
+        save(out/'matched_ablation_Gap.json', {'seed':42, 'comparisons':gaps})
     save(out/'evaluation_result.json',{'status':'COMPLETE_MEASURED_SUBSET_DEVELOPMENT_ONLY','cells':expected,'full_FM_P_gap':'UNKNOWN','formal_RQ4_complete_claim':False})
 
 

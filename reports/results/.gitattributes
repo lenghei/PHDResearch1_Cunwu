@@ -8,3 +8,7 @@ vm48_formal_rq4/**/*.json -text
 vm48_formal_rq4/**/per_class_all_conditions.csv text eol=lf
 uav_*/review/** -text
 uav_02_fmp/configuration_validation.csv -text
+uav_03_fmd_static_gap/static_gap_rules.csv -text
+uav_03_fmd_static_gap/reproduce_*/snapshot.json -text
+uav_03_fmd_static_gap/reproduce_*/*.csv -text
+uav_04_sampling/reproduce_*/snapshot.json -text

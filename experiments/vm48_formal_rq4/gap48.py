@@ -4,8 +4,11 @@ import numpy as np
 
 def state(tiny,latency):
     if any(v is None for v in [*tiny,*latency]):return 'NOT_EVALUATED'
-    if tiny[1]<.10 or latency[1]>100:return 'FAIL'
-    return 'PASS' if tiny[0]>=.10 else 'UNCERTAIN'
+    if any(not np.isfinite([lo, hi]).all() or not lower <= lo <= hi <= upper
+           for (lo, hi), lower, upper in ((tiny, 0, 1), (latency, 0, np.inf))):
+        raise ValueError('Invalid Gap confidence interval.')
+    if tiny[1]<.10 or latency[0]>100:return 'FAIL'
+    return 'PASS' if tiny[0]>=.10 and latency[1]<=100 else 'UNCERTAIN'
 
 
 def p_state(states):
@@ -26,6 +29,29 @@ def paired_gap(control,target):
     return {'CONTROL':c,'TARGETED':t,'known_Gap_count_reduction':c['GAP']-t['GAP'],
        'three_state_reduction_bounds':[c['gap_count_bounds'][0]-t['gap_count_bounds'][1],c['gap_count_bounds'][1]-t['gap_count_bounds'][0]],
        'scope':'Frozen purposeful P sample only; no population prevalence estimator'}
+
+
+def ablation_gap(control, target, contexts, resolutions):
+    expected = {(p, resolution) for p in contexts for resolution in resolutions}
+    if control.keys() != expected or target.keys() != expected:
+        raise ValueError('Ablation requires matched CONTROL and treatment cells.')
+
+    rows = []
+    for p in contexts:
+        baseline = {r: control[p, r] for r in resolutions}
+        treatment = {r: target[p, r] for r in resolutions}
+        rows.append({
+            'P_id': p, 'CONTROL_by_resolution': baseline, 'ABLATION_by_resolution': treatment,
+            'CONTROL': p_state(list(baseline.values())),
+            'ABLATION': p_state(list(treatment.values())),
+        })
+    summary = paired_gap([r['CONTROL'] for r in rows], [r['ABLATION'] for r in rows])
+    return {
+        **summary, 'seed': 42, 'architecture': 'YOLOv8s', 'resolutions': resolutions,
+        'confirmed_closure_P_ids': [r['P_id'] for r in rows
+                                    if (r['CONTROL'], r['ABLATION']) == ('GAP', 'COVERED')],
+        'per_P': rows,
+    }
 
 
 def bootstrap_gap_draws(cells,contexts,seeds,strategies=('CONTROL','ALL_FIVE_TARGETED'),samples=200):

@@ -26,6 +26,7 @@ __pycache__/
 .coverage
 htmlcov/
 # Models, archives and caches
+/code/models/
 *.pt
 *.pth
 *.onnx
@@ -52,6 +53,8 @@ local_runs/
 runtime/
 # Only explicitly reviewed result figures may be added
 !reports/results/*.png
+!/reports/results/uav_03_fmd_static_gap/review/full_validation_profiles.png
+!/reports/results/uav_03_fmd_static_gap/reproduce_*/checkpoint_validation.png
 !experiments/*/results/*.png
 # Credentials and private certificates
 *.pem

@@ -9,6 +9,7 @@ from pathlib import Path
 import shutil
 from statistics import mean
 import sys
+from tempfile import TemporaryDirectory
 
 sys.dont_write_bytecode = True
 HERE = Path(__file__).resolve().parent
@@ -78,8 +79,11 @@ def reusable(out):
         if not path.is_file():
             verified(origin, row["sha256"])
             path.parent.mkdir(parents=True, exist_ok=True)
-            with path.open("xb") as target, origin.open("rb") as source:
-                shutil.copyfileobj(source, target)
+            with TemporaryDirectory(dir=path.parent) as staged:
+                temporary = Path(staged) / path.name
+                shutil.copyfile(origin, temporary)
+                verified(temporary, row["sha256"])
+                os.link(temporary, path)
         verified(path, row["sha256"])
         if origin.is_file():
             verified(origin, row["sha256"])
