@@ -1,0 +1,41 @@
+{
+  "ExperimentID": "uav_04_sampling",
+  "RunID": "reproduce_20261126T001041_5cf06595",
+  "status": "PARTIAL_DEVELOPMENT_EVALUATION",
+  "mode": "DEVELOPMENT_GAP_ANALYSIS",
+  "scope": "MEASURED_SUBSET_ONLY",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_04_sampling",
+      "RunID": "reproduce_20261126T001041_5cf06595",
+      "status": "PARTIAL_DEVELOPMENT_EVALUATION",
+      "mode": "DEVELOPMENT_GAP_ANALYSIS",
+      "scope": "MEASURED_SUBSET_ONLY",
+      "images_per_condition": 548,
+      "verified_evidence": [
+        {
+          "Tiny_threshold": 0.1,
+          "complete_P": 10,
+          "covered": 0,
+          "covered_complete_P": 0,
+          "latency_limit_ms": 100,
+          "static_covered_complete_P": 0,
+          "tested_candidate_gap": 10,
+          "unknown": 90
+        },
+        {
+          "unique_pairs": 53,
+          "unmeasured_pairs": 447,
+          "formal_pair_credit": 0
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_04_sampling",
+      "RunID": "reproduce_20261126T001041_5cf06595",
+      "status": "PARTIAL_DEVELOPMENT_EVALUATION",
+      "mode": "DEVELOPMENT_GAP_ANALYSIS",
+      "scope": "MEASURED_SUBSET_ONLY"
+    }
+  }
+}

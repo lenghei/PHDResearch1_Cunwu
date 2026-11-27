@@ -1,0 +1,50 @@
+{
+  "status": "SAMPLING_VERIFIED",
+  "p": {
+    "pairwise_n": 80,
+    "uniform_n": 100,
+    "greedy_cover_n": 21,
+    "overlap_n": 1,
+    "unique_full_space_candidates": 179,
+    "eligible_population": 46368,
+    "uniform_inclusion_probability": 0.0021566597653554175,
+    "frozen_safe_population": 26496,
+    "frozen_uniform_inclusion_probability": 0.0037741545893719805
+  },
+  "d": {
+    "checkpoint_count": 11,
+    "logical_bindings": 143,
+    "SAT_checked": 143,
+    "needs_int8_calibration": 55,
+    "native10_candidates": 91
+  },
+  "active_selection": "WAITING_FOR_ADMITTED_TRAINING_LABELS",
+  "AP_used_for_selection": false,
+  "seed": 20261104,
+  "render_seed": 20261207,
+  "FM_P_UVL_sha256": {
+    "weekly": "e6eadd633d1c14e0d6bc425f5e54421d592d766c65a6e5f20c61bc34dd76fb5c",
+    "historical": "2033bb61456d29cb82e9d3e15c8491715db330c28cd9f1a0a1895d148ba48dec"
+  },
+  "FM_D_UVL_sha256": {
+    "weekly": "4022d674822b97dbbe3712646b9a0f970af95d175ae358e63582029bc107571a",
+    "historical": "13eb9182f48c448f1355d5c34d39c464d384e675e86fac9c5d07b58645ddd0e6"
+  },
+  "source_sha256": {
+    "uav_03_fmd_static_gap/reproduce_20261125T142040_7a322c8d/checkpoint_roster.csv": "74f08b8931246e7f4c4c110617907a68b8c07eb30e8c902295f0ff03d3884026",
+    "uav_03_fmd_static_gap/reproduce_20261125T134035_61c7c6f2/checkpoint_training.csv": "9753256ddf8a014d68e2b60a2c6957a9a8bfa140c03e986eb26e629df563d84e",
+    "uav_03_fmd_static_gap/reproduce_20261125T142040_7a322c8d/zeroshot_checkpoints.csv": "1903da551fcfd74ec36a1206710f608ecd6b2a0f040cc8ef221b5fe07338ca99",
+    "uav_02_fmp/review/full_space_validation.json": "2e7c92b6f15fc79a8cea2baa29bda9f13ddde3b28fc232f3af1e84ff0f1f8733"
+  },
+  "code_sha256": {
+    "experiments/uav_04_sampling/full_space_plan.py": "54494395155d8090a01899f06a7ec5b9f061a5aede1206d236c5d061009c626c",
+    "experiments/uav_04_sampling/run.py": "3f2064417ba0da21d105195d71526a1767dfc090aeb6d889f72f53bff6a4f3b9",
+    "experiments/uav_03_fmd_static_gap/plan_inference_pairwise.py": "f8cc71315013cf736e4c601f21794bcc6ca136395db678f38d96145c038fcf60",
+    "experiments/uav_03_fmd_static_gap/export_configuration_validation.py": "44404e71266d9ae82731eac18cd9886da9be508d6ee4f19adff98830eb87dd75",
+    "experiments/experiments_test/cv261123/sampling.py": "192f50edea0e4ca354721d7366e74f0c077dab4f73c0c178eacb4f7746958f29",
+    "experiments/experiments_test/cv261207/sampling.py": "5ff0bfd8d70725d6cf81559dd2d6cdaf35d0d7ddbc631f1eda75af5683b39522"
+  },
+  "frozen_selection_sha256": "b59d3b19f2a1260c1464576631e6161bf22b858c5ea66e7df82b0ea7acd42b35",
+  "target_split": "VisDrone2019-DET-test-dev",
+  "measured_pairs_in_this_run": 0
+}

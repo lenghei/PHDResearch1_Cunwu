@@ -1,0 +1,12 @@
+{
+  "status": "PASS_STATIC_GAP_RECOMPUTATION",
+  "fm_p_configuration_count": 46368,
+  "strict_identity_covered": 1,
+  "brightness_only_intermediate_covered": 3,
+  "broad_proxy_covered": 18,
+  "broad_proxy_gap": 46350,
+  "broad_proxy_gap_fraction": 0.999611801242236,
+  "broad_proxy_covered_ids_match_supplied_evidence": true,
+  "historical_checkpoint_actual_coverage": "UNKNOWN",
+  "interpretation": "Static coverage proxy, not empirical detector pass/fail or AP evidence."
+}

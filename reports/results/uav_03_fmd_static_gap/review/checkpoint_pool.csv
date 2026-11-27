@@ -1,0 +1,7 @@
+checkpoint,sha256,cohort,data,train_imgsz,recorded_epochs,seed,optimizer,lr0,batch,weights_role,classes,parameters,saved_ultralytics,health
+yolov8s_cft640,e564c819603bf36ac6d93e3acb0359e7d5a75503ce78458209e9a28113280667,WEEK1_BASELINE,VisDrone DET train 6471 / val 548,640,100,42,auto,0.01,4,"best EMA, epoch 76",10,11139470,8.4.61,CPU_TENSOR_PASS
+ck05_yolov8s_ft1280,96c84ece325eccf07edefd231f088f758ba5fa6a75a4b577e8db32a94bfeeb8b,FT1280_SMALL,VisDrone official train / val (historical YAML),1280,100,42,AdamW,0.01,2,validation-selected best EMA,10,11139470,8.4.33,CPU_TENSOR_PASS
+ck06_yolo11s_ft1280,839a3dcc962f2496777b87b7494b0584a74c940e03f75b7e6a7f699df798e0f1,FT1280_SMALL,VisDrone official train / val (historical YAML),1280,100,42,AdamW,0.01,2,validation-selected best EMA,10,9431662,8.4.33,CPU_TENSOR_PASS
+ck01_yolo26s_ft1280,1b3861902e01416f199f2242cb43618f7680848cabf5f5df9546f2b404f0c488,FT1280_SMALL,VisDrone official train / val (historical YAML),1280,100,42,AdamW,0.01,2,validation-selected best EMA,10,9955604,8.4.33,CPU_TENSOR_PASS
+yolov8n_ft640,4056d477afbe9490d2fd84f11f4ab68e5da04a6b9beda28e1c42cb0794b7cba4,LEGACY_NANO,VisDrone official train / val (historical YAML),640,100,42,AdamW,0.01,8,validation-selected best EMA,10,3012798,8.4.33,CPU_TENSOR_PASS
+ck04_yolo26n_native10_full20,4632d5a8a9e82f7533a699c04f4bb76265a6aa4837d8e7d0152d1df80617cf0f,PHASE4J_NANO,VisDrone A5841 train / B627 development,640,20,42,AdamW,0.001,4,fixed epoch 20 EMA,10,2507700,8.4.61,CPU_TENSOR_PASS

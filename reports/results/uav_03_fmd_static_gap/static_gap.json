@@ -1,0 +1,138 @@
+{
+  "proxy": {
+    "FM_P_configurations": 46368,
+    "proxy_covered": 18,
+    "proxy_gap": 46350,
+    "proxy_gap_fraction": 0.999611801242236,
+    "covered_configuration_ids": [
+      "p_cdbfeb94b010c58d",
+      "p_5562cc95aa710a3a",
+      "p_9284d6f0df757f5b",
+      "p_19b2b79727080481",
+      "p_a38f2642e924ab71",
+      "p_ed6a24998da28097",
+      "p_0c4ba023ef59282a",
+      "p_74182050088d8517",
+      "p_4b8b206ebbf891c7",
+      "p_8b8e1c7e8763ab41",
+      "p_a09bb4f8bb4b12ed",
+      "p_027215488dcee3c5",
+      "p_77b01f2b217894a3",
+      "p_d2ab29c3ee72f88b",
+      "p_0a720a6ab5c845b6",
+      "p_77b3ad885b2b0e90",
+      "p_227429146e450307",
+      "p_882f52b78cf74adf"
+    ],
+    "per_leaf": {
+      "JPEG_q75": {
+        "present_total": 11592,
+        "covered_when_present": 0
+      },
+      "JPEG_q50": {
+        "present_total": 11592,
+        "covered_when_present": 0
+      },
+      "Overexposed_mild": {
+        "present_total": 6048,
+        "covered_when_present": 6
+      },
+      "Downscale_x2": {
+        "present_total": 15456,
+        "covered_when_present": 6
+      },
+      "Defocus_r6": {
+        "present_total": 15456,
+        "covered_when_present": 0
+      },
+      "Motion_k15": {
+        "present_total": 13248,
+        "covered_when_present": 0
+      },
+      "Haze_light": {
+        "present_total": 13104,
+        "covered_when_present": 0
+      },
+      "Underexposed_strong": {
+        "present_total": 12096,
+        "covered_when_present": 0
+      },
+      "Gauss_s5": {
+        "present_total": 11592,
+        "covered_when_present": 0
+      },
+      "Shot_low": {
+        "present_total": 21168,
+        "covered_when_present": 0
+      },
+      "Normal": {
+        "present_total": 8064,
+        "covered_when_present": 6
+      },
+      "RollingShutter": {
+        "present_total": 19872,
+        "covered_when_present": 0
+      },
+      "Underexposed_mild": {
+        "present_total": 8064,
+        "covered_when_present": 6
+      },
+      "Overexposed_strong": {
+        "present_total": 4032,
+        "covered_when_present": 0
+      },
+      "Motion_k21": {
+        "present_total": 13248,
+        "covered_when_present": 0
+      },
+      "JPEG_q25": {
+        "present_total": 11592,
+        "covered_when_present": 0
+      },
+      "Downscale_x1_5": {
+        "present_total": 15456,
+        "covered_when_present": 6
+      },
+      "Defocus_r3": {
+        "present_total": 15456,
+        "covered_when_present": 9
+      },
+      "Shot_high": {
+        "present_total": 8064,
+        "covered_when_present": 0
+      },
+      "Gauss_s30": {
+        "present_total": 11592,
+        "covered_when_present": 0
+      },
+      "Gauss_s15": {
+        "present_total": 11592,
+        "covered_when_present": 0
+      },
+      "Haze_dense": {
+        "present_total": 11088,
+        "covered_when_present": 0
+      },
+      "LowLight": {
+        "present_total": 8064,
+        "covered_when_present": 0
+      },
+      "Motion_k7": {
+        "present_total": 13248,
+        "covered_when_present": 0
+      },
+      "Rain": {
+        "present_total": 9072,
+        "covered_when_present": 0
+      }
+    },
+    "coverage_status": "PROVISIONAL_ASSUMPTIONS_NOT_EXACT_PIXEL_EQUIVALENCE",
+    "interpretation": "Heuristic training-augmentation proxy; NOT measured detection failure."
+  },
+  "strict_identity": {
+    "policy": "EXACT_IDENTITY_ONLY",
+    "covered": 1,
+    "gap": 46367,
+    "note": "Strict lower-bound coverage from no alteration. Not a physical equivalence oracle."
+  }
+}

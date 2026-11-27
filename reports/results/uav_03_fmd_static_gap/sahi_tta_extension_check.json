@@ -1,0 +1,10 @@
+{
+  "status": "PASS_STRUCTURAL_SCOPE_CHECK",
+  "original_fm_d_sha256": "4022d674822b97dbbe3712646b9a0f970af95d175ae358e63582029bc107571a",
+  "original_constraint_count": 4,
+  "extension_constraint": "SAHI_Slicing & TTA => YOLOv8 & Small & VisDrone_FT & Train640 & Infer640 & FP32 & NMS & !Preprocessing & !Albu_Default & !NoiseAug & !MotionBlurAug & !ExposureAug & !JPEGAug & !HazeAug",
+  "original_count": 635904,
+  "extension_count_reported_in_supplied_evidence": 635905,
+  "difference": 1,
+  "runtime_compatibility_scope": "ONE YOLOv8s CPU fixture; model override; no AP evaluation"
+}

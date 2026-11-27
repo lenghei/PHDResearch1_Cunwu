@@ -1,0 +1,18 @@
+{
+  "ExperimentID": "uav_04_sampling",
+  "RunID": "reproduce_20261126T001041_5cf06595",
+  "status": "PARTIAL_DEVELOPMENT_EVALUATION",
+  "mode": "DEVELOPMENT_GAP_ANALYSIS",
+  "scope": "MEASURED_SUBSET_ONLY",
+  "schema": 2,
+  "bundle": "snapshot.json",
+  "SHA256": "a9b01083c1fadc1860c8784dbcadce33071d047dd17818c8710d5e9bc2eddcf4",
+  "files": {
+    "verified_metrics.csv": "3c08e98cc6f9064bcd717955b8b5e1d79ece083b97fd35e3454e4e2edbb6b01e",
+    "threshold_sensitivity.csv": "09f0b1318abc9b743080fff2d0a92677a90701538bb395d38c8659f4511820ff",
+    "paired_detector_differences.csv": "b323cc65ea0f6660050a89c55f0707bff6f71fe79c630a6d18442d0efc35102f",
+    "summary.json": "3f66ff94f9401826198a1a14f9b3a76340ece463d716349c77cf17b978d9d3cd",
+    "tiny_ap.png": "ed6c1dd86c70afc9ad0baa7368252bf57f5c16501361eb1e7cf255001cd00b98",
+    "snapshot.json": "a9b01083c1fadc1860c8784dbcadce33071d047dd17818c8710d5e9bc2eddcf4"
+  }
+}

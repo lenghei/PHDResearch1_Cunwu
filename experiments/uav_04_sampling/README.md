@@ -1,4 +1,4 @@
-# Week 4 · Configuration sampling
+#  Configuration sampling
 
 From the outer `uavgap` directory:
 
@@ -49,3 +49,11 @@ Verify a continuation chain by passing each sealed continuation in execution ord
 
 Add `--execute` to resume approved work before the original deadline.
 For a separately authorized continuation, pass the author's approval as `--no-deadline`. Add `--after $active` to wait for an active run to finish its authorized time window. Hardware or worker errors stop the handoff.
+
+After verifying an exact replay, use `--parallel-bootstrap` to process draws with two CPU threads on high-detection cells. Smaller cells and low-memory systems use the serial evaluator. Inference timing is recorded before Bootstrap.
+
+Use `--sparse-bootstrap` for cached single-cap COCO evaluation. It preserves stable score ties, the existing image draws, and exact interpolated precision. Incompatible inputs use the selected reference evaluator.
+
+Use `--sparse-matching` to skip detections below every matching IoU threshold inside the COCO matcher. All detections remain in precision accumulation and saved predictions.
+
+GPU utilization is required at startup. During execution, a utilization query error is recorded separately from the live temperature, memory, and device identity checks.

@@ -1,0 +1,18 @@
+{
+  "ExperimentID": "uav_04_sampling",
+  "RunID": "reproduce_20261125T160144_3ba46079",
+  "status": "SAMPLING_VERIFIED",
+  "scope": "PLAN_ONLY",
+  "mode": "FULL_SPACE_SAMPLING",
+  "schema": 2,
+  "bundle": "snapshot.json",
+  "SHA256": "fff2a794dd6d986d16a590c2283e963cfb6b97e3b1801e7433ce0c7c50718707",
+  "files": {
+    "full_space_p_samples.csv": "7dbbf7bbfb9451a9b57be55d0ae092e2935dc77d72011d9b917298b66051ef1b",
+    "uncovered_p_states.csv": "74a04a83aaec083c3d31a5d28cea975838b0d081ef13e771069593d6d1c3c15f",
+    "inference_pairwise_candidates.csv": "105a811151e665a2177a3c79e5d7b0b99c63b42f6f019c9382be31bd36a2032b",
+    "inference_coverage.csv": "67662f239bc1fbae370de67acd4340868949169aacfbe05f6761b15637868564",
+    "full_space_summary.json": "84294c1a4adda79cb3c081fe82373d5c69a9000415da8bb470a2c896d24e58a6",
+    "snapshot.json": "fff2a794dd6d986d16a590c2283e963cfb6b97e3b1801e7433ce0c7c50718707"
+  }
+}

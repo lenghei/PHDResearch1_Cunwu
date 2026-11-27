@@ -1,0 +1,45 @@
+{
+  "ExperimentID": "uav_04_sampling",
+  "RunID": "reproduce_20261125T160144_3ba46079",
+  "status": "SAMPLING_VERIFIED",
+  "scope": "PLAN_ONLY",
+  "mode": "FULL_SPACE_SAMPLING",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_04_sampling",
+      "RunID": "reproduce_20261125T160144_3ba46079",
+      "status": "SAMPLING_VERIFIED",
+      "scope": "PLAN_ONLY",
+      "mode": "FULL_SPACE_SAMPLING",
+      "seed": 20261104,
+      "verified_evidence": [
+        {
+          "item": "P pairwise",
+          "selected": 80,
+          "population": 46368
+        },
+        {
+          "item": "P uniform",
+          "selected": 100,
+          "population": 46368
+        },
+        {
+          "item": "D candidate bindings",
+          "selected": 143,
+          "checkpoints": 11
+        },
+        {
+          "item": "Formal pairs measured by this run",
+          "count": 0
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_04_sampling",
+      "RunID": "reproduce_20261125T160144_3ba46079",
+      "status": "SAMPLING_VERIFIED",
+      "scope": "PLAN_ONLY",
+      "mode": "FULL_SPACE_SAMPLING"
+    }
+  }
+}

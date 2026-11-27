@@ -1,0 +1,80 @@
+{
+  "testdev": {
+    "source_run": "uav05-testdev-b562591202bb428aa0ff6f4e0cdfcd1a",
+    "selection_sha256": "4c8956316faba59267be3ede0b7b48b824f130cacfbacd916f16da07ec5da476",
+    "scope": "LIMITED_TEST_DEV_BENCHMARK",
+    "source_artifact": "results/metrics.csv",
+    "source_sha256": "a993b99cbff283bf8b3891bb7908626e93b42b0ec47b461cb4232db3c81e7eed",
+    "images_per_pair": 1610,
+    "pairs": 505,
+    "uniform_pairs": 500,
+    "p18_pairs": 5,
+    "protocol": "uav_05_testdev_101p_5d_native10_v1",
+    "study_sha256": "6ded60c6d4c65356afd0068f228eebfe5b70b94f1b7f25551a14cab4afccd05b",
+    "batches": [
+      {
+        "run_id": "uav05-testdev-92e272c165554b73ac522032233b6346",
+        "source_artifact": "supervisor.json",
+        "sha256": "1e70124a6ac0fcc154353ce0cb879a20e19225343af7b9a2b1eff40ebce9b965",
+        "worker_wall_seconds": 5763.737944700057,
+        "stop_reason": "WORKER_ERROR"
+      },
+      {
+        "run_id": "uav05-testdev-b562591202bb428aa0ff6f4e0cdfcd1a",
+        "source_artifact": "supervisor.json",
+        "sha256": "9b76e6540188be5217974a6657b38956a91cbaaac2e058b16c4febcdd72bff87",
+        "worker_wall_seconds": 60504.578239999944,
+        "stop_reason": null
+      },
+      {
+        "run_id": "uav05-testdev-eee041e345f3405593178c0eb45e33b8",
+        "source_artifact": "supervisor.json",
+        "sha256": "93ef8beac174ef48ea1d1a54a2a5417460910f81947ca46afe8f4e161ce5dfcf",
+        "worker_wall_seconds": 7179.035822300008,
+        "stop_reason": null
+      }
+    ]
+  },
+  "timing_note": "D4/D5 measured timing used as proxy for the planned seed-42 pair.",
+  "files": {
+    "augmentation_reference.csv": "93a48dda58c4aa4c9807f0e87f86267e44eff278026c6ce713f16c4652e88876",
+    "normal_baselines.csv": "aa3b8f3fa428574942ea7a18f617ff228724eda8d60b7fcb90e2384cc7964693",
+    "testdev_metrics.csv": "a993b99cbff283bf8b3891bb7908626e93b42b0ec47b461cb4232db3c81e7eed",
+    "timing_reference.csv": "91df98e450113a9745768e41994642ae513bb178262cec2137a1f8aa93bed4f1",
+    "p_configurations.csv": "63305e9e7a4499d5ed0b1cc7fe556cf8351f035c09192290a4fd7767aee3a820",
+    "d_configurations.csv": "e869f283dde8fe42e147a9132c3bd315bb9613fbf505025863f03a7b4680797a",
+    "p18_resolution_contrasts.csv": "048de300afb3c6435074c9c4c7b96843dc47c63f9c9e2d4ede2e99496f5e2ab8",
+    "normal_i1280_reference.csv": "2a6e6736f847975fdba67c2f9675b89e6d3dc3817d3fcb7c340572940714c366",
+    "training_case_reference.csv": "e4c5a209cdb2c9ea3702d89923d4b540fb9b79d2d12c74685a56a39b4ba5d882",
+    "clean_val_resolution_source.csv": "e138335aef229ced9078e611a1f525403be4339f7fa8527798967e1193b54dbf"
+  },
+  "p18_val": {
+    "pair_id": "p_7b49139cd7ab294c__d_806d430bf3db1913",
+    "P": "p_7b49139cd7ab294c",
+    "D": "d_806d430bf3db1913",
+    "images": "548",
+    "AP50_95": "0.245936012814634",
+    "Tiny_AP50_95": "0.12509502747342027",
+    "Tiny_low": "0.11638198821749143",
+    "Tiny_high": "0.1395089069482978",
+    "latency_ms": "56.296861132294154",
+    "status": "PASS",
+    "source_run": "reproduce_20261126T000929_14dcac74",
+    "receipt_run": "reproduce_20261126T195434_d607522e",
+    "source_artifact": "verified_metrics.csv",
+    "source_sha256": "39264b385c60b785d7b458734bed7b3ef506b2ccc4265abed565dd32472b7531"
+  },
+  "guide_policy": {
+    "source_run": "vm38_variability_guided_augmentation_targeted960_20261114T215310_e8bba12b",
+    "source_artifact": "policy.json",
+    "sha256": "c337dddb890ae3968b1e011f80a1b8af988a7eee710ece27e66ce6d0f4e70eee",
+    "version": "VM38_GAUSSIAN_P025_V1",
+    "probability": 0.25,
+    "sigma": {
+      "distribution": "uniform",
+      "low": 5.5,
+      "high": 30.0
+    },
+    "range_rule": "Reuse the original FM_P Gaussian sigma hull; reject exact test levels using the accepted sampler."
+  }
+}

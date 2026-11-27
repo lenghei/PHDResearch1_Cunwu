@@ -1,0 +1,47 @@
+{
+  "ExperimentID": "uav_03_fmd_static_gap",
+  "RunID": "reproduce_20261125T142040_7a322c8d",
+  "status": "COMPLETE_WITH_LIMITATIONS",
+  "mode": "WEEK3_ZERO_SHOT_AND_INFERENCE_OPTIONS",
+  "scope": "DEVELOPMENT_VALIDATION",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_03_fmd_static_gap",
+      "RunID": "reproduce_20261125T142040_7a322c8d",
+      "status": "COMPLETE_WITH_LIMITATIONS",
+      "mode": "WEEK3_ZERO_SHOT_AND_INFERENCE_OPTIONS",
+      "scope": "DEVELOPMENT_VALIDATION",
+      "images_per_condition": 548,
+      "checkpoints": [
+        {
+          "eligible_checkpoints": 11,
+          "external_controls": 1,
+          "zero_shot_checkpoints": 4
+        }
+      ],
+      "inference_profiles": [
+        {
+          "new_profiles": 10,
+          "images_each": 548,
+          "scope": "RESOURCE_ONLY",
+          "INT8": "NOT_ADMITTED_NO_VERIFIED_CALIBRATED_BACKEND"
+        }
+      ],
+      "static_coverage": [
+        {
+          "identity": 1,
+          "brightness_only": 3,
+          "plan_proxy": 18,
+          "population": 46368
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_03_fmd_static_gap",
+      "RunID": "reproduce_20261125T142040_7a322c8d",
+      "status": "COMPLETE_WITH_LIMITATIONS",
+      "mode": "WEEK3_ZERO_SHOT_AND_INFERENCE_OPTIONS",
+      "scope": "DEVELOPMENT_VALIDATION"
+    }
+  }
+}

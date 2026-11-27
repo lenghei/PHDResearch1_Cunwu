@@ -1,0 +1,34 @@
+{
+  "ExperimentID": "uav_03_fmd_static_gap",
+  "RunID": "reproduce_20261125T134035_61c7c6f2",
+  "status": "COMPLETE",
+  "mode": "MIXED_BACKEND_CHECKPOINT_VALIDATION",
+  "scope": "DEVELOPMENT_VALIDATION",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_03_fmd_static_gap",
+      "RunID": "reproduce_20261125T134035_61c7c6f2",
+      "status": "COMPLETE",
+      "mode": "MIXED_BACKEND_CHECKPOINT_VALIDATION",
+      "scope": "DEVELOPMENT_VALIDATION",
+      "images_per_condition": 548,
+      "cells": 16,
+      "image_evaluations": 8768,
+      "checkpoint_scope": [
+        {
+          "models": 8,
+          "FM_D_architecture_scale_eligible": 7,
+          "external_control": "LEAF-YOLO-S",
+          "dataset": "VisDrone2019-DET-val Normal"
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_03_fmd_static_gap",
+      "RunID": "reproduce_20261125T134035_61c7c6f2",
+      "status": "COMPLETE",
+      "mode": "MIXED_BACKEND_CHECKPOINT_VALIDATION",
+      "scope": "DEVELOPMENT_VALIDATION"
+    }
+  }
+}

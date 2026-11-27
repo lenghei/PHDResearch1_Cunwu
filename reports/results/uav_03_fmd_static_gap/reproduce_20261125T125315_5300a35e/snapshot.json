@@ -1,0 +1,35 @@
+{
+  "ExperimentID": "uav_03_fmd_static_gap",
+  "RunID": "reproduce_20261125T125315_5300a35e",
+  "status": "COMPLETE",
+  "mode": "CHECKPOINT_VALIDATION",
+  "scope": "DEVELOPMENT_VALIDATION",
+  "files": {
+    "summary.json": {
+      "ExperimentID": "uav_03_fmd_static_gap",
+      "RunID": "reproduce_20261125T125315_5300a35e",
+      "status": "COMPLETE",
+      "mode": "CHECKPOINT_VALIDATION",
+      "scope": "DEVELOPMENT_VALIDATION",
+      "images_per_condition": 548,
+      "cells": 12,
+      "image_evaluations": 6576,
+      "validation": [
+        {
+          "models": 6,
+          "precision": "FP32",
+          "worker_wall_seconds": 1917.77592559997,
+          "source_runs": 2,
+          "dataset": "VisDrone2019-DET-val"
+        }
+      ]
+    },
+    "result.json": {
+      "ExperimentID": "uav_03_fmd_static_gap",
+      "RunID": "reproduce_20261125T125315_5300a35e",
+      "status": "COMPLETE",
+      "mode": "CHECKPOINT_VALIDATION",
+      "scope": "DEVELOPMENT_VALIDATION"
+    }
+  }
+}

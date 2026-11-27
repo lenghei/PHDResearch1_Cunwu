@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "name": "SUPERVISOR_PROXY_20261022",
+  "verification_status": "PROVISIONAL_ASSUMPTIONS_NOT_EXACT_PIXEL_EQUIVALENCE",
+  "training_profile": "Ultralytics 8.4.33 default as described in supervisor research plan; must be checked against actually installed source and saved training args",
+  "covered_levels": {
+    "illumination": ["Normal", "Overexposed_mild", "Underexposed_mild"],
+    "motion": [],
+    "defocus": ["Defocus_r3"],
+    "gaussian": [],
+    "shot": [],
+    "compression": [],
+    "atmosphere": [],
+    "altitude": ["Downscale_x1_5", "Downscale_x2"],
+    "rolling": []
+  },
+  "rules": [
+    {"feature_family":"illumination", "default_status":"weak_proxy", "evidence_needed":"hsv_v intensity range, saved hsv_v and offset semantics", "rationale":"Mild gain changes are approximated by HSV brightness, but offsets are not exactly reproduced."},
+    {"feature_family":"motion", "default_status":"gap", "evidence_needed":"actual train augmentations and Albumentations source", "rationale":"A generic box/median blur is not the directional motion-kernel transform."},
+    {"feature_family":"defocus", "default_status":"weak_proxy", "evidence_needed":"blur kernel and probability in installed Albumentations transform", "rationale":"Small defocus is approximated by standard blur; large radius is excluded."},
+    {"feature_family":"gaussian", "default_status":"gap", "evidence_needed":"noise transforms in actual pipeline", "rationale":"No matching noise transform documented in supervisor baseline."},
+    {"feature_family":"shot", "default_status":"gap", "evidence_needed":"shot-noise transforms in actual pipeline", "rationale":"No matching photon-noise transform documented in supervisor baseline."},
+    {"feature_family":"compression", "default_status":"gap", "evidence_needed":"ImageCompression p in installed Albumentations source", "rationale":"Default compression was p=0 in cited source version."},
+    {"feature_family":"atmosphere", "default_status":"gap", "evidence_needed":"haze and rain transforms in actual pipeline", "rationale":"Neither weather effect is documented in baseline training."},
+    {"feature_family":"altitude", "default_status":"weak_proxy", "evidence_needed":"scale, mosaic and training image resampling semantics", "rationale":"Scale and mosaic approximate altitude-related reductions, not identical camera physics."},
+    {"feature_family":"rolling", "default_status":"gap", "evidence_needed":"saved shear and perspective settings", "rationale":"No matching rolling-shutter distortion in baseline."}
+  ]
+}

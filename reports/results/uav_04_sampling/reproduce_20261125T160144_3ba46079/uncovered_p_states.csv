@@ -1,0 +1,4 @@
+cohort,leaf_a,selected_a,leaf_b,selected_b
+FIRST500_UNIFORM_SAFE,Downscale_x2,1,Overexposed_strong,1
+FIRST500_UNIFORM_SAFE,Motion_k15,1,Overexposed_strong,1
+UNIFORM_FULL,Motion_k21,1,Overexposed_strong,1

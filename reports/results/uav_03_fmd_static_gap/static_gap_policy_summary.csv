@@ -1,0 +1,4 @@
+﻿policy_id,covered,total,gap,gap_fraction,coverage_interpretation,evidence_status
+STRICT_IDENTITY,1,46368,46367,0.9999784334023465,EXACT identity only; Normal without degradation,RECOMPUTED_FROM_FM_P_REFERENCE_MODEL
+BRIGHTNESS_ONLY_INTERMEDIATE,3,46368,46365,0.9999353002070394,Normal + mild overexposure + mild underexposure; HSV gain proxy only,RECOMPUTED_INTERMEDIATE_SENSITIVITY_POLICY_NOT_A_SEPARATE_PLAN_TARGET
+SUPERVISOR_BROAD_PROXY,18,46368,46350,0.999611801242236,3 illumination x 2 defocus states x 3 altitude states; weak proxy assumptions,PROVISIONAL_ASSUMPTIONS_NOT_EXACT_PIXEL_EQUIVALENCE

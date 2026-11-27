@@ -25,3 +25,15 @@ After admission, use `--execute --science $science --gpu-authorization $gpu`.
 Keep the emitted selection hash with the approval. The pilot uses 1,610 images per
 cell and has zero credit toward the earlier frozen 500-pair batch. The pilot
 measures the historical baselines. The matched retraining study is documented in [RQ4](../vm48_formal_rq4/README.md).
+
+## Test-dev sampling campaign
+
+The private frozen plan has 100 uniform P and the purposeful P18 case, each crossed with five D. Use the uniform cohort to estimate Gap prevalence and report P18 separately.
+
+```powershell
+$campaign = 'main/experiments/uav_05_evaluation/run_testdev_101p.py'
+& ./.venv/Scripts/python.exe -B $campaign --identity
+& ./.venv/Scripts/python.exe -B $campaign --execute --science $science --gpu-authorization $gpu
+```
+
+The execution requires science approval for the bound selection and a finite, one-use GPU allocation for the implementation. Evaluation shares one PNG cache per P and verifies sealed pairs before resuming. Rolling shutter transforms GT and ignore regions and retains source areas for size bins.

@@ -1,0 +1,130 @@
+{
+  "ExperimentID": "uav_03_fmd_static_gap",
+  "RunID": "reproduce_20261125T142040_7a322c8d",
+  "status": "COMPLETE_WITH_LIMITATIONS",
+  "mode": "WEEK3_ZERO_SHOT_AND_INFERENCE_OPTIONS",
+  "scope": "DEVELOPMENT_VALIDATION",
+  "schema": 2,
+  "bundle": "snapshot.json",
+  "started_at": "2026-11-25T14:20:40.694610+00:00",
+  "SHA256": "f75540cf85ff0185ff647fb4481ad389f11f9900330ce568e125cee6b7f2b9f1",
+  "sources": [
+    {
+      "kind": "zero_shot",
+      "RunID": "reproduce_20261125T140959_a734cf67",
+      "result": {
+        "artifact": "result.json",
+        "SHA256": "a3d2c84d1cf321157322e98dd8431c001464c6e38eab6fc4739deab9de08b8fa"
+      },
+      "supervisor": {
+        "artifact": "supervisor.json",
+        "SHA256": "f3eb04147d3086a9d6a31f2384a32738c97cf562643b513ac7937c70ec2ce18d"
+      },
+      "cells": [
+        {
+          "artifact": "yolov8n/infer640/COMPLETE.json",
+          "SHA256": "5f7341cd619960b7eca565e85f2e566c55ead3c6b39affdf43b4cbfe168dd3ae"
+        },
+        {
+          "artifact": "yolov8s/infer640/COMPLETE.json",
+          "SHA256": "73dba3cc3e33b98b99b659295e4a2fc4a20a2744e3a1f28c777a9765bf4f1ca3"
+        },
+        {
+          "artifact": "yolo26n/infer640/COMPLETE.json",
+          "SHA256": "7b1381c9add6642e7b2e94a9eb149c625dd5357926bdf172ba8a9582d6cb66cf"
+        },
+        {
+          "artifact": "yolo26s/infer640/COMPLETE.json",
+          "SHA256": "f5d0f32d21a7665909f01c30b84502c785273fef3a1a497ce4c5d39c514cca8b"
+        }
+      ]
+    },
+    {
+      "kind": "inference_options",
+      "RunID": "reproduce_20261125T142040_7a322c8d",
+      "plan": {
+        "artifact": "plan.json",
+        "SHA256": "7f38774e0285079d92668361f7a1063eadacaf635072e6891f5bc131a260a574"
+      },
+      "supervisor": {
+        "artifact": "supervisor.json",
+        "SHA256": "7932f9ac00170dd0deb403319674c3bf9f9253a67ebe8a9a0c9558c5ba0b27b4"
+      },
+      "cells": [
+        {
+          "artifact": "v8_full640.json",
+          "SHA256": "8a775fdb8c449efbd9f4d3633e2cc0b3126b8d7673033fc52d975bd9daa5ec06"
+        },
+        {
+          "artifact": "v8_full1536.json",
+          "SHA256": "b9e1856dcb74976280f31f3bbabc1304b919b8d7b355c15cc0e06541ada10f87"
+        },
+        {
+          "artifact": "v8_sahi640.json",
+          "SHA256": "07f1f5fe2c47fc00a27fb814ca2dcc1b8783a03c82371fb0989828e761a0702e"
+        },
+        {
+          "artifact": "v8_tta640.json",
+          "SHA256": "34b3aee6f20ec60f44d150f3788e11e35130293664c03204ba78c2ac9bb7e54d"
+        },
+        {
+          "artifact": "v8_clahe640.json",
+          "SHA256": "f5d87eecb4cdc8a601f86e64dbcc4dee963995e355a8a2274380b2fabb6892ab"
+        },
+        {
+          "artifact": "v8_gamma640.json",
+          "SHA256": "ba28f268f8ee9e68d8f1f088feb18a6504022d3053bfc4f402ed3e78fdf55bae"
+        },
+        {
+          "artifact": "v8_denoise640.json",
+          "SHA256": "efb7d6caad957829c7b819fdc1d86ec543a06349996c278a06b2105fc8677cfb"
+        },
+        {
+          "artifact": "v8_deblur640.json",
+          "SHA256": "93c3d981fc2ee9d8056f02117aeae52a3d3597c3d2bda0ec12e4208e3d3eb8d6"
+        },
+        {
+          "artifact": "v26_dense640.json",
+          "SHA256": "086c7bdba61e2b53740c430286e362643d5b3aefd8a9a44629fe28c35794df92"
+        }
+      ]
+    },
+    {
+      "kind": "inference_options",
+      "RunID": "reproduce_20261125T142441_9934d5c8",
+      "plan": {
+        "artifact": "plan.json",
+        "SHA256": "bb9b159de30b8307034cb4c5a14939ef41a54d3e64fa164ea974c9e7d87b6d8c"
+      },
+      "supervisor": {
+        "artifact": "supervisor.json",
+        "SHA256": "ecd474f1a8fc4d51d2aaced27f5fbbc30cad1cb527eb08f5fc8ce3293a0ee6e6"
+      },
+      "cells": [
+        {
+          "artifact": "v26_e2e640.json",
+          "SHA256": "9d2df2823095d1b3598ec286aa8e6ab895a55d04b2ead9724976710df4bc5dc7"
+        }
+      ]
+    },
+    {
+      "kind": "native10_training_roster",
+      "RunID": "reproduce_20261125T134035_61c7c6f2",
+      "artifact": "checkpoint_training.csv",
+      "SHA256": "9753256ddf8a014d68e2b60a2c6957a9a8bfa140c03e986eb26e629df563d84e"
+    },
+    {
+      "kind": "static_source_audit",
+      "artifact": "static_source_20261125T141345.json",
+      "SHA256": "bf6d944c621a940c345d9a242cd174ed5fe602ba392117c9cfaf3bbffce185f8"
+    }
+  ],
+  "files": {
+    "checkpoint_roster.csv": "74f08b8931246e7f4c4c110617907a68b8c07eb30e8c902295f0ff03d3884026",
+    "inference_options.csv": "b3f2af6f8a6620a7f6e27edb59133649050136f2ac6d13e3b7d430963f64884c",
+    "snapshot.json": "f75540cf85ff0185ff647fb4481ad389f11f9900330ce568e125cee6b7f2b9f1",
+    "zeroshot_checkpoints.csv": "1903da551fcfd74ec36a1206710f608ecd6b2a0f040cc8ef221b5fe07338ca99",
+    "zeroshot_metrics.csv": "14ce1650a0ff58c402d015d810775ff3e11fce0a0163fe7a75ff78cd570dae4e",
+    "zeroshot_per_class.csv": "795ed20a27b582fee49324e6e55b79c4bb5da372a70a25aed968e9220f1d8a93"
+  }
+}

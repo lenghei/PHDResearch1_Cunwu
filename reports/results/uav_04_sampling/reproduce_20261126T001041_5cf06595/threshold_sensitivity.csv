@@ -1,0 +1,7 @@
+Tiny_threshold,latency_limit_ms,complete_P,covered,tested_candidate_gap,unknown,covered_complete_P,static_covered_complete_P
+0.05,50,10,1,9,90,1,0
+0.05,100,10,2,9,89,1,0
+0.1,50,10,0,10,90,0,0
+0.1,100,10,0,10,90,0,0
+0.15,50,10,0,10,90,0,0
+0.15,100,10,0,10,90,0,0

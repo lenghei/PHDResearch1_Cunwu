@@ -1,0 +1,12 @@
+{
+  "status": "PASS_FULL_CSV_REVALIDATION",
+  "csv": "configuration_validation.csv",
+  "data_rows_excluding_header": 635904,
+  "columns": 67,
+  "configuration_id_unique": true,
+  "34_leaf_vectors_unique": true,
+  "train_variant_count": 844,
+  "all_rows_pass_all_four_constraints": true,
+  "measured_values_falsely_joined": 0,
+  "csv_sha256": "a1f94f20398faf61a5bdcb8815428cbe2456727dba2876d5ef39beb58779c282"
+}

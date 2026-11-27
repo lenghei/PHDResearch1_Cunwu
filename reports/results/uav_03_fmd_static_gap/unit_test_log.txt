@@ -1,0 +1,10 @@
+test_expected_configuration_count_is_declared (test_fmd_configuration.FMDFullConfigurationTests.test_expected_configuration_count_is_declared) ... ok
+test_four_constraints (test_fmd_configuration.FMDFullConfigurationTests.test_four_constraints) ... ok
+test_original_model_has_34_leaves (test_fmd_configuration.FMDFullConfigurationTests.test_original_model_has_34_leaves) ... ok
+test_training_variants_count (test_fmd_configuration.FMDFullConfigurationTests.test_training_variants_count) ... ok
+test_uvl_source_contains_original_constraints (test_fmd_configuration.FMDFullConfigurationTests.test_uvl_source_contains_original_constraints) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+OK

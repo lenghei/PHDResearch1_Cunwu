@@ -1,0 +1,12 @@
+checkpoint,template,sample_n,covered_inference_level_pairs,feasible_inference_level_pairs,evaluation_classes
+yolov8s_cft640,NMS,13,174,174,native10
+ck05_yolov8s_ft1280,NMS,13,174,174,native10
+ck06_yolo11s_ft1280,NMS,13,174,174,native10
+ck01_yolo26s_ft1280,YOLO26,13,193,193,native10
+yolov8n_ft640,NMS,13,174,174,native10
+ck04_yolo26n_native10_full20,YOLO26,13,193,193,native10
+external_leaf_yolo_n,NMS,13,174,174,native10
+yolov8n,NMS,13,174,174,common6
+yolov8s,NMS,13,174,174,common6
+yolo26n,YOLO26,13,193,193,common6
+yolo26s,YOLO26,13,193,193,common6

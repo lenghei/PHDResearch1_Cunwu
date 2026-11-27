@@ -1,0 +1,19 @@
+{
+  "status": "PASS_INDEPENDENT_EXHAUSTIVE_ENUMERATION",
+  "source_model": "fm_d.uvl",
+  "source_model_sha256": "4022d674822b97dbbe3712646b9a0f970af95d175ae358e63582029bc107571a",
+  "leaf_feature_count": 34,
+  "cross_tree_constraint_count": 4,
+  "valid_configuration_count": 635904,
+  "training_variant_count": 844,
+  "configuration_id_unique": true,
+  "feature_vector_unique": true,
+  "all_rows_pass_four_constraints": true,
+  "measured_attribute_join": "NOT_JOINED; checkpoint training-augmentation leaves are not uniquely evidenced in supplied package",
+  "measurement_values_in_matrix": 0,
+  "measurement_status": "LOGIC_ONLY_NOT_MEASURED_FOR_EXACT_FULL_CONFIGURATION",
+  "flamapy_independent_confirmation": "NOT_RUN_IN_THIS_CONTAINER; run flamapy_count.py in project .venv_flamapy",
+  "csv_path": "/mnt/data/uav03_package/main/reports/results/uav_03_fmd_static_gap/configuration_validation.csv",
+  "csv_columns": 67,
+  "data_rows_excluding_header": 635904
+}
