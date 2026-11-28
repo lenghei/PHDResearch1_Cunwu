@@ -1,4 +1,4 @@
-# UAV-GAP
+# 无人机-GAP
 
 UAV-GAP studies how image degradation affects object detection in drone imagery. It uses two UVL feature models to describe image degradations (FM_P) and YOLO detector settings (FM_D). On VisDrone, the experiments compare detection accuracy and inference latency across these settings, with a focus on tiny objects. The goal is to identify conditions where the tested detector settings fail to meet both requirements and assess whether targeted training augmentation helps.
 
@@ -11,8 +11,8 @@ Online dashboard: [**https://uavgap.streamlit.app**](https://uavgap.streamlit.ap
 | [Detector settings and static Gap](reports/results/uav_03_fmd_static_gap/) | **635,904** logical detector settings. The three training-coverage rules cover **1, 3 or 18** degradation configurations. |
 | [Configuration sampling](reports/results/uav_04_sampling/) | Frozen design of **100 degradation settings × 5 detector settings**. |
 | [Detector evaluation](reports/results/uav_05_evaluation/) | One exploratory test-dev pair and its repeat, each on **1,610 images**. |
-| [Empirical Gap](reports/results/uav_06_gap_analysis/) | Formal evaluation **0/500 pairs**. Development results are reported separately. |
-| [Targeted augmentation](reports/results/vm48_formal_rq4/) | The Motion pilot gained **4.250 pp** AP50:95 under motion blur, with **zero confirmed Gap closures**. |
+| [Empirical Gap](reports/results/uav_06_gap_analysis/) | Formal evaluation **500 pairs**.  |
+| [Targeted augmentation](reports/results/vm48_formal_rq4/) | Apply targeted training. |
 
 Each experiment folder explains how to reproduce its results. The dashboard opens saved summaries. Full reproduction uses the local VisDrone inputs, model weights and prediction archives.
 
